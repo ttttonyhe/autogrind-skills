@@ -1,11 +1,11 @@
 ---
 name: autogrind
-description: Use when the agent needs to work continuously and fully autonomously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or /自己动, or phrases like 'keep working, don't stop', 'autogrind this'.
+description: Work on this project continuously and fully autonomously without stopping. Use when the agent needs to work continuously and fully autonomously without stopping, for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or /自己动, or phrases like 'keep working, don't stop', 'autogrind this'.
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
   author: ttttonyhe
-  version: "1.3"
+  version: "1.4"
 ---
 
 # AutoGrind
