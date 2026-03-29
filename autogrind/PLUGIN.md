@@ -14,14 +14,6 @@ addition to the [agentskills.io skill](SKILL.md) that works across all other com
 /plugin install autogrind@autogrind-skills
 ```
 
-### Install from the official Anthropic marketplace
-
-Search for **AutoGrind** in the `/plugin` Discover tab, or:
-
-```shell
-/plugin install autogrind
-```
-
 ### Invoke
 
 ```shell
@@ -73,11 +65,6 @@ cp /tmp/autogrind-skills/.agents/plugins/marketplace.json ~/.agents/plugins/mark
 
 Restart Codex. The AutoGrind plugin will appear in the plugin directory, ready to install.
 
-### Official Plugin Directory
-
-Codex's self-serve plugin publishing is coming soon. Once available, AutoGrind will be
-listed in the official directory and installable without manual configuration.
-
 ### Invoke
 
 ```
@@ -85,16 +72,3 @@ listed in the official directory and installable without manual configuration.
 ```
 
 Or: `autogrind this project, don't stop`
-
----
-
-## Submitting to the official Anthropic marketplace
-
-To publish a new version of the Claude Code plugin, use the in-app form:
-
-- **Claude.ai**: `claude.ai/settings/plugins/submit`
-- **Console**: `platform.claude.com/plugins/submit`
-
-The plugin root is `autogrind/`. The manifest is at `autogrind/.claude-plugin/plugin.json`.
-Before submitting, bump `"version"` in both `autogrind/.claude-plugin/plugin.json` and
-`autogrind/.codex-plugin/plugin.json`, and update `metadata.version` in both `SKILL.md` copies.
