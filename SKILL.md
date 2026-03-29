@@ -110,6 +110,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
 - Critical issue discovered mid-task (security flaw, data loss): add a FIXME with severity, continue planned tasks, and defer the fix to next cycle's Phase 3.
 - **Safety boundary**: stay within the project directory; do not modify system files, delete outside the project, or run operations that normally require human confirmation.
+- **Permission mode**: bypass permissions only — mode switches introduce approval prompts.
 
 ### Phase 5 - Reflect
 
@@ -161,10 +162,8 @@ This pause is the only planned delay. It is **not** a stopping point.
 **One and only one:** the user sends an explicit stop signal.
 
 Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
-
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
-
-**When a stop signal arrives mid-task:** finish the current atomic task cleanly (do not stop at a half-written file or a failing test), then stop. Do not start new tasks. A clean stop beats an abrupt one.
+Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. Follow-ups are regular interactions — only `/autogrind` re-enters.
 
 Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 
