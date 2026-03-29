@@ -1,4 +1,4 @@
-![autogrind-banner](https://static.ouorz.com/autogrind-banner-2.png)
+![autogrind-banner](https://static.ouorz.com/autogrind-banner-4.png)
 
 **Tell your agent to start working. Walk away. Come back to finished work.**
 
