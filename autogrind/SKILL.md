@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: Use when the user wants the agent to work autonomously and continuously on any project without stopping - grinding through improvements in coding, research, data science, design, writing, or any long-running workflow in repeating cycles until explicitly told to stop. Triggered by "keep working", "don't stop", "grind on this", "work autonomously", or "keep going until I say stop".
+description: Let the agent work on this project fully autonomously and continuously without stopping
 ---
 
 # AutoGrind
