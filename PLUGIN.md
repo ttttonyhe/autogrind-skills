@@ -31,7 +31,7 @@ Or use a trigger phrase such as `keep working, don't stop` or `autogrind this pr
 ### Update
 
 ```bash
-claude plugin update autogrind
+claude plugin update autogrind@autogrind-skills
 ```
 
 Run `/reload-plugins` in an active session after install or update if the new plugin state does not appear immediately.
@@ -40,21 +40,11 @@ Run `/reload-plugins` in an active session after install or update if the new pl
 
 ## Codex
 
-### Default personal install
-
-Run this once to make AutoGrind available in Codex across all repositories:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/scripts/install-codex-plugin.sh)
-```
-
-After running it, open `plugins` in Codex once and install `autogrind` from your personal marketplace.
-
-### Repo-local install from this repo
+### Local install from this repo
 
 1. Open this repository in Codex.
 2. Open `plugins`.
-3. Install `autogrind` from the repo marketplace shipped in [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json).
+3. Install `autogrind` from the AutoGrind marketplace
 
 ### Invoke
 
