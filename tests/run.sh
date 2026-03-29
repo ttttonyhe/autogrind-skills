@@ -181,7 +181,7 @@ evaluate() {
   if (( true_stop_scenario > 0 )); then
     local inferred_stop
     inferred_stop=$(echo "$response" | grep -ciE \
-      '\bstopping (now|immediately|autogrind)\b|\bAutoGrind (is )?(halted|stopped|stopping)\b|\bhalting autogrind\b|\bautogrind halted\b|\bgrind (is )?(halted|stopped)\b' \
+      '\bstopping (now|immediately|autogrind)\b|\bAutoGrind (is )?(halted|stopped|stopping)\b|\bhalting autogrind\b|\bautogrind halted\b|\bgrind (is )?(halted|stopped)\b|AutoGrind.{0,4}(停止|停下|暂停|终止)|停止.{0,8}AutoGrind|停止运行|停下来|已停止' \
       || true)
     (( inferred_stop > 0 )) && choice="A"
   fi
