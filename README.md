@@ -8,7 +8,7 @@ AutoGrind is a skill for AI coding agents that makes them work *continuously and
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
-Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research — see [RESEARCH.md](RESEARCH.md).
+Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research — see [RESEARCH.md](RESEARCH.md).
 
 ---
 
@@ -232,6 +232,16 @@ cp -r autogrind ~/.agents/skills/autogrind
 All support the agentskills.io universal path. Install once, invoke directly.
 
 **Invoke:** `"Keep working on this project. Don't stop."` or `"autogrind"`
+
+---
+
+### Hermes Agent (NousResearch)
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this, keep going"`
 
 </details>
 

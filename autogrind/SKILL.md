@@ -2,7 +2,7 @@
 name: autogrind
 description: Use when the agent needs to work continuously and fully autonomously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or /自己动, or phrases like 'keep working, don't stop', 'autogrind this'.
 license: MIT
-compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent
+compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
   author: ttttonyhe
   version: "1.3"
@@ -208,3 +208,4 @@ Where `TaskCreate`/`TaskUpdate` appear in this skill, use your platform's equiva
 | Goose | `~/.agents/skills/` | Native task tools |
 | AmpCode | `~/.config/agents/skills/` or `~/.agents/skills/` | Native task tools |
 | Kilo / Kiro / Factory | `~/.agents/skills/` | Native task tools |
+| Hermes Agent (NousResearch) | `~/.agents/skills/` | Native task tools |
