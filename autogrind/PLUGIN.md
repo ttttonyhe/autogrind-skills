@@ -17,11 +17,11 @@ addition to the [agentskills.io skill](SKILL.md) that works across all other com
 ### Invoke
 
 ```shell
-/autogrind:autogrind
+/autogrind
 ```
 
 Or use a trigger phrase — Claude Code recognises these automatically:
-`/autogrind`, `keep working, don't stop`, `autogrind this project`
+`keep working, don't stop`, `autogrind this project`
 
 ### Update
 
