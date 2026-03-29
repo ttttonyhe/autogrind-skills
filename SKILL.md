@@ -185,7 +185,7 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 | Rationalization                             | Reality                                                                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | "I should check in with the user"           | Work. They'll stop you when they need to.                                                                                 |
-| "End of cycle is a natural stop point"      | End of cycle = beginning of next cycle.                                                                                   |
+| "User hasn't responded — maybe they're done" | Silence is not a stop signal. Keep grinding.                                                                              |
 | "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding.                                                                         |
 | "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
