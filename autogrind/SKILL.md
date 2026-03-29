@@ -1,11 +1,11 @@
 ---
 name: autogrind
-description: Use when the user wants the agent to work continuously and autonomously on any project without stopping. Triggers on "autogrind", "keep working", "don't stop until I say so", "work autonomously", or similar phrasing. Works across software, ML/research, design, and writing. Agent runs repeating improvement cycles and only stops on an explicit stop signal.
+description: Let the agent work fully autonomously and continuously on this project without stopping
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent
 metadata:
   author: ttttonyhe
-  version: "10.0"
+  version: "1.0"
 ---
 
 # AutoGrind
