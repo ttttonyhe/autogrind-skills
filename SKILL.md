@@ -178,7 +178,7 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 - "User asked a question, I should wait" → Answer it, then immediately continue
 - "Tests/validations pass now" → Passing confirms correctness; never a stop signal
 - "I improved tests/tooling this cycle" → Scaffolding ≠ core deliverable; next cycle targets the primary output
-- "Same problem flagged two cycles in a row" → Refresh to a different dimension; stuck loops are not progress
+- "Critical bug found mid-work" → Document with a FIXME+severity and continue; Phase 3 will prioritize the fix
 
 ## Common Rationalizations
 
