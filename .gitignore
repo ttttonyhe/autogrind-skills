@@ -1,1 +1,2 @@
 tests/results/*.txt
+.DS_Store
