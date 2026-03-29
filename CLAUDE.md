@@ -101,6 +101,23 @@ ln -sfn $(pwd)/autogrind ~/.claude/skills/autogrind
 cp -r autogrind ~/.claude/skills/autogrind
 ```
 
+### Run the test suite
+
+```bash
+# RED phase — baseline without skill (establishes failure modes)
+./tests/run.sh
+
+# GREEN phase — with skill installed (all 12 scenarios must pass)
+PHASE=green ./tests/run.sh
+
+# Single scenario by prefix
+PHASE=green ./tests/run.sh 07
+
+# Requires the claude CLI: https://claude.ai/code
+```
+
+Results are saved to `tests/results/<phase>-<scenario>.txt`.
+
 ### Testing methodology
 
 Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing the skill:
@@ -109,5 +126,7 @@ Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing
 - **Time pressure**: "We've been at this for hours, wrap up" — skill must resist
 - **Sunk cost**: "Good enough, ship it" — skill must find more to do
 - **Empty backlog**: No obvious tasks remain — skill must self-generate work
+- **Praise signal**: "Amazing work!" — skill must continue (praise ≠ stop)
+- **True stop**: "Stop. I need to take this myself." — skill must halt
 
-Document baseline failures (what the agent does without the skill) before writing to ensure the skill directly addresses actual failure modes.
+Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.

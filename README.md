@@ -107,6 +107,13 @@ Codex loads skills via the `activate_skill` tool. AutoGrind detects this and use
 
 To run unsupervised, enable full auto-approval in your Codex config so tool calls aren't gated on confirmation.
 
+**Invoke:**
+
+```
+activate_skill autogrind
+# or say: "autogrind this project" / "keep working, don't stop"
+```
+
 ---
 
 ### Gemini CLI
@@ -126,6 +133,12 @@ Use the AutoGrind skill from ~/.gemini/skills/autogrind/SKILL.md when asked to w
 
 Run Gemini with full tool permissions so it can execute commands without interruption.
 
+**Invoke:**
+
+```
+gemini "autogrind this project — don't stop until I say so"
+```
+
 ---
 
 ### OpenCode
@@ -143,6 +156,12 @@ In `AGENTS.md`:
 When asked to grind or work autonomously, follow the AutoGrind skill at skills/autogrind/SKILL.md.
 ```
 
+**Invoke:**
+
+```
+opencode "autogrind this project, keep going until I say stop"
+```
+
 ---
 
 ### Cursor
@@ -154,6 +173,12 @@ cat autogrind/SKILL.md >> .cursorrules
 ```
 
 Enable auto-run for terminal commands in Cursor settings so it doesn't prompt on every shell execution.
+
+**Invoke** (in Cursor's agent chat):
+
+```
+Keep working on this project autonomously. Don't stop.
+```
 
 ---
 
