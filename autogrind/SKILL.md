@@ -1,6 +1,11 @@
 ---
 name: autogrind
-description: Let the agent work on this project fully autonomously and continuously without stopping
+description: Use when the user wants the agent to work continuously and autonomously on any project without stopping. Triggers on "autogrind", "keep working", "don't stop until I say so", "work autonomously", or similar phrasing. Works across software, ML/research, design, and writing. Agent runs repeating improvement cycles and only stops on an explicit stop signal.
+license: MIT
+compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent
+metadata:
+  author: ttttonyhe
+  version: "10.0"
 ---
 
 # AutoGrind
@@ -26,12 +31,12 @@ GRIND UNTIL EXPLICIT STOP SIGNAL
 ```dot
 digraph autogrind {
     rankdir=TB;
-    init      [label="INIT (once)\nDetect guidance files\nExtract project goals", shape=box];
-    overview  [label="1. OVERVIEW\nAssess project state", shape=box];
+    init      [label="INIT (once)\nDetect guidance files\nInit Session Heuristics", shape=box];
+    overview  [label="1. OVERVIEW\nAssess state · importance-rate areas", shape=box];
     understand[label="2. UNDERSTAND\nReview relevant work & history", shape=box];
-    plan      [label="3. PLAN\nPrioritized task list", shape=box];
+    plan      [label="3. PLAN\nPrioritized tasks · frontier scan\nsolvability gate", shape=box];
     work      [label="4. WORK\nExecute · validate · persist", shape=box];
-    reflect   [label="5. REFLECT\nSelf-assess · seed next cycle", shape=box];
+    reflect   [label="5. REFLECT\nGrounded signals · pattern check\nheuristic extraction", shape=box];
     pause     [label="PAUSE 60s\nAnnounce · wait · continue", shape=box, style=filled, fillcolor="#ffffcc"];
     check     [label="Explicit stop\nsignal?", shape=diamond];
     done      [label="STOP", shape=doublecircle];
@@ -52,6 +57,7 @@ digraph autogrind {
 - Scan for guidance files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md`
 - Extract: project goals, domain, methodology or tech stack, conventions, known issues
 - If none exist, infer from directory structure, existing artifacts, and project context
+- Initialize **Session Heuristics**: an empty in-context list (max 5) of transferable principles discovered during Reflect phases. Format: `[cycle N] When <condition>, prefer <approach> because <reason>.` Prepend each Overview with a quick read of this list.
 - **Context compaction**: each Overview re-reads project state from scratch, so compaction mid-session does not break the grind loop. If compaction occurs, complete the current phase and proceed normally.
 
 ### Phase 1 - Overview
@@ -61,7 +67,9 @@ Assess current project state. Adapt to domain:
 - **ML/research**: review experiment log or training runs, check latest metrics, scan open questions
 - **Design/writing**: review revision history, open feedback, check revision backlog
 
-Produce a one-paragraph current-state summary before proceeding.
+Produce a one-paragraph current-state summary. For each area assessed, note its **lag from ideal** (high / medium / low) — this directly feeds Plan prioritization.
+
+Read Session Heuristics before proceeding to Understand.
 
 ### Phase 2 - Understand
 
@@ -71,34 +79,46 @@ Produce a one-paragraph current-state summary before proceeding.
 
 ### Phase 3 - Plan
 
-Generate 3–8 prioritized tasks. Priority order applies across all domains:
+Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task to **≤ 4 steps** for reliable execution. Priority order applies across all domains:
 
-1. Broken/failing validations - tests, failed experiments, broken builds
-2. Incomplete core deliverables - features, analyses, missing sections
-3. Quality/coverage gaps - test coverage, experiment coverage, argument gaps
+1. Broken/failing validations — tests, failed experiments, broken builds
+2. Incomplete core deliverables — features, analyses, missing sections
+3. Quality/coverage gaps — test coverage, experiment coverage, argument gaps
 4. Documentation/writeup gaps
 5. Performance/efficiency opportunities
 6. Polish/refinement
+
+**Capability frontier**: after listing priority tasks, scan for 1–2 frontier tasks — novel, achievable work at the edge of current capability that pushes the project forward rather than only patching problems.
+
+**Solvability gate**: before finalizing the list, verify each task is actionable with available tools and access. Drop or defer unresolvable tasks.
 
 Track tasks with the platform's task mechanism (see Platform Notes).
 
 ### Phase 4 - Work
 
 - Execute tasks in priority order
+- Execute **independent tasks concurrently** where the platform supports it
 - Per task: execute → validate (run tests, inspect outputs, check metrics) → persist (commit, save checkpoint, export, log)
-- One logical change per persist - never batch unrelated changes
+- One logical change per persist — never batch unrelated changes
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
 
 ### Phase 5 - Reflect
 
-Answer these two questions first - they override all other priorities:
+**Step 1 — Grounded signals first.** Before any self-assessment, check verifiable evidence:
+- Code: test results, lint/build status, coverage delta
+- ML/research: metric movement vs. last cycle, experiment outcomes
+- Design/writing: reviewer feedback received, revision diff, checklist completion
 
-**Core deliverable check**: Did this cycle directly improve the PRIMARY OUTPUT (the skill, model, paper, design, feature - the thing the project is actually about)? If work was only scaffolding (tests, tooling, CI, evaluators): next cycle **must** include a core-deliverable task.
+These facts anchor the reflection. Do not skip to self-assessment when execution signals are available.
+
+**Step 2 — Answer the two mandatory questions first — they override all other priorities:**
+
+**Core deliverable check**: Did this cycle directly improve the PRIMARY OUTPUT (the skill, model, paper, design, feature)? If work was only scaffolding (tests, tooling, CI): next cycle **must** include a core-deliverable task.
 
 **Self-audit**: Am I fixing real problems or adapting to symptoms? When validations fail, the first question is always: *does the implementation need improvement?* Fixing a validator to pass without fixing what it validates is not progress.
 
-Then review remaining dimensions:
+**Step 3 — Scan remaining dimensions:**
 
 | Dimension | Ask |
 |-----------|-----|
@@ -111,13 +131,17 @@ Then review remaining dimensions:
 | Security | Any obvious attack surfaces? |
 | Work quality | Anything to simplify or clarify? |
 
+**Step 4 — Cross-cycle pattern check.** Compare this cycle's top observations to the previous cycle's. If the same dimension is flagged with the same diagnosis and no progress — this signals a stuck loop. On the next cycle, **Refresh**: deliberately target a different dimension rather than continuing on the stuck one.
+
+**Step 5 — Extract one heuristic.** Distill one transferable principle from this cycle: `When <condition>, prefer <approach> because <reason>.` Add it to Session Heuristics (prepend; keep max 5, drop oldest when full).
+
 End Reflect with: *"Next cycle focus: [area]."*
 
 ### Inter-Cycle Pause
 
 After Reflect, before the next Overview:
 
-1. Print: `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds - send a stop signal now to halt."`
+1. Print: `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — send a stop signal now to halt."`
 2. Wait 60 seconds (`sleep 60` or platform equivalent).
 3. If no stop signal: begin Overview immediately.
 
@@ -129,11 +153,11 @@ This pause is the only planned delay. It is **not** a stopping point.
 
 Recognized: "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
 
-Everything else - silence, task completion, praise, questions, inter-cycle pauses, "looks done" - is **not** a stop signal.
+Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 
-## Red Flags - Continue Immediately
+## Red Flags — Continue Immediately
 
-- "TODO list empty" or "no obvious next task" → Reflect always generates one
+- "TODO list empty" or "no obvious next task" → Capability frontier scan always finds one
 - "Project looks complete" or "everything is working" → Measure it: coverage, perf, docs
 - "Good enough to ship" or "I've been at this a while" → Only the user decides
 - "I'll summarize progress and pause" → Pausing IS stopping
@@ -141,6 +165,7 @@ Everything else - silence, task completion, praise, questions, inter-cycle pause
 - "User asked a question, I should wait" → Answer it, then immediately continue
 - "Tests/validations pass now" → Passing confirms correctness; never a stop signal
 - "I improved tests/tooling this cycle" → Scaffolding ≠ core deliverable; next cycle targets the primary output
+- "Same problem flagged two cycles in a row" → Refresh to a different dimension; stuck loops are not progress
 
 ## Common Rationalizations
 
@@ -149,9 +174,10 @@ Everything else - silence, task completion, praise, questions, inter-cycle pause
 | "I should check in with the user" | Work. They'll stop you when they need to. |
 | "End of cycle is a natural stop point" | End of cycle = beginning of next cycle. |
 | "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding. |
-| "All done here - nothing left to improve" | Run Reflect. There is always a weakest dimension. |
+| "All done here — nothing left to improve" | Run Reflect. There is always a weakest dimension. |
 | "The test/validator was wrong, I fixed it" | First ask: does the *implementation* need improvement? Fixing evaluators to match broken implementations is not progress. |
 | "I improved tests/scaffolding this cycle" | Supporting work only. The core deliverable must also advance each cycle. |
+| "The same issue keeps coming up" | Refresh to a different dimension; stuck loops are not progress. |
 
 ## Platform Notes
 
