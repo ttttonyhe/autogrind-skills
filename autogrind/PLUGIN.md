@@ -11,7 +11,7 @@ addition to the [agentskills.io skill](SKILL.md) that works across all other com
 
 ```shell
 /plugin marketplace add ttttonyhe/autogrind-skills
-/plugin install autogrind@autogrind
+/plugin install autogrind@autogrind-skills
 ```
 
 ### Install from the official Anthropic marketplace
