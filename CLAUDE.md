@@ -12,7 +12,9 @@ The repo root IS the skill package — `SKILL.md` lives at the root to satisfy t
 
 ## Plugin Structure
 
-The repo root serves three distribution formats simultaneously:
+The repo root stays skill-first, but Codex marketplace discovery points at a dedicated plugin
+bundle under `plugins/autogrind/`. This keeps the repository centered on the raw skill while
+matching the `./plugins/<name>` layout used by Codex's built-in marketplaces.
 
 ```
 autogrind-skills/           (repo root = skill root)
@@ -20,10 +22,17 @@ autogrind-skills/           (repo root = skill root)
 ├── .claude-plugin/
 │   ├── plugin.json                 # Claude Code plugin manifest
 │   └── marketplace.json            # Claude Code marketplace catalog
-├── .codex-plugin/plugin.json       # Codex plugin manifest
-├── .agents/plugins/marketplace.json # Codex repo marketplace catalog
+├── .agents/plugins/marketplace.json # Codex repo marketplace catalog -> plugins/autogrind
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
 ├── commands/autogrind.md           # /autogrind slash command
+├── scripts/
+│   └── install-codex-plugin.sh     # personal Codex installer
+├── plugins/
+│   └── autogrind/
+│       ├── .codex-plugin/plugin.json
+│       ├── skills/autogrind/SKILL.md
+│       ├── commands/autogrind.md
+│       └── assets/
 └── PLUGIN.md                       # plugin installation guide
 ```
 
@@ -31,16 +40,16 @@ Both native plugins are complements to the core skill package. Do not restructur
 
 ### SKILL.md sync rule
 
-`SKILL.md` and `skills/autogrind/SKILL.md` must always be identical.
-A pre-commit hook (`.git/hooks/pre-commit`) enforces this — it blocks commits where the
-files diverge. When editing the skill, update both files before committing.
+`SKILL.md`, `skills/autogrind/SKILL.md`, and `plugins/autogrind/skills/autogrind/SKILL.md`
+must always be identical. The pre-commit hook (`.git/hooks/pre-commit`) also enforces sync
+between the root and marketplace copies of `commands/autogrind.md`.
 
 ### Version bumping
 
 When making significant skill changes, bump `metadata.version` in `SKILL.md`
-(and therefore in `skills/autogrind/SKILL.md`) **and** bump `"version"` in
-both `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
-All four must stay in sync.
+(and therefore in both copied skill files) **and** bump `"version"` in
+`.claude-plugin/plugin.json` and `plugins/autogrind/.codex-plugin/plugin.json`.
+All five must stay in sync.
 
 ### SKILL.md Frontmatter
 

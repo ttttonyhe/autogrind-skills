@@ -78,7 +78,13 @@ claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin instal
 
 ### Codex
 
-推荐使用原生插件：在 Codex 中打开本仓库，运行 `/plugins`，然后从仓库内置 marketplace 安装 `autogrind`。完整说明见 [PLUGIN.md](PLUGIN.md)。
+推荐的原生插件安装方式：先运行下面这段命令，把 AutoGrind 安装到你自己的 Codex marketplace，这样所有仓库都能看到它：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/scripts/install-codex-plugin.sh)
+```
+
+运行完后，在 Codex 里打开 `plugins`，然后从你的 personal marketplace 安装 `autogrind`。如果你只是想在当前源码仓库里测试，也仍然可以直接从本仓库安装；完整说明见 [PLUGIN.md](PLUGIN.md)。
 
 如果你只是想直接安装原始技能，或做本地技能开发/测试，也可以继续使用下面的方式：
 

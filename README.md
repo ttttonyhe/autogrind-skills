@@ -78,7 +78,13 @@ claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin instal
 
 ### Codex
 
-Preferred native plugin path: open this repo in Codex, run `/plugins`, and install `autogrind` from the repo marketplace. Full instructions: [PLUGIN.md](PLUGIN.md).
+Preferred native plugin path: run this once to install AutoGrind into your personal Codex marketplace so it is available in every repo:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/scripts/install-codex-plugin.sh)
+```
+
+Then open `plugins` in Codex and install `autogrind` from your personal marketplace. Repo-local install from this source repository still works; full instructions are in [PLUGIN.md](PLUGIN.md).
 
 For direct skill install or local authoring/testing, the raw skill still works:
 

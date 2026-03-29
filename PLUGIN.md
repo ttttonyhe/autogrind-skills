@@ -40,22 +40,28 @@ Run `/reload-plugins` in an active session after install or update if the new pl
 
 ## Codex
 
-### One-click install from this repo
+### Default personal install
+
+Run this once to make AutoGrind available in Codex across all repositories:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/scripts/install-codex-plugin.sh)
+```
+
+After running it, open `plugins` in Codex once and install `autogrind` from your personal marketplace.
+
+### Repo-local install from this repo
 
 1. Open this repository in Codex.
 2. Open `plugins`.
-3. Install `autogrind` from the repo marketplace shipped in [`.agents/plugins/marketplace.json`](../.agents/plugins/marketplace.json).
+3. Install `autogrind` from the repo marketplace shipped in [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json).
 
 ### Invoke
 
 Use a natural trigger phrase such as `autogrind this project`, `keep working, don't stop`, or `continue improving until I say stop`.
 
-### Personal install outside this repo
-
-If you want AutoGrind to appear in Codex across other repositories, clone this repo into a personal plugin location and add an equivalent entry to `~/.agents/plugins/marketplace.json`, following the official Codex plugin marketplace format.
-
 ---
 
 ## Raw Skill Install
 
-If you do not want either native plugin, the core skill still works directly through the usual skills directories documented in the repository [README](../README.md).
+If you do not want either native plugin, the core skill still works directly through the usual skills directories documented in the repository [README](./README.md).
