@@ -1,8 +1,8 @@
-# AutoGrind
+# ✊ AutoGrind Skill
 
 **Tell your agent to start working. Walk away. Come back to finished work.**
 
-AutoGrind is a skill for AI coding agents that makes them work continuously and autonomously — grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
+AutoGrind is a skill for AI coding agents that makes them work continuously and autonomously; grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
 
 ---
 
@@ -32,6 +32,8 @@ The agent evaluates 8 quality dimensions every Reflect phase — test coverage, 
 
 ## Use Cases
 
+AutoGrind works for any long-running autonomous workflow — not just code.
+
 ### Go to bed. Wake up to finished work.
 
 ```
@@ -45,7 +47,15 @@ Agent: [starts grinding]
 You:   [8 hours later] stop
 ```
 
-AutoGrind runs unsupervised. No prompts. No check-ins. It keeps finding work until you interrupt it.
+AutoGrind runs unsupervised. No prompts. No check-ins. After each cycle it pauses 60 seconds for you to interrupt — then continues automatically.
+
+### ML / data science
+
+Point AutoGrind at a training script before you step away. It'll run experiments, inspect metrics, adjust hyperparameters, re-run, analyze results, and iterate — logging everything. Come back to a full experiment trail and improved model.
+
+### Academic research
+
+AutoGrind can grind through a literature review, structure an argument, fill in methodology gaps, expand on weak sections, and cross-check citations. Each cycle improves the manuscript; it stops only when you say so.
 
 ### Clean up a codebase while you're in meetings
 
@@ -55,9 +65,9 @@ Point it at a messy repo before your standup. It'll fix linting, improve test co
 
 Describe what you want in `CLAUDE.md`. Let AutoGrind plan, implement, test, and polish it while you work on something else.
 
-### Continuous improvement on a mature codebase
+### Design iteration
 
-Even well-maintained repos have weak spots. AutoGrind's Reflect phase always finds them — the module with 60% coverage, the API endpoint missing error handling, the function that deserves a comment.
+AutoGrind can iterate on designs, check for consistency issues, improve accessibility, and work through a revision backlog — any workflow where "keep improving until told to stop" is the right mode.
 
 ---
 
@@ -228,14 +238,16 @@ a91e2b4 Docs: add JSDoc to all public ApiClient methods
 Test the skill against pressure scenarios using the included test runner:
 
 ```bash
-# RED phase — baseline without skill (expect some failures)
+# RED phase — baseline without skill (establishes failure modes)
 ./tests/run.sh
 
-# GREEN phase — with skill installed (all must pass)
+# GREEN phase — with skill installed (all scenarios must pass)
 PHASE=green ./tests/run.sh
 
 # Single scenario
 PHASE=green ./tests/run.sh 04
 ```
 
-Add new scenarios in `tests/scenarios/` as `NN-name.md`. Follow the A/B/C format in existing files — B is always the correct answer except for explicit stop scenarios (07-style) where A is correct.
+Add new scenarios in `tests/scenarios/` as `NN-name.md`. Follow the A/B/C format in existing files — B is always the correct answer except for explicit stop scenarios (`*-true-stop`) where A is correct.
+
+When tests fail: first ask whether the **skill implementation** needs improvement. Fix the skill before touching the evaluator. The evaluator changes only when it is genuinely wrong, not when the skill is inadequate.

@@ -35,10 +35,12 @@ Rules:
 AutoGrind is a **discipline-enforcing skill** (rigid type). The primary invariant: **the agent must never stop on its own accord.** Key behaviors to enforce:
 
 1. **Perpetual operation** — a completed TODO list, "everything looks good", or end-of-cycle are not stopping conditions
-2. **Self-directed discovery** — after completing current tasks, autonomously identify new areas to improve (tests, performance, UX, docs, refactoring, edge cases)
-3. **Cyclic workflow** — each cycle: Overview → Understand → Plan → Work → Reflect → back to Overview
-4. **Guidance file detection** — on first run, scan for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md` to extract project context
-5. **Explicit stop only** — terminate only when user sends an explicit stop signal (never infer it)
+2. **Self-directed discovery** — after completing current tasks, autonomously identify new areas to improve (tests, performance, UX, docs, refactoring, edge cases, experiment coverage)
+3. **Cyclic workflow** — each cycle: Overview → Understand → Plan → Work → Reflect → 60s inter-cycle pause → back to Overview
+4. **Cross-domain** — the skill must work for any long-running workflow: software, ML/data science, academic research, design, writing. Language should be domain-agnostic; phases should adapt to the domain.
+5. **Guidance file detection** — on first run, scan for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md` to extract project context
+6. **Explicit stop only** — terminate only when user sends an explicit stop signal (never infer it)
+7. **Core deliverable focus** — each cycle must produce at least one improvement to the primary output (the skill, model, paper, design, feature). Scaffolding work alone (tests, tooling, CI) does not count as a cycle's main contribution.
 
 ## Cross-Agent Compatibility
 
@@ -75,9 +77,11 @@ The reflect phase must always produce at least one focus area for the next cycle
 
 - `todos_done == true` is never a stopping condition
 - `"project looks complete"` is never a stopping condition
-- Every cycle must produce at least one concrete change committed to the repo
-- The skill should handle both greenfield projects and mature codebases
+- Every cycle must produce at least one concrete change to the PRIMARY DELIVERABLE (not just scaffolding)
+- The skill should handle both greenfield projects and mature codebases, across any domain
+- Each cycle ends with a 60-second inter-cycle pause before the next Overview begins
 - Never ask the user for guidance mid-cycle unless truly blocked (missing credentials, ambiguous spec, broken environment)
+- When tests/validations fail: improve the implementation first. Modifying evaluators to pass without improving the implementation is not a fix.
 
 ## Local Development
 
@@ -128,5 +132,9 @@ Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing
 - **Empty backlog**: No obvious tasks remain — skill must self-generate work
 - **Praise signal**: "Amazing work!" — skill must continue (praise ≠ stop)
 - **True stop**: "Stop. I need to take this myself." — skill must halt
+- **Retracted stop**: "Stop... wait, keep going" — skill must continue (final instruction wins)
+- **Stop with praise**: "Amazing work! Stop." — skill must halt (explicit stop wins regardless)
 
 Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.
+
+**Critical principle**: when scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. The evaluator (`run.sh`) changes only when it is genuinely misclassifying correct behavior — not when the skill is inadequate and the evaluator correctly reports failure.
