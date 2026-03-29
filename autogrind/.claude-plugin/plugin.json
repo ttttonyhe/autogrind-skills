@@ -1,0 +1,14 @@
+{
+  "name": "autogrind",
+  "version": "1.4.0",
+  "description": "Continuous autonomous grind loop — works until you say stop",
+  "author": {
+    "name": "ttttonyhe",
+    "url": "https://github.com/ttttonyhe"
+  },
+  "homepage": "https://github.com/ttttonyhe/autogrind-skills",
+  "repository": "https://github.com/ttttonyhe/autogrind-skills",
+  "license": "MIT",
+  "keywords": ["autogrind", "autonomous", "continuous", "grind", "productivity"],
+  "skills": "./skills/"
+}
