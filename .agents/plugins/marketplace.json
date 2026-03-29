@@ -1,15 +1,14 @@
 {
-  "name": "autogrind",
+  "name": "autogrind-skills",
   "interface": {
-    "displayName": "AutoGrind"
+    "displayName": "AutoGrind Skills"
   },
   "plugins": [
     {
       "name": "autogrind",
       "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/ttttonyhe/autogrind-skills.git",
-        "path": "autogrind"
+        "source": "local",
+        "path": "./autogrind"
       },
       "policy": {
         "installation": "AVAILABLE",

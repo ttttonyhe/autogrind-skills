@@ -60,15 +60,18 @@ claude plugin validate ./autogrind
 
 ### Install from this repo
 
-Copy the marketplace catalog to your local Codex plugins directory:
+Codex uses `local` source paths, so you need the plugin files on disk alongside the marketplace catalog:
 
 ```bash
 mkdir -p ~/.agents/plugins
-curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/.agents/plugins/marketplace.json \
-  -o ~/.agents/plugins/marketplace.json
+# Copy the plugin
+git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git /tmp/autogrind-skills
+cp -r /tmp/autogrind-skills/autogrind ~/.agents/plugins/autogrind
+# Install the marketplace catalog (points to ./autogrind relative to ~/.agents/plugins/)
+cp /tmp/autogrind-skills/.agents/plugins/marketplace.json ~/.agents/plugins/marketplace.json
 ```
 
-Then install through Codex's plugin interface.
+Restart Codex. The AutoGrind plugin will appear in the plugin directory, ready to install.
 
 ### Official Plugin Directory
 
