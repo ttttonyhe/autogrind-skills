@@ -56,7 +56,7 @@ All five must stay in sync.
 name: autogrind
 description: Use when [triggering conditions - no workflow summary]
 license: MIT
-compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent
+compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
   author: ttttonyhe
   version: "1.x"
