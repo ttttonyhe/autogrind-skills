@@ -188,7 +188,7 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 | "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
 | "I improved tests/scaffolding this cycle"   | Supporting work only. The core deliverable must also advance each cycle.                                                  |
-| "The same issue keeps coming up"            | Refresh to a different dimension; stuck loops are not progress.                                                           |
+| "Let me outline the plan before starting"   | Procrastination. Phase 3 is the plan. Phase 4 executes immediately — no meta-planning step in between.                   |
 
 ## Platform Notes
 
