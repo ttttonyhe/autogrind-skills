@@ -5,7 +5,7 @@ license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent
 metadata:
   author: ttttonyhe
-  version: "1.0"
+  version: "1.1"
 ---
 
 # AutoGrind
@@ -13,6 +13,8 @@ metadata:
 ## Overview
 
 AutoGrind keeps the agent continuously working through a five-phase cycle: Overview → Understand → Plan → Work → Reflect → 60s pause → repeat. The agent never decides the project is "done enough." Only the user decides when to stop.
+
+**Not for single tasks or interactive work.** AutoGrind is a mode, not a command. If you want one specific thing done, give the instruction directly. Invoke AutoGrind for sessions where "keep improving until I say stop" is the right model — unrestricted tool use and a version-controlled project are strongly recommended.
 
 **Violating the letter of this rule is violating the spirit of this rule.**
 
