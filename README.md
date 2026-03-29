@@ -255,7 +255,7 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/
 
 </details>
 
-### Optional Native Plugins
+### Install via Plugins
 
 If you prefer native plugin UX on Claude Code or Codex, use the install paths in [PLUGIN.md](PLUGIN.md). Both native plugins wrap the same `autogrind` skill instead of replacing it.
 
