@@ -1,3 +1,4 @@
 tests/results/*.txt
 .DS_Store
 docs/
+.claude/
