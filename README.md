@@ -1,12 +1,14 @@
 ![autogrind-banner](https://static.ouorz.com/autogrind-banner-4.png)
 
+[English](README.md) | [简体中文](README.zh.md)
+
 **Tell your agent to start working. Walk away. Come back to finished work.**
 
 AutoGrind is a skill for AI coding agents that makes them work *continuously and autonomously*, grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
-Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent.
+Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent.
 
 ---
 
@@ -24,12 +26,6 @@ Then invoke it:
 
 ```
 /autogrind
-```
-
-Or in Simplified Chinese (普通话支持):
-
-```
-自己动
 ```
 
 Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
@@ -122,6 +118,70 @@ cp -r autogrind ~/.cursor/skills/autogrind
 Enable auto-run for terminal commands in Cursor settings.
 
 **Invoke:** `"Keep working on this project autonomously. Don't stop."`
+
+---
+
+### Windsurf
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this project, don't stop"`
+
+---
+
+### Roocode
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"Keep working, don't stop"`
+
+---
+
+### GitHub Copilot
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+Pair with a `.github/copilot-instructions.md` file to give Copilot project context.
+
+**Invoke:** `"autogrind mode — keep working autonomously"`
+
+---
+
+### Goose
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this project, keep going"`
+
+---
+
+### AmpCode
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this, don't stop"`
+
+---
+
+### Kilo / Kiro / Factory / NousResearch
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+All support the agentskills.io universal path. Install once, invoke directly.
+
+**Invoke:** `"Keep working on this project. Don't stop."` or `"autogrind"`
 
 </details>
 

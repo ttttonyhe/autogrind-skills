@@ -1,0 +1,321 @@
+![autogrind-banner](https://static.ouorz.com/autogrind-banner-4.png)
+
+[English](README.md) | [简体中文](README.zh.md)
+
+**告诉你的 AI 智能体开始工作，然后放手。回来时，工作已经完成。**
+
+AutoGrind 是一个专为 AI 编程智能体设计的技能，让它们**持续自主地**工作——不断修复问题、改进代码、完善测试、精细打磨，循环往复，直到**你**说停止为止。没有打扰，没有"要继续吗？"，没有因为 TODO 列表看起来清空了就停下来。
+
+适用于任何长时间运行的工作流：代码开发、机器学习、学术研究、设计、写作。
+
+兼容 [Agent Skills](https://agentskills.io) 开放标准；适用于 Claude Code、Codex、Gemini CLI、OpenCode、Cursor 及所有兼容智能体。
+
+---
+
+## 安装
+
+将以下内容粘贴到任意智能体对话框中：
+
+```
+请从 https://github.com/ttttonyhe/autogrind-skills 安装 AutoGrind 技能。
+克隆仓库，将 autogrind/ 技能安装到我的智能体环境对应的位置，
+并确认已准备就绪。
+```
+
+然后调用：
+
+```
+/自己动
+```
+
+建议开启不受限制的工具权限，这样 AutoGrind 才能在无需逐次确认的情况下执行命令、读取文件并提交代码。例如：
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+如果不开启，AutoGrind 会在每次工具调用时暂停等待确认，失去自主运行的意义。
+
+<details>
+<summary>手动安装（Claude Code、Codex、Gemini CLI、OpenCode、Cursor 等）</summary>
+
+### 通用安装（所有智能体）
+
+所有兼容 agentskills.io 的智能体都会自动从 `~/.agents/skills/` 目录发现技能。安装一次，所有智能体通用：
+
+```bash
+git clone https://github.com/ttttonyhe/autogrind-skills.git
+cd autogrind-skills
+
+# 符号链接（实时同步仓库更新）
+ln -sfn "$(pwd)/autogrind" ~/.agents/skills/autogrind
+
+# 或复制安装（稳定版本）
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+---
+
+### Claude Code
+
+```bash
+# 符号链接（实时同步仓库更新）
+ln -sfn "$(pwd)/autogrind" ~/.claude/skills/autogrind
+
+# 或复制安装
+cp -r autogrind ~/.claude/skills/autogrind
+```
+
+**调用方式：** `/自己动` 或 `/autogrind` 或"持续工作，不要停"
+
+---
+
+### Codex
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+Codex 会自动发现技能。在 Codex 配置中开启完全自动审批，避免工具调用被拦截确认。
+
+**调用方式：** `activate_skill autogrind` 或 `"自主运行这个项目"`
+
+---
+
+### Gemini CLI
+
+```bash
+cp -r autogrind ~/.gemini/skills/autogrind
+# 或使用通用路径：~/.agents/skills/autogrind
+```
+
+Gemini CLI 会自动从 `~/.gemini/skills/` 目录发现技能，无需手动配置 GEMINI.md。本地开发可使用 `gemini skills link` 创建符号链接。
+
+**调用方式：** `gemini "自主运行这个项目，不要停"`
+
+---
+
+### OpenCode
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+# 或：~/.claude/skills/autogrind（OpenCode 两个路径都会检查）
+```
+
+OpenCode 自动发现技能，无需手动配置 AGENTS.md。
+
+**调用方式：** `opencode "自主运行这个项目，持续工作直到我说停"`
+
+---
+
+### Cursor
+
+```bash
+cp -r autogrind ~/.cursor/skills/autogrind
+# 或使用通用路径：~/.agents/skills/autogrind
+```
+
+在 Cursor 设置中开启终端命令自动运行。
+
+**调用方式：** `"自主地持续改进这个项目，不要停下来。"`
+
+---
+
+### Windsurf
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**调用方式：** `"autogrind 这个项目，不要停"`
+
+---
+
+### Roocode / VS Code
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**调用方式：** `"持续工作，不要停"`
+
+---
+
+### GitHub Copilot
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+在 `.github/copilot-instructions.md` 中加入项目上下文，配合 AutoGrind 效果更佳。
+
+**调用方式：** `"autogrind 模式，持续工作"`
+
+---
+
+### Goose
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**调用方式：** `"autogrind 这个项目，持续运行"`
+
+---
+
+### AmpCode / Kilo / Kiro / Factory
+
+```bash
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+以上智能体均支持 agentskills.io 通用路径，安装后直接调用即可。
+
+**调用方式：** `"持续工作，不要停"` 或 `"autogrind 模式"`
+
+</details>
+
+---
+
+## 更新
+
+将以下内容粘贴到任意智能体对话框中：
+
+```
+请将 AutoGrind 技能更新到 https://github.com/ttttonyhe/autogrind-skills 的最新版本。
+```
+
+或手动更新：
+
+```bash
+# 如果是符号链接安装——无需任何操作，仓库变更会实时生效。
+
+# 如果是复制安装，重新执行安装命令：
+cp -r autogrind ~/.claude/skills/autogrind    # Claude Code
+cp -r autogrind ~/.agents/skills/autogrind    # 通用 / Codex / Gemini / OpenCode / Cursor
+```
+
+---
+
+## 磨砺循环
+
+```mermaid
+flowchart TD
+    INIT["初始化（一次）\n检测引导文件\n提取目标与约定"]
+    OV["1. 概览\n评估项目当前状态"]
+    UN["2. 理解\n回顾相关工作与历史"]
+    PL["3. 规划\n优先级任务 + 前沿探索"]
+    WK["4. 执行\n实施、验证、持久化"]
+    RF["5. 反思\n可验证信号 + 启发提取"]
+    PA["暂停 60 秒\n公告、等待、继续"]
+    ST{"收到明确\n停止信号？"}
+    STOP(["停止"])
+    NEVER["绝不自行停止"]
+
+    INIT --> OV --> UN --> PL --> WK --> RF --> PA --> ST
+    ST -->|是| STOP
+    ST -->|否，始终| OV
+    ST -.->|想要停止| NEVER
+```
+
+每个反思阶段：先检查可验证信号（测试结果、指标、构建状态），评估核心交付物进展，扫描质量维度（覆盖率、错误处理、文档、性能、用户体验、可观测性、安全性），检测卡死循环并转移焦点，为下一循环提炼可复用的启发原则。永远有最薄弱的一环。
+
+每个循环结束后，AutoGrind 会暂停 60 秒，让你有机会中断。如果你什么都不做，它会自动继续。
+
+---
+
+## 常见问题
+
+**它什么时候停止？如果我的项目已经完成了怎么办？**
+
+AutoGrind 只在你明确告知时停止："停"、"停止"、"暂停"、"够了"、"结束"，或任何清晰的终止指令。它绝不会自行停止。
+
+如果你的项目感觉已经完成，AutoGrind 会继续寻找下一个改进点：覆盖率缺口、缺失的文档、性能优化空间、边缘情况处理、代码打磨。反思阶段会对照质量维度清单进行评估，总能找到可改进的地方。当**你**满意时，说"停止"即可。
+
+**它会执行破坏性命令吗？我会不会回来发现系统被搞坏了？**
+
+AutoGrind 优先执行可逆的、有版本追踪的变更。每次代码变更都会提交到 git，你有完整的撤销记录。它不会主动执行破坏性操作（如 `rm -rf`、强制推送、`DROP TABLE`）。
+
+即便如此，AutoGrind 仍会自主执行代码、编辑文件、提交变更。建议的防护措施：
+
+- 从干净的 git 工作区开始，确保所有变更都有追踪记录，方便后续审查
+- 回来后先执行 `git log`，再部署任何内容
+- 对于敏感环境，使用智能体的权限控制来限制可执行的命令
+
+**上下文压缩会影响 AutoGrind 吗？**
+
+不会。每个循环的概览阶段都会从头重新读取项目状态：git 历史、测试输出、文件结构、开放问题。AutoGrind 不依赖于对前几个循环的记忆。包含多次上下文压缩的长会话可以正常运行。
+
+---
+
+## 使用场景
+
+**去睡觉。醒来时工作已经完成。**
+
+```
+你：   自己动，我去睡觉了
+智能体：[开始持续工作]
+       循环 1 - 修复了损坏的导入，新增 12 个测试
+       循环 2 - 为所有导出函数添加文档
+       循环 3 - 减少 40% 的数据库查询次数
+       循环 4 - 添加输入验证，补充边缘情况测试
+       ...
+你：   [8 小时后] 停
+```
+
+**机器学习 / 数据科学** — 指向训练脚本。它运行实验、查看指标、调整超参数、重新运行、持续迭代。回来时你会看到完整的实验记录和更优的模型。
+
+**学术研究** — 深入文献综述、填补方法论空白、扩充薄弱章节、交叉核对引用。每个循环都在改进手稿。
+
+**代码库清理** — 指向混乱的代码仓库。它修复 lint 问题、提升覆盖率、补充文档缺口、重构最差的部分，按优先级排序，每次提交都有意义。
+
+**设计迭代** — 处理修改积压：一致性检查、无障碍改进、文案修改、间距修正。任何"持续改进直到被叫停"的工作流都适用。
+
+---
+
+## 提交内容
+
+AutoGrind 在每次逻辑变更后提交，附有有意义的提交信息。回来时，`git log` 讲述完整的故事。
+
+```
+$ git log --oneline
+f3a1b2c 减少 UserRepository.findByOrg() 的 N+1 查询
+e8d4c91 测试：覆盖 AuthService.refreshToken() 的空值和过期情况
+b7a3f52 修复：SessionManager.cleanup() 中的空指针解引用
+a91e2b4 文档：为所有公共 ApiClient 方法添加 JSDoc
+9c4d718 重构：将重试逻辑从 ApiClient 提取到 RetryHandler
+8b2f1e7 测试：为 /auth/refresh 端点添加集成测试
+```
+
+---
+
+## 工作方向来源
+
+首次运行时，AutoGrind 按顺序扫描引导文件：
+
+1. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` / `.cursorrules`
+2. `opencode.md`
+3. `README.md`
+
+它会提取你的项目目标、技术栈、约定和已知问题。如果以上文件都不存在，则从目录结构、包文件和测试输出中推断。
+
+写一个 `CLAUDE.md`（或相应的引导文件）描述重要的内容，AutoGrind 会遵守它。
+
+---
+
+## 开发
+
+```bash
+# RED 阶段 - 无技能基线（建立失败模式）
+./tests/run.sh
+
+# GREEN 阶段 - 安装技能后（所有场景必须通过）
+PHASE=green ./tests/run.sh
+
+# 单个场景
+PHASE=green ./tests/run.sh 04
+```
+
+在 `tests/scenarios/` 中按 `NN-name.md` 格式添加新场景。遵循现有文件中的 A/B/C 格式：B 始终是正确答案，明确停止场景（`*-true-stop`）除外，其中 A 是正确答案。
+
+场景失败时：首先考虑技能实现是否需要改进。先修复技能，再修改评估器。评估器只在真正错误分类正确行为时才做修改。
