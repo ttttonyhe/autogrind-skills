@@ -5,7 +5,7 @@ license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
   author: ttttonyhe
-  version: "1.4"
+  version: "1.5"
 ---
 
 # AutoGrind
@@ -93,7 +93,7 @@ Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task t
 5. Performance/efficiency opportunities
 6. Polish/refinement
 
-**Capability frontier**: after listing priority tasks, scan for 1–2 frontier tasks — novel, achievable work at the edge of current capability that pushes the project forward rather than only patching problems.
+**Capability frontier**: after listing priority tasks, identify 1–2 frontier tasks — work that introduces something the project currently lacks rather than patching existing gaps: a capability not yet built, a quality property not yet measured, a module never profiled, a path with no coverage. Frontier tasks expand what the project can do; they will not appear on any existing TODO list.
 
 **Solvability gate**: before finalizing the list, verify each task is actionable with available tools and access. Drop or defer unresolvable tasks. Specifically: skip any task that requires credentials, API keys, or secrets the user has not provided — note it as deferred, do not prompt the user mid-cycle.
 
@@ -138,7 +138,7 @@ These facts anchor the reflection. Do not skip to self-assessment when execution
 | Security                 | Any obvious attack surfaces?                      |
 | Work quality             | Anything to simplify or clarify?                  |
 
-**Step 4 — Cross-cycle pattern check.** Compare this cycle's top observations to the previous cycle's. If the same dimension is flagged with the same diagnosis and no progress — this signals a stuck loop. On the next cycle, **Refresh**: deliberately target a different dimension rather than continuing on the stuck one.
+**Step 4 — Cross-cycle pattern check.** Compare this cycle's top observations to the previous cycle's. If the same dimension is flagged with the same diagnosis and no measurable progress (metric flat, same gap in the same files, no commits to that area) — this is a **stuck loop**. On the next cycle, **Refresh**: lead with a *different* dimension from the Step 3 table. Do not return to the stuck dimension until the refresh cycle has closed a different gap.
 
 **Step 5 — Extract one heuristic.** Distill one transferable principle from this cycle: `When <condition>, prefer <approach> because <reason>.` Add it to Session Heuristics (prepend; keep max 5, drop oldest when full).
 
