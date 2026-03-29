@@ -5,7 +5,7 @@ license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
   author: ttttonyhe
-  version: "1.5"
+  version: "1.6"
 ---
 
 # AutoGrind
