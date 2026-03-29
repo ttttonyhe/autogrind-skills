@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: Use when the user wants the agent to work autonomously and continuously on any project without stopping — grinding through improvements in coding, research, data science, design, writing, or any long-running workflow in repeating cycles until explicitly told to stop. Triggered by "keep working", "don't stop", "grind on this", "work autonomously", or "keep going until I say stop".
+description: Use when the user wants the agent to work autonomously and continuously on any project without stopping - grinding through improvements in coding, research, data science, design, writing, or any long-running workflow in repeating cycles until explicitly told to stop. Triggered by "keep working", "don't stop", "grind on this", "work autonomously", or "keep going until I say stop".
 ---
 
 # AutoGrind
@@ -40,20 +40,21 @@ digraph autogrind {
     init -> overview;
     overview -> understand -> plan -> work -> reflect -> pause -> check;
     check -> done      [label="yes"];
-    check -> overview  [label="no — always"];
+    check -> overview  [label="no - always"];
     check -> warn      [label="tempted\nto stop"];
 }
 ```
 
 ## Workflow
 
-### INIT — once per session
+### INIT - once per session
 
 - Scan for guidance files: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md`
 - Extract: project goals, domain, methodology or tech stack, conventions, known issues
 - If none exist, infer from directory structure, existing artifacts, and project context
+- **Context compaction**: each Overview re-reads project state from scratch, so compaction mid-session does not break the grind loop. If compaction occurs, complete the current phase and proceed normally.
 
-### Phase 1 — Overview
+### Phase 1 - Overview
 
 Assess current project state. Adapt to domain:
 - **Code**: `git log --oneline -20`, `git status`, run test suite, scan `TODO`/`FIXME`
@@ -62,38 +63,38 @@ Assess current project state. Adapt to domain:
 
 Produce a one-paragraph current-state summary before proceeding.
 
-### Phase 2 — Understand
+### Phase 2 - Understand
 
 - Review artifacts most relevant to this cycle's focus (code, data, papers, designs, drafts)
 - Review recent changes; identify failing validations, open questions, broken areas
 - Do not start planning until understanding is solid
 
-### Phase 3 — Plan
+### Phase 3 - Plan
 
 Generate 3–8 prioritized tasks. Priority order applies across all domains:
 
-1. Broken/failing validations — tests, failed experiments, broken builds
-2. Incomplete core deliverables — features, analyses, missing sections
-3. Quality/coverage gaps — test coverage, experiment coverage, argument gaps
+1. Broken/failing validations - tests, failed experiments, broken builds
+2. Incomplete core deliverables - features, analyses, missing sections
+3. Quality/coverage gaps - test coverage, experiment coverage, argument gaps
 4. Documentation/writeup gaps
 5. Performance/efficiency opportunities
 6. Polish/refinement
 
 Track tasks with the platform's task mechanism (see Platform Notes).
 
-### Phase 4 — Work
+### Phase 4 - Work
 
 - Execute tasks in priority order
 - Per task: execute → validate (run tests, inspect outputs, check metrics) → persist (commit, save checkpoint, export, log)
-- One logical change per persist — never batch unrelated changes
+- One logical change per persist - never batch unrelated changes
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
 
-### Phase 5 — Reflect
+### Phase 5 - Reflect
 
-Answer these two questions first — they override all other priorities:
+Answer these two questions first - they override all other priorities:
 
-**Core deliverable check**: Did this cycle directly improve the PRIMARY OUTPUT (the skill, model, paper, design, feature — the thing the project is actually about)? If work was only scaffolding (tests, tooling, CI, evaluators): next cycle **must** include a core-deliverable task.
+**Core deliverable check**: Did this cycle directly improve the PRIMARY OUTPUT (the skill, model, paper, design, feature - the thing the project is actually about)? If work was only scaffolding (tests, tooling, CI, evaluators): next cycle **must** include a core-deliverable task.
 
 **Self-audit**: Am I fixing real problems or adapting to symptoms? When validations fail, the first question is always: *does the implementation need improvement?* Fixing a validator to pass without fixing what it validates is not progress.
 
@@ -116,7 +117,7 @@ End Reflect with: *"Next cycle focus: [area]."*
 
 After Reflect, before the next Overview:
 
-1. Print: `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — send a stop signal now to halt."`
+1. Print: `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds - send a stop signal now to halt."`
 2. Wait 60 seconds (`sleep 60` or platform equivalent).
 3. If no stop signal: begin Overview immediately.
 
@@ -128,9 +129,9 @@ This pause is the only planned delay. It is **not** a stopping point.
 
 Recognized: "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
 
-Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
+Everything else - silence, task completion, praise, questions, inter-cycle pauses, "looks done" - is **not** a stop signal.
 
-## Red Flags — Continue Immediately
+## Red Flags - Continue Immediately
 
 - "TODO list empty" or "no obvious next task" → Reflect always generates one
 - "Project looks complete" or "everything is working" → Measure it: coverage, perf, docs
@@ -148,7 +149,7 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 | "I should check in with the user" | Work. They'll stop you when they need to. |
 | "End of cycle is a natural stop point" | End of cycle = beginning of next cycle. |
 | "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding. |
-| "All done here — nothing left to improve" | Run Reflect. There is always a weakest dimension. |
+| "All done here - nothing left to improve" | Run Reflect. There is always a weakest dimension. |
 | "The test/validator was wrong, I fixed it" | First ask: does the *implementation* need improvement? Fixing evaluators to match broken implementations is not progress. |
 | "I improved tests/scaffolding this cycle" | Supporting work only. The core deliverable must also advance each cycle. |
 

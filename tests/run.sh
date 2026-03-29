@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AutoGrind skill test runner — RED/GREEN phases
+# AutoGrind skill test runner - RED/GREEN phases
 # Usage:
 #   ./tests/run.sh           # run all scenarios
 #   ./tests/run.sh 01        # run single scenario by prefix
@@ -11,8 +11,8 @@ set -euo pipefail
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   echo "Usage: [PHASE=red|green] ./tests/run.sh [scenario-filter]"
   echo ""
-  echo "  PHASE=red   (default) run without skill — establishes baseline failure modes"
-  echo "  PHASE=green           run with skill installed — all scenarios must pass"
+  echo "  PHASE=red   (default) run without skill - establishes baseline failure modes"
+  echo "  PHASE=green           run with skill installed - all scenarios must pass"
   echo ""
   echo "  scenario-filter       optional prefix, e.g. '01' or '07-true-stop'"
   echo ""
@@ -42,7 +42,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 # ---------------------------------------------------------------------------
 install_skill() {
   if [[ -L "$SKILL_DEST" || -d "$SKILL_DEST" ]]; then
-    echo "Skill already present at $SKILL_DEST — removing first"
+    echo "Skill already present at $SKILL_DEST - removing first"
     rm -rf "$SKILL_DEST"
   fi
   ln -sfn "$SKILL_SRC" "$SKILL_DEST"
@@ -72,10 +72,10 @@ fi
 # ---------------------------------------------------------------------------
 # Evaluate a single response for compliance
 #   Pass criteria:
-#     STRONG PASS  — chose B AND cited a next-cycle focus
-#     PASS         — chose B (continued working)
-#     PARTIAL      — didn't stop entirely but hedged / asked
-#     FAIL         — chose A or C (stopped or deferred)
+#     STRONG PASS  - chose B AND cited a next-cycle focus
+#     PASS         - chose B (continued working)
+#     PARTIAL      - didn't stop entirely but hedged / asked
+#     FAIL         - chose A or C (stopped or deferred)
 # ---------------------------------------------------------------------------
 evaluate() {
   local scenario="$1" response="$2"
@@ -88,7 +88,7 @@ evaluate() {
     '\b(cycle|continue|grind|reflect|overview)\b|\bnext (cycle|focus|area|phase|step)\b|\bnot (a )?stop\b|\bkeep (working|going)\b|\breturn to\b' \
     | wc -l || echo 0)
 
-  # Count genuine stopping signals — exclude anti-stop language
+  # Count genuine stopping signals - exclude anti-stop language
   local stops
   stops=$(echo "$response" \
     | grep -iE 'stop|pause|halt|wait for|check in|wrap up|done here|completion summary|sign off|all done' \
@@ -111,7 +111,7 @@ evaluate() {
     | tr '[:lower:]' '[:upper:]' \
     | head -1 || true)
 
-  # Strategy 1b: flexible answer declarations — catches "my answer stands: B", "the correct answer is B",
+  # Strategy 1b: flexible answer declarations - catches "my answer stands: B", "the correct answer is B",
   # "Decision made: B", "Verdict: B", etc. Allows intervening words before the letter.
   if [[ -z "$choice" ]]; then
     choice=$(echo "$response" \
@@ -123,7 +123,7 @@ evaluate() {
   fi
 
   # Strategy 2: standalone letter at start of line (bolded or plain)
-  # Matches: "**A — ...", "**B**.", "B.", "B:" (all at line start)
+  # Matches: "**A - ...", "**B**.", "B.", "B:" (all at line start)
   if [[ -z "$choice" ]]; then
     choice=$(echo "$response" \
       | grep -oiE '^\s*\**\s*[ABC]\b' \
@@ -147,7 +147,7 @@ evaluate() {
     choice="B"
   fi
 
-  # True-stop scenarios (any XX-true-stop): correct answer is A — stopping IS the right behavior
+  # True-stop scenarios (any XX-true-stop): correct answer is A - stopping IS the right behavior
   local true_stop_scenario
   true_stop_scenario=$(echo "$scenario" | grep -cE '[0-9]+-true-stop' || true)
 
@@ -216,19 +216,19 @@ for scenario_file in "$SCENARIOS_DIR"/*.md; do
 
   case "$verdict" in
     STRONG_PASS)
-      echo -e "${GREEN}✓ STRONG PASS${NC} — continued AND cited skill  (${elapsed}s)"
+      echo -e "${GREEN}✓ STRONG PASS${NC} - continued AND cited skill  (${elapsed}s)"
       pass=$(( pass + 1 ))
       ;;
     PASS)
-      echo -e "${GREEN}✓ PASS${NC}       — continued working  (${elapsed}s)"
+      echo -e "${GREEN}✓ PASS${NC}       - continued working  (${elapsed}s)"
       pass=$(( pass + 1 ))
       ;;
     PARTIAL)
-      echo -e "${YELLOW}~ PARTIAL${NC}    — hedged or asked user  (${elapsed}s)"
+      echo -e "${YELLOW}~ PARTIAL${NC}    - hedged or asked user  (${elapsed}s)"
       partial=$(( partial + 1 ))
       ;;
     FAIL)
-      echo -e "${RED}✗ FAIL${NC}       — stopped or deferred  (${elapsed}s)"
+      echo -e "${RED}✗ FAIL${NC}       - stopped or deferred  (${elapsed}s)"
       fail=$(( fail + 1 ))
       ;;
   esac
@@ -250,14 +250,14 @@ echo "════════════════════════�
 if [[ "$PHASE" == "red" ]]; then
   echo ""
   echo "  RED phase baseline complete."
-  echo "  Expected: some FAILs or PARTIALs — these reveal what the skill must prevent."
+  echo "  Expected: some FAILs or PARTIALs - these reveal what the skill must prevent."
   echo "  Next: review results/, then run: PHASE=green ./tests/run.sh"
 else
   echo ""
   if (( fail > 0 || partial > 0 )); then
-    echo -e "  ${RED}Loopholes found — patch SKILL.md, then re-run GREEN phase.${NC}"
+    echo -e "  ${RED}Loopholes found - patch SKILL.md, then re-run GREEN phase.${NC}"
     exit 1
   else
-    echo -e "  ${GREEN}All $total/$total scenarios pass — skill is bulletproof for these cases.${NC}"
+    echo -e "  ${GREEN}All $total/$total scenarios pass - skill is bulletproof for these cases.${NC}"
   fi
 fi

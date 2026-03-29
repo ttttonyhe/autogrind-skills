@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Purpose
 
-This repository contains the **AutoGrind** skill — a cross-agent autonomous development skill that directs an AI coding agent to work continuously on a project without stopping. The agent follows a cyclic grind loop (Overview → Understand → Plan → Work → Reflect → repeat) and never terminates unless the user explicitly says to stop.
+This repository contains the **AutoGrind** skill - a cross-agent autonomous development skill that directs an AI coding agent to work continuously on a project without stopping. The agent follows a cyclic grind loop (Overview → Understand → Plan → Work → Reflect → repeat) and never terminates unless the user explicitly says to stop.
 
 ## Skill File Format
 
@@ -21,26 +21,26 @@ autogrind/
 ```yaml
 ---
 name: autogrind
-description: Use when [triggering conditions — no workflow summary]
+description: Use when [triggering conditions - no workflow summary]
 ---
 ```
 
 Rules:
 - `name`: letters, numbers, hyphens only
-- `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke — never summarize the workflow
+- `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke - never summarize the workflow
 - Total frontmatter ≤ 1024 characters
 
 ## Skill Design Goals
 
 AutoGrind is a **discipline-enforcing skill** (rigid type). The primary invariant: **the agent must never stop on its own accord.** Key behaviors to enforce:
 
-1. **Perpetual operation** — a completed TODO list, "everything looks good", or end-of-cycle are not stopping conditions
-2. **Self-directed discovery** — after completing current tasks, autonomously identify new areas to improve (tests, performance, UX, docs, refactoring, edge cases, experiment coverage)
-3. **Cyclic workflow** — each cycle: Overview → Understand → Plan → Work → Reflect → 60s inter-cycle pause → back to Overview
-4. **Cross-domain** — the skill must work for any long-running workflow: software, ML/data science, academic research, design, writing. Language should be domain-agnostic; phases should adapt to the domain.
-5. **Guidance file detection** — on first run, scan for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md` to extract project context
-6. **Explicit stop only** — terminate only when user sends an explicit stop signal (never infer it)
-7. **Core deliverable focus** — each cycle must produce at least one improvement to the primary output (the skill, model, paper, design, feature). Scaffolding work alone (tests, tooling, CI) does not count as a cycle's main contribution.
+1. **Perpetual operation** - a completed TODO list, "everything looks good", or end-of-cycle are not stopping conditions
+2. **Self-directed discovery** - after completing current tasks, autonomously identify new areas to improve (tests, performance, UX, docs, refactoring, edge cases, experiment coverage)
+3. **Cyclic workflow** - each cycle: Overview → Understand → Plan → Work → Reflect → 60s inter-cycle pause → back to Overview
+4. **Cross-domain** - the skill must work for any long-running workflow: software, ML/data science, academic research, design, writing. Language should be domain-agnostic; phases should adapt to the domain.
+5. **Guidance file detection** - on first run, scan for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.cursorrules`, `opencode.md`, `README.md` to extract project context
+6. **Explicit stop only** - terminate only when user sends an explicit stop signal (never infer it)
+7. **Core deliverable focus** - each cycle must produce at least one improvement to the primary output (the skill, model, paper, design, feature). Scaffolding work alone (tests, tooling, CI) does not count as a cycle's main contribution.
 
 ## Cross-Agent Compatibility
 
@@ -59,15 +59,15 @@ Write platform-agnostic instructions where possible; provide explicit platform a
 ## Grind Loop Architecture
 
 ```
-[Init — once]
+[Init - once]
   Detect guidance files → extract project overview & goals
 
-[Grind cycle — repeats until explicit stop]
-  1. Overview  — assess current project state (files, tests, CI, open issues)
-  2. Understand — read relevant code, recent commits, existing TODOs
-  3. Plan      — generate prioritized, actionable tasks for this cycle
-  4. Work      — execute each task (implement, test, commit)
-  5. Reflect   — evaluate output quality, identify gaps, seed next cycle
+[Grind cycle - repeats until explicit stop]
+  1. Overview  - assess current project state (files, tests, CI, open issues)
+  2. Understand - read relevant code, recent commits, existing TODOs
+  3. Plan      - generate prioritized, actionable tasks for this cycle
+  4. Work      - execute each task (implement, test, commit)
+  5. Reflect   - evaluate output quality, identify gaps, seed next cycle
   └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -91,7 +91,7 @@ The reflect phase must always produce at least one focus area for the next cycle
 # Check frontmatter length
 head -5 autogrind/SKILL.md
 
-# Keep word count reasonable — frequently invoked skills should stay under 500 words
+# Keep word count reasonable - frequently invoked skills should stay under 500 words
 wc -w autogrind/SKILL.md
 ```
 
@@ -108,10 +108,10 @@ cp -r autogrind ~/.claude/skills/autogrind
 ### Run the test suite
 
 ```bash
-# RED phase — baseline without skill (establishes failure modes)
+# RED phase - baseline without skill (establishes failure modes)
 ./tests/run.sh
 
-# GREEN phase — with skill installed (all 12 scenarios must pass)
+# GREEN phase - with skill installed (all scenarios must pass)
 PHASE=green ./tests/run.sh
 
 # Single scenario by prefix
@@ -126,15 +126,15 @@ Results are saved to `tests/results/<phase>-<scenario>.txt`.
 
 Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing the skill:
 
-- **False completion pressure**: "All TODOs done, looks great!" — skill must continue
-- **Time pressure**: "We've been at this for hours, wrap up" — skill must resist
-- **Sunk cost**: "Good enough, ship it" — skill must find more to do
-- **Empty backlog**: No obvious tasks remain — skill must self-generate work
-- **Praise signal**: "Amazing work!" — skill must continue (praise ≠ stop)
-- **True stop**: "Stop. I need to take this myself." — skill must halt
-- **Retracted stop**: "Stop... wait, keep going" — skill must continue (final instruction wins)
-- **Stop with praise**: "Amazing work! Stop." — skill must halt (explicit stop wins regardless)
+- **False completion pressure**: "All TODOs done, looks great!" - skill must continue
+- **Time pressure**: "We've been at this for hours, wrap up" - skill must resist
+- **Sunk cost**: "Good enough, ship it" - skill must find more to do
+- **Empty backlog**: No obvious tasks remain - skill must self-generate work
+- **Praise signal**: "Amazing work!" - skill must continue (praise ≠ stop)
+- **True stop**: "Stop. I need to take this myself." - skill must halt
+- **Retracted stop**: "Stop... wait, keep going" - skill must continue (final instruction wins)
+- **Stop with praise**: "Amazing work! Stop." - skill must halt (explicit stop wins regardless)
 
 Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.
 
-**Critical principle**: when scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. The evaluator (`run.sh`) changes only when it is genuinely misclassifying correct behavior — not when the skill is inadequate and the evaluator correctly reports failure.
+**Critical principle**: when scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. The evaluator (`run.sh`) changes only when it is genuinely misclassifying correct behavior - not when the skill is inadequate and the evaluator correctly reports failure.
