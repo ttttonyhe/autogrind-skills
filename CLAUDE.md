@@ -22,13 +22,22 @@ autogrind/
 ---
 name: autogrind
 description: Use when [triggering conditions - no workflow summary]
+license: MIT
+compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent
+metadata:
+  author: ttttonyhe
+  version: "1.x"
 ---
 ```
 
 Rules:
 - `name`: letters, numbers, hyphens only
-- `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke - never summarize the workflow
+- `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke — never summarize the workflow. Include specific trigger phrases (e.g., `/autogrind`, `keep working, don't stop`) for agent discovery optimization per agentskills.io guidelines
+- `license`: must match the repo LICENSE file (currently MIT)
+- `compatibility`: space for all supported agents — update when new agents add agentskills.io support
+- `metadata.version`: bump when making significant changes to skill logic
 - Total frontmatter ≤ 1024 characters
+- Validate with `npx skills-ref validate ./autogrind` before committing
 
 ## Skill Design Goals
 
@@ -44,17 +53,44 @@ AutoGrind is a **discipline-enforcing skill** (rigid type). The primary invarian
 
 ## Cross-Agent Compatibility
 
-The skill must be usable across all major coding agents:
+The skill must be usable across all major coding agents. All agents except Claude Code discover skills from `~/.agents/skills/` per the agentskills.io universal path:
 
 | Agent | Skill loading mechanism | Task tracking |
 |-------|------------------------|---------------|
 | Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
 | Codex | `activate_skill` tool | Native task tools |
-| OpenCode | AGENTS.md conventions | Native task tools |
-| Cursor | `.cursorrules` or explicit load | Comments / notes |
-| Gemini CLI | GEMINI.md conventions | Native task tools |
+| Gemini CLI | `~/.gemini/skills/` or `~/.agents/skills/` | Native task tools |
+| OpenCode | `~/.agents/skills/` (auto-discovered) | Native task tools |
+| Cursor | `~/.cursor/skills/` or `~/.agents/skills/` | File-based notes |
+| Windsurf / Roocode / Goose | `~/.agents/skills/` | Native task tools |
+| AmpCode / Kilo / Kiro / Factory | `~/.agents/skills/` | Native task tools |
+| GitHub Copilot | `~/.agents/skills/` | Native task tools |
 
-Write platform-agnostic instructions where possible; provide explicit platform alternatives where divergence is necessary.
+Write platform-agnostic instructions where possible; provide explicit platform alternatives where divergence is necessary. The platform notes table in SKILL.md is the authoritative mapping — keep it in sync with this table.
+
+## Research Foundation
+
+AutoGrind's design is grounded in findings from top-tier AI/ML research. When modifying the skill, any change that weakens a research-backed mechanism requires explicit justification.
+
+### Self-Reflection
+
+| Paper | Key finding | Mechanism in SKILL.md |
+|---|---|---|
+| **Reflexion** (NeurIPS 2023) | Verbal RL with episodic memory enables iterative improvement — but only when grounded in verifiable feedback | Reflect phase anchors assessment to execution signals before self-evaluation |
+| **CRITIC** (ICLR 2024) | External signals always outperform intrinsic self-critique; no paper shows pure intrinsic correction succeeding reliably | Phase 5, Step 1: verifiable signals checked first (test results, build status, metrics) |
+| **IoRT** (2025) | Static reflection loops produce three failure modes: *redundant* (same critique every cycle), *drift* (abandoning correct paths), *stubborn* (ignoring valid feedback) | Cross-cycle pattern check (Phase 5, Step 4): Refresh when same dimension is flagged with no progress |
+| **ERL** (ICLR 2026 workshop) | Abstract heuristics transfer across tasks better than specific trajectory memories | Session Heuristics: one `When <condition>, prefer <approach> because <reason>` principle extracted per cycle |
+| **SAMULE** (2025) | Multi-level reflection (micro → meso → macro) outperforms single-level self-critique | Five-step Reflect: immediate signals → mandatory questions → dimension scan → cross-cycle check → heuristic |
+
+### Planning and Self-Direction
+
+| Paper | Key finding | Mechanism in SKILL.md |
+|---|---|---|
+| **Voyager** (2023) | Automatic curriculum is the single most critical component (–93% without it); mechanism is "capability frontier" — novel, achievable tasks at the edge of what's been done | Capability frontier scan in Phase 3: 1–2 frontier tasks after priority list |
+| **LLMCompiler** (ICML 2024) | Parallel execution of independent tasks: 3.7× faster, +9% accuracy | Phase 4: independent tasks run concurrently where platform supports it |
+| **AOP** (ICLR 2025) | Solvability gate before task assignment is the most critical planning step | Solvability gate in Phase 3: verify each task actionable before finalizing |
+| **Generative Agents** (2023) | Importance-weighted retrieval outperforms flat recall | Phase 1 lag rating: each area rated high/medium/low to feed Plan prioritization |
+| **AOP companion / ToT** | Plans exceeding ~4 steps degrade execution reliability significantly | Each task capped at ≤ 4 steps |
 
 ## Grind Loop Architecture
 
@@ -82,16 +118,23 @@ The reflect phase must always produce at least one focus area for the next cycle
 - Each cycle ends with a 60-second inter-cycle pause before the next Overview begins
 - Never ask the user for guidance mid-cycle unless truly blocked (missing credentials, ambiguous spec, broken environment)
 - When tests/validations fail: improve the implementation first. Modifying evaluators to pass without improving the implementation is not a fix.
+- **Reflect must check verifiable signals before self-assessment** (CRITIC): grounding reflection in execution evidence is non-negotiable
+- **Plan must include a capability frontier scan** (Voyager): without self-directed task generation, autonomous agents lose the majority of their effectiveness
+- **Stuck loops must be detected and refreshed** (IoRT): repeating the same reflection on the same stuck dimension is not progress — shift dimensions
+- **Session Heuristics are in-context only** (ERL): they are lost on context compaction; reinitialize to empty and continue — they are a convenience, not a dependency
 
 ## Local Development
 
 ### Validate skill structure
 
 ```bash
-# Check frontmatter length
-head -5 autogrind/SKILL.md
+# Validate against agentskills.io spec
+npx skills-ref validate ./autogrind
 
-# Keep word count reasonable - frequently invoked skills should stay under 500 words
+# Check frontmatter
+head -12 autogrind/SKILL.md
+
+# Keep word count reasonable - frequently invoked skills should stay under 2000 words
 wc -w autogrind/SKILL.md
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: Use when asked to work continuously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or /自己动 (中文), or phrases like 'keep working, don't stop', 'autogrind this'.
+description: Use when the agent needs to work continuously and fully autonomously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or /自己动, or phrases like 'keep working, don't stop', 'autogrind this'.
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent
 metadata:
@@ -159,6 +159,8 @@ This pause is the only planned delay. It is **not** a stopping point.
 Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
 
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
+
+**When a stop signal arrives mid-task:** finish the current atomic task cleanly (do not stop at a half-written file or a failing test), then stop. Do not start new tasks. A clean stop beats an abrupt one.
 
 Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 

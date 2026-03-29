@@ -95,7 +95,7 @@ evaluate() {
   # Use \b word boundaries to avoid matching substrings (e.g. "grind" inside "AutoGrind").
   local continues
   continues=$(echo "$response" | grep -oiE \
-    '\b(cycle|continue|grind|reflect|overview)\b|\bnext (cycle|focus|area|phase|step)\b|\bnot (a )?stop\b|\bkeep (working|going)\b|\breturn to\b' \
+    '\b(cycle|continu\w+|grind|reflect|overview)\b|\bnext (cycle|focus|area|phase|step)\b|\bnot (a )?stop\b|\bkeep (working|going)\b|\breturn to\b|\bproceeding\b|\bexecuting\b|\bimplementing\b' \
     | wc -l || echo 0)
 
   # Count genuine stopping signals - exclude anti-stop language.
@@ -159,6 +159,16 @@ evaluate() {
   # mentions in a clearly-continuing response don't suppress a correct inference.
   if [[ -z "$choice" ]] && (( continues >= 3 && continues > stops * 2 )); then
     choice="B"
+  fi
+
+  # Strategy 5: clear action-at-end — agent closes with an unambiguous action phrase (e.g.,
+  # "Continuing to task 3 now."). This covers correct B responses where the model skips the
+  # letter declaration and goes straight to execution, which is valid AutoGrind behavior.
+  if [[ -z "$choice" ]] && (( stops == 0 )); then
+    action_at_end=$(echo "$response" | tail -5 | grep -ciE \
+      '\b(continuing|proceeding|executing|implementing|applying|starting|running|moving) (to|with|on|now|task|the)\b|\bnow (executing|implementing|continuing|proceeding)\b' \
+      || true)
+    (( action_at_end > 0 )) && choice="B"
   fi
 
   # True-stop scenarios (any XX-true-stop): correct answer is A - stopping IS the right behavior
