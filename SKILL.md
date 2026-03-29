@@ -107,7 +107,9 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - One logical change per persist — never batch unrelated changes
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
-- **Safety boundary**: stay within the project directory. Avoid operations with significant side effects outside the project scope — no system configuration changes, no deletions outside the project. Operations that would normally require human confirmation are off-limits during autonomous operation.
+- User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
+- Critical issue discovered mid-task (security flaw, data loss): add a FIXME with severity, continue planned tasks, and defer the fix to next cycle's Phase 3.
+- **Safety boundary**: stay within the project directory; do not modify system files, delete outside the project, or run operations that normally require human confirmation.
 
 ### Phase 5 - Reflect
 
