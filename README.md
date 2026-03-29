@@ -6,6 +6,8 @@ AutoGrind is a skill for AI coding agents that makes them work *continuously and
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
+Compatible with the [Agent Skills](https://agentskills.io) open standard — works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent.
+
 ---
 
 ## Install
@@ -119,9 +121,9 @@ flowchart TD
     INIT["INIT (once)\nDetect guidance files\nExtract goals and conventions"]
     OV["1. OVERVIEW\nAssess project state"]
     UN["2. UNDERSTAND\nReview relevant work and history"]
-    PL["3. PLAN\n3-8 prioritized tasks"]
+    PL["3. PLAN\nPrioritized tasks + frontier scan"]
     WK["4. WORK\nExecute, validate, persist"]
-    RF["5. REFLECT\nSelf-assess, seed next cycle"]
+    RF["5. REFLECT\nGrounded signals + heuristics"]
     PA["PAUSE 60s\nAnnounce, wait, continue"]
     ST{"Explicit stop\nsignal?"}
     STOP(["STOP"])
@@ -133,7 +135,7 @@ flowchart TD
     ST -.->|tempted to stop| NEVER
 ```
 
-Every Reflect phase evaluates: core deliverable progress, test coverage, error handling, docs, performance, UX, observability, security, and code quality. There is always a weakest dimension.
+Every Reflect phase: checks verifiable signals first (test results, metrics, build status), evaluates core deliverable progress, scans quality dimensions (coverage, error handling, docs, performance, UX, observability, security), detects stuck loops and shifts focus, and extracts a transferable heuristic for the next cycle. There is always a weakest dimension.
 
 After each cycle, AutoGrind pauses 60 seconds so you can interrupt. If you do nothing, it continues automatically.
 
