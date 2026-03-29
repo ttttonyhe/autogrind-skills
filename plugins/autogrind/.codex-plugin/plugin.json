@@ -6,8 +6,8 @@
     "name": "ttttonyhe",
     "url": "https://github.com/ttttonyhe"
   },
-  "homepage": "https://github.com/ttttonyhe/autogrind-skills",
-  "repository": "https://github.com/ttttonyhe/autogrind-skills",
+  "homepage": "https://github.com/ttttonyhe/autogrind",
+  "repository": "https://github.com/ttttonyhe/autogrind",
   "license": "MIT",
   "keywords": [
     "autogrind",
@@ -24,7 +24,7 @@
     "developerName": "ttttonyhe",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],
-    "websiteURL": "https://github.com/ttttonyhe/autogrind-skills",
+    "websiteURL": "https://github.com/ttttonyhe/autogrind",
     "privacyPolicyURL": "https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement",
     "termsOfServiceURL": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
     "defaultPrompt": [

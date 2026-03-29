@@ -17,7 +17,7 @@ Compatible with the [Agent Skills](https://agentskills.io) open standard; works 
 Paste this into any agent chat:
 
 ```
-Please install the AutoGrind skill from https://github.com/ttttonyhe/autogrind-skills.
+Please install the AutoGrind skill from https://github.com/ttttonyhe/autogrind.
 Clone the repo, install the skill to the right location for my agent environment,
 and confirm it is ready to use.
 ```
@@ -47,11 +47,11 @@ All agentskills.io-compatible agents discover skills from `~/.agents/skills/`. O
 
 ```bash
 # Stable install — clone directly to the skills location
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 
 # Or symlink from an existing clone (live updates)
-git clone https://github.com/ttttonyhe/autogrind-skills.git
-ln -sfn "$(pwd)/autogrind-skills" ~/.agents/skills/autogrind
+git clone https://github.com/ttttonyhe/autogrind.git
+ln -sfn "$(pwd)/autogrind" ~/.agents/skills/autogrind
 ```
 
 ---
@@ -60,7 +60,7 @@ ln -sfn "$(pwd)/autogrind-skills" ~/.agents/skills/autogrind
 
 ```bash
 # Stable install — clone directly to the skills location
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.claude/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/autogrind
 
 # Or symlink from an existing clone (live updates)
 ln -sfn "$(pwd)" ~/.claude/skills/autogrind
@@ -71,25 +71,19 @@ ln -sfn "$(pwd)" ~/.claude/skills/autogrind
 Optional native plugin:
 
 ```bash
-claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin install autogrind@autogrind-skills
+claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind
 ```
 
 ---
 
 ### Codex
 
-Preferred native plugin path: run this once to install AutoGrind into your personal Codex marketplace so it is available in every repo:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/ttttonyhe/autogrind-skills/main/scripts/install-codex-plugin.sh)
-```
-
-Then open `plugins` in Codex and install `autogrind` from your personal marketplace. Repo-local install from this source repository still works; full instructions are in [PLUGIN.md](PLUGIN.md).
+Preferred native plugin path: open this repo in Codex, open `plugins`, and install `autogrind` from the AutoGrind marketplace. Full instructions: [PLUGIN.md](PLUGIN.md).
 
 For direct skill install or local authoring/testing, the raw skill still works:
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 Codex discovers raw skills automatically from `~/.agents/skills/`. Enable full auto-approval in your Codex config so tool calls are not gated on confirmation.
@@ -101,7 +95,7 @@ Codex discovers raw skills automatically from `~/.agents/skills/`. Enable full a
 ### Gemini CLI
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.gemini/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.gemini/skills/autogrind
 # Or use the universal path: ~/.agents/skills/autogrind
 ```
 
@@ -114,7 +108,7 @@ Gemini CLI discovers skills automatically from `~/.gemini/skills/` — no GEMINI
 ### OpenCode
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 # Or: ~/.claude/skills/autogrind (OpenCode checks both)
 ```
 
@@ -127,7 +121,7 @@ OpenCode discovers skills automatically — no AGENTS.md entry required.
 ### Cursor
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.cursor/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.cursor/skills/autogrind
 # Or use the universal path: ~/.agents/skills/autogrind
 ```
 
@@ -141,9 +135,9 @@ Enable auto-run for terminal commands in Cursor settings.
 
 ```bash
 # Preferred path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.codeium/windsurf/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.codeium/windsurf/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this project, don't stop"`
@@ -154,9 +148,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 
 ```bash
 # Preferred path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.roo/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.roo/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"Keep working, don't stop"`
@@ -167,9 +161,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 
 ```bash
 # Preferred path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.cline/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.cline/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this project, keep going"`
@@ -180,9 +174,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 
 ```bash
 # Preferred path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.trae/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.trae/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this, don't stop"` or `/autogrind`
@@ -192,9 +186,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 ### Kimi Code
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.config/agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.config/agents/skills/autogrind
 # Or project-level
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git .kimi/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git .kimi/skills/autogrind
 ```
 
 **Invoke:** `/skill:autogrind` or `"keep working, don't stop"`
@@ -205,9 +199,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git .kimi/skil
 
 ```bash
 # Preferred paths
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.copilot/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.copilot/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 Pair with a `.github/copilot-instructions.md` file to give Copilot project context.
@@ -219,7 +213,7 @@ Pair with a `.github/copilot-instructions.md` file to give Copilot project conte
 ### Goose
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this project, keep going"`
@@ -230,9 +224,9 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 
 ```bash
 # Preferred path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.config/agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.config/agents/skills/autogrind
 # Or universal path
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this, don't stop"`
@@ -242,7 +236,7 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/
 ### Kilo / Kiro / Factory
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 All support the agentskills.io universal path. Install once, invoke directly.
@@ -254,7 +248,7 @@ All support the agentskills.io universal path. Install once, invoke directly.
 ### Hermes Agent (NousResearch)
 
 ```bash
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.agents/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/autogrind
 ```
 
 **Invoke:** `"autogrind this, keep going"`
@@ -272,7 +266,7 @@ If you prefer native plugin UX on Claude Code or Codex, use the install paths in
 Paste this into any agent chat:
 
 ```
-Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind-skills.
+Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind.
 ```
 
 <details>

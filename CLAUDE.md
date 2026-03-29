@@ -17,7 +17,7 @@ bundle under `plugins/autogrind/`. This keeps the repository centered on the raw
 matching the `./plugins/<name>` layout used by Codex's built-in marketplaces.
 
 ```
-autogrind-skills/           (repo root = skill root)
+autogrind/           (repo root = skill root)
 ├── SKILL.md                        # agentskills.io root (must match skills/autogrind/SKILL.md)
 ├── .claude-plugin/
 │   ├── plugin.json                 # Claude Code plugin manifest
@@ -25,8 +25,6 @@ autogrind-skills/           (repo root = skill root)
 ├── .agents/plugins/marketplace.json # Codex repo marketplace catalog -> plugins/autogrind
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
 ├── commands/autogrind.md           # /autogrind slash command
-├── scripts/
-│   └── install-codex-plugin.sh     # personal Codex installer
 ├── plugins/
 │   └── autogrind/
 │       ├── .codex-plugin/plugin.json
@@ -72,7 +70,7 @@ Rules:
 - `compatibility`: space for all supported agents — update when new agents add agentskills.io support
 - `metadata.version`: bump when making significant changes to skill logic
 - Total frontmatter ≤ 1024 characters
-- Validate with `npx skills-ref validate .` before committing
+- Validate with `npx skills-ref validate skills/autogrind` before committing
 
 ## Skill Design Goals
 
@@ -164,7 +162,7 @@ The reflect phase must always produce at least one focus area for the next cycle
 
 ```bash
 # Validate against agentskills.io spec
-npx skills-ref validate .
+npx skills-ref validate skills/autogrind
 
 # Check frontmatter
 head -12 SKILL.md
@@ -180,7 +178,7 @@ wc -w SKILL.md
 ln -sfn $(pwd) ~/.claude/skills/autogrind
 
 # Or clone directly to skills location
-git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.claude/skills/autogrind
+git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/autogrind
 ```
 
 ### Run the test suite

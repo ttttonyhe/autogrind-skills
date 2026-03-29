@@ -10,14 +10,14 @@ AutoGrind is available as a native plugin for **Claude Code** and **OpenAI Codex
 ### One-line install
 
 ```bash
-claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin install autogrind@autogrind-skills
+claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind
 ```
 
 ### In-app install
 
 ```text
-/plugin marketplace add ttttonyhe/autogrind-skills
-/plugin install autogrind@autogrind-skills
+/plugin marketplace add ttttonyhe/autogrind
+/plugin install autogrind@autogrind
 ```
 
 ### Invoke
@@ -31,7 +31,7 @@ Or use a trigger phrase such as `keep working, don't stop` or `autogrind this pr
 ### Update
 
 ```bash
-claude plugin update autogrind@autogrind-skills
+claude plugin update autogrind@autogrind
 ```
 
 Run `/reload-plugins` in an active session after install or update if the new plugin state does not appear immediately.

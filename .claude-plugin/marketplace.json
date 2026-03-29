@@ -1,5 +1,5 @@
 {
-  "name": "autogrind-skills",
+  "name": "autogrind",
   "owner": {
     "name": "ttttonyhe"
   },
@@ -12,8 +12,8 @@
       "source": "./",
       "description": "Continuous autonomous grind loop — works until you say stop",
       "license": "MIT",
-      "homepage": "https://github.com/ttttonyhe/autogrind-skills",
-      "repository": "https://github.com/ttttonyhe/autogrind-skills",
+      "homepage": "https://github.com/ttttonyhe/autogrind",
+      "repository": "https://github.com/ttttonyhe/autogrind",
       "category": "productivity",
       "keywords": ["autogrind", "autonomous", "grind"]
     }

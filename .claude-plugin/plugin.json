@@ -6,8 +6,8 @@
     "name": "ttttonyhe",
     "url": "https://github.com/ttttonyhe"
   },
-  "homepage": "https://github.com/ttttonyhe/autogrind-skills",
-  "repository": "https://github.com/ttttonyhe/autogrind-skills",
+  "homepage": "https://github.com/ttttonyhe/autogrind",
+  "repository": "https://github.com/ttttonyhe/autogrind",
   "license": "MIT",
   "keywords": ["autogrind", "autonomous", "continuous", "grind", "productivity"],
   "skills": "./skills/"
