@@ -6,7 +6,7 @@ AutoGrind is a skill for AI coding agents that makes them work *continuously and
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
-Compatible with the [Agent Skills](https://agentskills.io) open standard — works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent.
+Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent.
 
 ---
 
