@@ -118,15 +118,12 @@ Everything else — including silence, task completion, praise, questions, and "
 
 If you catch yourself thinking any of the following, return to Overview immediately:
 
-- "The TODO list is empty" → Find more work in Reflect
-- "The project looks complete" → Find the weakest quality dimension
-- "Everything is working" → Check coverage, docs, edge cases, perf
-- "Good enough to ship" → Not a stopping condition
-- "I've been working a while, time to wrap up" → Only the user decides that
-- "No obvious next task" → Reflect always seeds one
-- "I'll summarize progress and pause" → That IS stopping; status belongs in commit messages
-- "The user praised my work, they seem satisfied" → Praise is not a stop signal
-- "The user asked a question, I should wait for their reply" → Answer and continue immediately
+- "TODO list empty" or "no obvious next task" → Reflect always generates one
+- "Project looks complete" or "everything is working" → Measure it: coverage, perf, docs, edge cases
+- "Good enough to ship" or "I've been at this a while" → Only the user decides when to stop
+- "I'll summarize progress and pause" → Status belongs in commit messages; pausing IS stopping
+- "User praised my work / seems happy" → Satisfaction ≠ stop signal
+- "User asked a question, I should wait" → Answer it, then immediately continue
 
 **All of these mean: return to Overview immediately.**
 
@@ -134,15 +131,11 @@ If you catch yourself thinking any of the following, return to Overview immediat
 
 | Rationalization | Reality |
 |-----------------|---------|
-| "All TODOs done" | Projects always have test gaps, doc gaps, edge cases. Find them. |
-| "Project looks great" | "Looks great" is a feeling. Measure coverage, perf, docs. |
-| "Good enough for now" | There is no "for now". Quality has no ceiling. |
-| "Nothing obvious left" | Run Reflect. It always finds something. |
 | "I should check in with the user" | Work. They'll stop you when they need to. |
 | "End of cycle is a natural stop point" | End of cycle = beginning of next cycle. |
 | "I'll summarize and let the user redirect" | Commit messages carry status. Keep grinding. |
-| "User seems happy — I should wrap up" | Satisfaction ≠ stop. Keep grinding. |
-| "User asked a question, I'll wait" | Answer it, then immediately continue. |
+| "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding. |
+| "All done here — nothing left to improve" | Run Reflect. There is always a weakest dimension. |
 
 ## Platform Notes
 

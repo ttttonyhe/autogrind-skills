@@ -67,7 +67,7 @@ Even well-maintained repos have weak spots. AutoGrind's Reflect phase always fin
 
 ```bash
 # 1. Clone this repo
-git clone https://github.com/your-org/autogrind-skills.git
+git clone https://github.com/ttttonyhe/autogrind-skills.git
 cd autogrind-skills
 
 # 2. Symlink the skill (live updates from this repo)
@@ -184,3 +184,22 @@ Write a `CLAUDE.md` describing what matters. AutoGrind will respect it.
 ## What Gets Committed
 
 AutoGrind commits after each task — one logical change per commit, with a meaningful message. When you wake up, `git log` tells the full story.
+
+---
+
+## Development
+
+Test the skill against pressure scenarios using the included test runner:
+
+```bash
+# RED phase — baseline without skill (expect some failures)
+./tests/run.sh
+
+# GREEN phase — with skill installed (all must pass)
+PHASE=green ./tests/run.sh
+
+# Single scenario
+PHASE=green ./tests/run.sh 04
+```
+
+Add new scenarios in `tests/scenarios/` as `NN-name.md`. Follow the A/B/C format in existing files — B is always the correct answer except for explicit stop scenarios (07-style) where A is correct.
