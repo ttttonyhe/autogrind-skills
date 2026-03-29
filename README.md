@@ -1,14 +1,14 @@
 ![autogrind-banner](https://static.ouorz.com/autogrind-banner-4.png)
 
-[English](README.md) | [简体中文](README.zh.md)
-
 **Tell your agent to start working. Walk away. Come back to finished work.**
 
-AutoGrind is a skill for AI coding agents that makes them work *continuously and autonomously*, grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
+AutoGrind is a skill for AI coding agents that makes them work _continuously and autonomously_, grinding through improvements, fixes, tests, and polish in repeating cycles until _you_ say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
-Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research — see [RESEARCH.md](RESEARCH.md).
+Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research; see [RESEARCH.md](RESEARCH.md).
+
+[English](README.md) | [简体中文](README.zh.md)
 
 ---
 
@@ -37,7 +37,7 @@ claude --dangerously-skip-permissions
 Without this, AutoGrind pauses on every tool call. It works, but defeats the purpose.
 
 <details>
-<summary>Manual CLI installation (Claude Code, Codex, Gemini, OpenCode, Cursor)</summary>
+<summary>Manual CLI installation</summary>
 
 ### Universal (all agents)
 
@@ -255,7 +255,8 @@ Paste this into any agent chat:
 Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind-skills.
 ```
 
-Or manually:
+<details>
+<summary>Manual update</summary>
 
 ```bash
 # If installed as symlink — no action needed, repo changes are live immediately.
@@ -264,6 +265,8 @@ Or manually:
 cp -r autogrind ~/.claude/skills/autogrind    # Claude Code
 cp -r autogrind ~/.agents/skills/autogrind    # Universal / Codex / Gemini / OpenCode / Cursor
 ```
+
+</details>
 
 ---
 
@@ -300,7 +303,7 @@ After each cycle, AutoGrind pauses 60 seconds so you can interrupt. If you do no
 
 AutoGrind stops only when you explicitly tell it to: "stop", "halt", "pause", "that's enough", or any clear termination request. It never stops on its own.
 
-If your project feels done, AutoGrind will find the next improvement: coverage gaps, missing documentation, performance wins, edge cases, polish. The Reflect phase evaluates against a checklist of quality dimensions and always surfaces something. Say "stop" when *you* are satisfied.
+If your project feels done, AutoGrind will find the next improvement: coverage gaps, missing documentation, performance wins, edge cases, polish. The Reflect phase evaluates against a checklist of quality dimensions and always surfaces something. Say "stop" when _you_ are satisfied.
 
 **Will it run destructive commands? Will I wake up to a broken system?**
 
