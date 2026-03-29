@@ -24,7 +24,7 @@ Then invoke it:
 /autogrind
 ```
 
-Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts:
+Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
 
 ```bash
 claude --dangerously-skip-permissions
