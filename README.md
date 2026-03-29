@@ -37,12 +37,26 @@ Without this, AutoGrind pauses on every tool call. It works, but defeats the pur
 <details>
 <summary>Manual CLI installation (Claude Code, Codex, Gemini, OpenCode, Cursor)</summary>
 
-### Claude Code
+### Universal (all agents)
+
+All agentskills.io-compatible agents discover skills from `~/.agents/skills/`. One install, all agents:
 
 ```bash
 git clone https://github.com/ttttonyhe/autogrind-skills.git
 cd autogrind-skills
 
+# Symlink (live updates from this repo)
+ln -sfn "$(pwd)/autogrind" ~/.agents/skills/autogrind
+
+# Or copy for a stable install
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+---
+
+### Claude Code
+
+```bash
 # Symlink (live updates from this repo)
 ln -sfn "$(pwd)/autogrind" ~/.claude/skills/autogrind
 
@@ -60,7 +74,7 @@ cp -r autogrind ~/.claude/skills/autogrind
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
-Codex loads skills via the `activate_skill` tool. Enable full auto-approval in your Codex config so tool calls are not gated on confirmation.
+Codex discovers skills automatically. Enable full auto-approval in your Codex config so tool calls are not gated on confirmation.
 
 **Invoke:** `activate_skill autogrind` or `"autogrind this project"`
 
@@ -70,14 +84,10 @@ Codex loads skills via the `activate_skill` tool. Enable full auto-approval in y
 
 ```bash
 cp -r autogrind ~/.gemini/skills/autogrind
+# Or use the universal path: ~/.agents/skills/autogrind
 ```
 
-In `~/.gemini/GEMINI.md` or your project's `GEMINI.md`:
-
-```markdown
-## Skills
-Use the AutoGrind skill from ~/.gemini/skills/autogrind/SKILL.md when asked to work continuously.
-```
+Gemini CLI discovers skills automatically from `~/.gemini/skills/` — no GEMINI.md entry required. For local development, use `gemini skills link` to symlink.
 
 **Invoke:** `gemini "autogrind this project, don't stop until I say so"`
 
@@ -86,15 +96,11 @@ Use the AutoGrind skill from ~/.gemini/skills/autogrind/SKILL.md when asked to w
 ### OpenCode
 
 ```bash
-cp -r autogrind ~/.config/opencode/skills/autogrind
+cp -r autogrind ~/.agents/skills/autogrind
+# Or: ~/.claude/skills/autogrind (OpenCode checks both)
 ```
 
-In `AGENTS.md`:
-
-```markdown
-## Skills
-When asked to grind or work autonomously, follow the AutoGrind skill at skills/autogrind/SKILL.md.
-```
+OpenCode discovers skills automatically — no AGENTS.md entry required.
 
 **Invoke:** `opencode "autogrind this project, keep going until I say stop"`
 
@@ -103,7 +109,8 @@ When asked to grind or work autonomously, follow the AutoGrind skill at skills/a
 ### Cursor
 
 ```bash
-cat autogrind/SKILL.md >> .cursorrules
+cp -r autogrind ~/.cursor/skills/autogrind
+# Or use the universal path: ~/.agents/skills/autogrind
 ```
 
 Enable auto-run for terminal commands in Cursor settings.

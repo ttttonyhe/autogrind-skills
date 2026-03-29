@@ -1,0 +1,6 @@
+interface:
+  display_name: "AutoGrind"
+  short_description: "Continuous autonomous grind loop — works until you say stop"
+
+policy:
+  allow_implicit_invocation: true

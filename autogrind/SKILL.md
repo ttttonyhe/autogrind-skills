@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: Let the agent work fully autonomously and continuously on this project without stopping
+description: Use when asked to work continuously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or phrases like 'keep working, don't stop', 'autogrind this'.
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent
 metadata:
@@ -58,7 +58,7 @@ digraph autogrind {
 - Extract: project goals, domain, methodology or tech stack, conventions, known issues
 - If none exist, infer from directory structure, existing artifacts, and project context
 - Initialize **Session Heuristics**: an empty in-context list (max 5) of transferable principles discovered during Reflect phases. Format: `[cycle N] When <condition>, prefer <approach> because <reason>.` Prepend each Overview with a quick read of this list.
-- **Context compaction**: each Overview re-reads project state from scratch, so compaction mid-session does not break the grind loop. If compaction occurs, complete the current phase and proceed normally.
+- **Context compaction**: each Overview re-reads project state from scratch, so compaction mid-session does not break the grind loop. If compaction occurs, complete the current phase and proceed normally. Session Heuristics are in-context only — they are lost on compaction. Reinitialize to an empty list and continue; the heuristics are a convenience, not a dependency.
 
 ### Phase 1 - Overview
 
