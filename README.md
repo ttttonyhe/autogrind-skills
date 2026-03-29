@@ -8,7 +8,7 @@ AutoGrind is a skill for AI coding agents that makes them work *continuously and
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
-Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research — see [RESEARCH.md](RESEARCH.md).
+Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research — see [RESEARCH.md](RESEARCH.md).
 
 ---
 
@@ -124,6 +124,9 @@ Enable auto-run for terminal commands in Cursor settings.
 ### Windsurf
 
 ```bash
+# Preferred path
+cp -r autogrind ~/.codeium/windsurf/skills/autogrind
+# Or universal path
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
@@ -134,6 +137,9 @@ cp -r autogrind ~/.agents/skills/autogrind
 ### Roocode
 
 ```bash
+# Preferred path
+cp -r autogrind ~/.roo/skills/autogrind
+# Or universal path
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
@@ -141,15 +147,56 @@ cp -r autogrind ~/.agents/skills/autogrind
 
 ---
 
+### Cline
+
+```bash
+# Preferred path
+cp -r autogrind ~/.cline/skills/autogrind
+# Or universal path
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this project, keep going"`
+
+---
+
+### Trae
+
+```bash
+# Preferred path
+cp -r autogrind ~/.trae/skills/autogrind
+# Or universal path
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+**Invoke:** `"autogrind this, don't stop"` or `/autogrind`
+
+---
+
+### Kimi Code
+
+```bash
+cp -r autogrind ~/.config/agents/skills/autogrind
+# Or project-level
+cp -r autogrind .kimi/skills/autogrind
+```
+
+**Invoke:** `/skill:autogrind` or `"keep working, don't stop"`
+
+---
+
 ### GitHub Copilot
 
 ```bash
+# Preferred paths
+cp -r autogrind ~/.copilot/skills/autogrind
+# Or universal path
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
 Pair with a `.github/copilot-instructions.md` file to give Copilot project context.
 
-**Invoke:** `"autogrind mode — keep working autonomously"`
+**Invoke:** `"autogrind mode — keep working autonomously"` or `/autogrind`
 
 ---
 
@@ -166,6 +213,9 @@ cp -r autogrind ~/.agents/skills/autogrind
 ### AmpCode
 
 ```bash
+# Preferred path
+cp -r autogrind ~/.config/agents/skills/autogrind
+# Or universal path
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
@@ -173,7 +223,7 @@ cp -r autogrind ~/.agents/skills/autogrind
 
 ---
 
-### Kilo / Kiro / Factory / NousResearch
+### Kilo / Kiro / Factory
 
 ```bash
 cp -r autogrind ~/.agents/skills/autogrind
