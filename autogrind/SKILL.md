@@ -147,7 +147,7 @@ Where `TaskCreate`/`TaskUpdate` appear in this skill, use your platform's equiva
 | Agent | Skill loading | Task tracking |
 |-------|--------------|---------------|
 | Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
-| Codex | Skills load natively | `update_plan` or equivalent |
+| Codex | `activate_skill` tool | Native task tools |
 | Gemini CLI | GEMINI.md conventions | Native task tools |
 | OpenCode | AGENTS.md conventions | Native task tools |
 | Cursor | `.cursorrules` or explicit load | File-based notes |

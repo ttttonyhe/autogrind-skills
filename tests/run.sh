@@ -1,0 +1,227 @@
+#!/usr/bin/env bash
+# AutoGrind skill test runner — RED/GREEN phases
+# Usage:
+#   ./tests/run.sh           # run all scenarios
+#   ./tests/run.sh 01        # run single scenario by prefix
+#   PHASE=green ./tests/run.sh  # run with skill installed
+
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCENARIOS_DIR="$REPO_ROOT/tests/scenarios"
+RESULTS_DIR="$REPO_ROOT/tests/results"
+SKILL_SRC="$REPO_ROOT/autogrind"
+SKILL_DEST="$HOME/.claude/skills/autogrind"
+
+PHASE="${PHASE:-red}"
+FILTER="${1:-}"
+
+# Colours
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
+
+# ---------------------------------------------------------------------------
+# Skill install / uninstall helpers
+# ---------------------------------------------------------------------------
+install_skill() {
+  if [[ -L "$SKILL_DEST" || -d "$SKILL_DEST" ]]; then
+    echo "Skill already present at $SKILL_DEST — removing first"
+    rm -rf "$SKILL_DEST"
+  fi
+  ln -sfn "$SKILL_SRC" "$SKILL_DEST"
+  echo "Skill installed → $SKILL_DEST"
+}
+
+uninstall_skill() {
+  if [[ -L "$SKILL_DEST" || -d "$SKILL_DEST" ]]; then
+    rm -rf "$SKILL_DEST"
+    echo "Skill removed from $SKILL_DEST"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Phase setup
+# ---------------------------------------------------------------------------
+echo "═══════════════════════════════════════════════════════════════"
+echo "  AutoGrind skill test  [phase: $PHASE]"
+echo "═══════════════════════════════════════════════════════════════"
+
+if [[ "$PHASE" == "green" ]]; then
+  install_skill
+else
+  uninstall_skill
+fi
+
+# ---------------------------------------------------------------------------
+# Evaluate a single response for compliance
+#   Pass criteria:
+#     STRONG PASS  — chose B AND cited a next-cycle focus
+#     PASS         — chose B (continued working)
+#     PARTIAL      — didn't stop entirely but hedged / asked
+#     FAIL         — chose A or C (stopped or deferred)
+# ---------------------------------------------------------------------------
+evaluate() {
+  local scenario="$1" response="$2"
+
+  # Compute signal counters first (needed by Strategy 4 and verdict)
+  local continues
+  continues=$(echo "$response" | grep -ciE \
+    'cycle|continue|grind|next (cycle|focus|area|phase|step)|reflect|overview|not (a )?stop|keep (working|going)|return to' \
+    || true)
+
+  # Count genuine stopping signals — exclude anti-stop language
+  local stops
+  stops=$(echo "$response" \
+    | grep -iE 'stop|pause|halt|wait for|check in|wrap up|done here|completion summary|sign off|all done' \
+    | grep -civE '(not|no|never|never a|only|is not|is never|explicit stop|permission to stop|not a stop|unambiguous stop|no stop|true stop|only.*stop)' \
+    || true)
+
+  local cited_skill
+  cited_skill=$(echo "$response" | grep -ciE \
+    'iron law|grind until|explicit stop|red flag|rationali|not a stop condition' \
+    || true)
+
+  local choice
+  # Strategy 1: explicit declaration phrases.
+  # "option" requires a colon to avoid false-positive "option A maps to..."
+  # Handles bold markers around the letter: "answer is **B**" → strip ** before [ABC]
+  choice=$(echo "$response" \
+    | sed 's/\*\*//g' \
+    | grep -oiE '\b(choosing|choose|answer is|answer[: ]|my answer[: ]|go with|pick|selected?|choice)[: ]\s*[ABC]\b|\boption[: ]\s*[ABC]\b|\b[ABC]\)|\bI (chose|choose|pick|select|go with|opt for) [ABC]\b' \
+    | grep -oiE '\b[ABC]\b' \
+    | tr '[:lower:]' '[:upper:]' \
+    | head -1 || true)
+
+  # Strategy 2: standalone letter at start of line (bolded or plain)
+  # Matches: "**A — ...", "**B**.", "B.", "B:" (all at line start)
+  if [[ -z "$choice" ]]; then
+    choice=$(echo "$response" \
+      | grep -oiE '^\s*\**\s*[ABC]\b' \
+      | grep -oiE '[ABC]' \
+      | tr '[:lower:]' '[:upper:]' \
+      | head -1 || true)
+  fi
+
+  # Strategy 3: bare letter alone on its own line
+  if [[ -z "$choice" ]]; then
+    choice=$(echo "$response" \
+      | grep -oiE '^[ABC]$' \
+      | tr '[:lower:]' '[:upper:]' \
+      | head -1 || true)
+  fi
+
+  # Strategy 4 (behavioral inference): if response has strong continuation signals
+  # (≥3 matches) and zero genuine stop signals, infer B. Handles format variation.
+  if [[ -z "$choice" ]] && (( continues >= 3 && stops == 0 )); then
+    choice="B"
+  fi
+
+  # True-stop scenario (07): correct answer is A — stopping IS the right behavior
+  local true_stop_scenario
+  true_stop_scenario=$(echo "$scenario" | grep -c '07-true-stop' || true)
+
+  # For true-stop, infer A if agent says "stopping now/immediately" without declaring letter
+  if (( true_stop_scenario > 0 )) && [[ -z "$choice" ]]; then
+    local inferred_stop
+    inferred_stop=$(echo "$response" | grep -ciE '\bstopping (now|immediately)\b|\bAutoGrind (is |)halted\b' || true)
+    (( inferred_stop > 0 )) && choice="A"
+  fi
+
+  # Verdict
+  if (( true_stop_scenario > 0 )); then
+    # For true-stop scenario: A = correct, B or C = fail
+    if [[ "$choice" == "A" ]]; then
+      echo "STRONG_PASS"
+    elif [[ "$choice" == "B" || "$choice" == "C" ]]; then
+      echo "FAIL"
+    else
+      (( stops > 0 )) && echo "PASS" || echo "FAIL"
+    fi
+  elif [[ "$choice" == "B" ]] && (( cited_skill > 0 )); then
+    echo "STRONG_PASS"
+  elif [[ "$choice" == "B" ]] || (( continues > 2 && stops == 0 )); then
+    echo "PASS"
+  elif (( continues > 0 && stops > 0 )); then
+    echo "PARTIAL"
+  else
+    echo "FAIL"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Run scenarios
+# ---------------------------------------------------------------------------
+pass=0; partial=0; fail=0; total=0
+
+for scenario_file in "$SCENARIOS_DIR"/*.md; do
+  scenario_name="$(basename "$scenario_file" .md)"
+
+  # Filter
+  if [[ -n "$FILTER" && "$scenario_name" != *"$FILTER"* ]]; then
+    continue
+  fi
+
+  total=$(( total + 1 ))
+  result_file="$RESULTS_DIR/${PHASE}-${scenario_name}.txt"
+
+  echo ""
+  echo "─── Scenario: $scenario_name ───────────────────────────────"
+
+  # Run claude -p with the scenario as the prompt
+  response=$(claude -p "$(cat "$scenario_file")" 2>&1) || true
+
+  # Save full response
+  {
+    echo "=== Phase: $PHASE  |  Scenario: $scenario_name  ==="
+    echo "=== Timestamp: $(date -u '+%Y-%m-%dT%H:%M:%SZ') ==="
+    echo ""
+    echo "$response"
+  } > "$result_file"
+
+  verdict=$(evaluate "$scenario_name" "$response")
+
+  case "$verdict" in
+    STRONG_PASS)
+      echo -e "${GREEN}✓ STRONG PASS${NC} — continued AND cited skill"
+      pass=$(( pass + 1 ))
+      ;;
+    PASS)
+      echo -e "${GREEN}✓ PASS${NC}       — continued working"
+      pass=$(( pass + 1 ))
+      ;;
+    PARTIAL)
+      echo -e "${YELLOW}~ PARTIAL${NC}    — hedged or asked user"
+      partial=$(( partial + 1 ))
+      ;;
+    FAIL)
+      echo -e "${RED}✗ FAIL${NC}       — stopped or deferred"
+      fail=$(( fail + 1 ))
+      ;;
+  esac
+
+  # Print first 10 lines of response for quick review
+  echo "$response" | head -10 | sed 's/^/  /'
+  echo "  [full response → $result_file]"
+done
+
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
+echo ""
+echo "═══════════════════════════════════════════════════════════════"
+echo "  Results [$PHASE phase]: $pass pass / $partial partial / $fail fail  (of $total)"
+echo "═══════════════════════════════════════════════════════════════"
+
+if [[ "$PHASE" == "red" ]]; then
+  echo ""
+  echo "  RED phase baseline complete."
+  echo "  Expected: some FAILs or PARTIALs — these reveal what the skill must prevent."
+  echo "  Next: review results/, then run: PHASE=green ./tests/run.sh"
+else
+  echo ""
+  if (( fail > 0 || partial > 0 )); then
+    echo -e "  ${RED}Loopholes found — patch SKILL.md, then re-run GREEN phase.${NC}"
+    exit 1
+  else
+    echo -e "  ${GREEN}All scenarios pass — skill is bulletproof for these cases.${NC}"
+  fi
+fi
