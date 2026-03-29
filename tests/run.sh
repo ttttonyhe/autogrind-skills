@@ -133,9 +133,9 @@ evaluate() {
     choice="B"
   fi
 
-  # True-stop scenario (07): correct answer is A — stopping IS the right behavior
+  # True-stop scenarios (any XX-true-stop): correct answer is A — stopping IS the right behavior
   local true_stop_scenario
-  true_stop_scenario=$(echo "$scenario" | grep -c '07-true-stop' || true)
+  true_stop_scenario=$(echo "$scenario" | grep -cE '[0-9]+-true-stop' || true)
 
   # For true-stop, infer A if agent says "stopping now/immediately" without declaring letter
   if (( true_stop_scenario > 0 )) && [[ -z "$choice" ]]; then
