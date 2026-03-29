@@ -5,6 +5,16 @@
 #   ./tests/run.sh 01        # run single scenario by prefix
 #   PHASE=green ./tests/run.sh  # run with skill installed
 #   ./tests/run.sh --help    # show this help
+#
+# RED/GREEN contrast note:
+#   Scenarios deliberately name AutoGrind concepts (Iron Law, grind cycle, etc.) because
+#   real invocations always include the loaded skill. As a result, a capable model may score
+#   PASS on RED even without the skill installed — the framing primes correct behavior.
+#   RED phase is therefore not a strict "before" baseline; it establishes a floor and
+#   documents that these scenarios are non-trivial enough to require reasoning, not just
+#   pattern-matching. A FAIL on RED is a genuine failure mode; a PASS on RED does not
+#   imply the skill adds no value (the skill prevents drift under long sessions and novel
+#   pressure patterns not covered by the scenarios).
 
 set -euo pipefail
 
@@ -88,11 +98,15 @@ evaluate() {
     '\b(cycle|continue|grind|reflect|overview)\b|\bnext (cycle|focus|area|phase|step)\b|\bnot (a )?stop\b|\bkeep (working|going)\b|\breturn to\b' \
     | wc -l || echo 0)
 
-  # Count genuine stopping signals - exclude anti-stop language
+  # Count genuine stopping signals - exclude anti-stop language.
+  # NOTE: continues counts occurrences (grep -oiE), stops counts lines. This asymmetry is
+  # intentional: the exclusion filter needs per-line context to work correctly, and in practice
+  # Strategies 1-3 catch the choice before Strategy 4 is needed. Keep \b word boundaries on
+  # all single-word negation terms to avoid substring false-positives (e.g. "no" matching "now").
   local stops
   stops=$(echo "$response" \
     | grep -iE 'stop|pause|halt|wait for|check in|wrap up|done here|completion summary|sign off|all done' \
-    | grep -civE '(not|no|never|never a|only|is not|is never|explicit stop|permission to stop|not a stop|unambiguous stop|no stop|true stop|only.*stop)' \
+    | grep -civE '(\bnot\b|\bno\b|\bnever\b|never a|\bonly\b|is not|is never|explicit stop|permission to stop|not a stop|unambiguous stop|no stop|true stop|only.*stop)' \
     || true)
 
   local cited_skill
