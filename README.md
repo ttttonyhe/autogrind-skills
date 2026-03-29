@@ -1,8 +1,8 @@
-# AutoGrind
+![autogrind-banner](https://static.ouorz.com/autogrind-banner-2.png)
 
 **Tell your agent to start working. Walk away. Come back to finished work.**
 
-AutoGrind is a skill for AI coding agents that makes them work continuously and autonomously, grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
+AutoGrind is a skill for AI coding agents that makes them work *continuously and autonomously*, grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
 
 Works for any long-running workflow: code, ML, research, design, writing.
 
