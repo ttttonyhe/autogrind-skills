@@ -24,6 +24,14 @@ Then invoke it:
 /autogrind
 ```
 
+Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts:
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+Without this, AutoGrind pauses on every tool call. It works, but defeats the purpose.
+
 <details>
 <summary>Manual CLI installation (Claude Code, Codex, Gemini, OpenCode, Cursor)</summary>
 
@@ -39,14 +47,6 @@ ln -sfn "$(pwd)/autogrind" ~/.claude/skills/autogrind
 # Or copy for a stable install
 cp -r autogrind ~/.claude/skills/autogrind
 ```
-
-Enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts:
-
-```bash
-claude --dangerously-skip-permissions
-```
-
-Without this, AutoGrind pauses on every tool call. It works, but defeats the purpose.
 
 **Invoke:** `/autogrind` or `"keep working, don't stop"`
 
