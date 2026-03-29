@@ -245,6 +245,10 @@ cp -r autogrind ~/.agents/skills/autogrind
 
 </details>
 
+### 原生插件（Claude Code 和 Codex）
+
+Claude Code 和 OpenAI Codex 用户可以直接从本仓库以原生插件形式安装 AutoGrind，无需克隆仓库。详见[插件安装指南](autogrind/PLUGIN.md)。
+
 ---
 
 ## 更新
