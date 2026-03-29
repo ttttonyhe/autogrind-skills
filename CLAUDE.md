@@ -18,16 +18,26 @@ autogrind/
 
 ## Plugin Structure
 
-`autogrind/` serves two distribution formats simultaneously:
+`autogrind/` stays skill-first and serves three distribution formats simultaneously:
 
 ```
 autogrind/
 ├── SKILL.md                        # agentskills.io root (must match skills/autogrind/SKILL.md)
 ├── .claude-plugin/plugin.json      # Claude Code plugin manifest
+├── .codex-plugin/plugin.json       # Codex plugin manifest
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
 ├── commands/autogrind.md           # /autogrind slash command
 └── PLUGIN.md                       # plugin installation guide
 ```
+
+Repo-level marketplace catalogs live outside `autogrind/`:
+
+```text
+.claude-plugin/marketplace.json     # Claude Code marketplace catalog
+.agents/plugins/marketplace.json    # Codex repo marketplace catalog
+```
+
+Both native plugins are complements to the core skill package. Do not restructure the repo around either plugin unless explicitly requested.
 
 ### SKILL.md sync rule
 
@@ -39,7 +49,8 @@ files diverge. When editing the skill, update both files before committing.
 
 When making significant skill changes, bump `metadata.version` in `autogrind/SKILL.md`
 (and therefore in `autogrind/skills/autogrind/SKILL.md`) **and** bump `"version"` in
-`autogrind/.claude-plugin/plugin.json`. All three must stay in sync.
+both `autogrind/.claude-plugin/plugin.json` and `autogrind/.codex-plugin/plugin.json`.
+All four must stay in sync.
 
 ### SKILL.md Frontmatter
 
@@ -83,6 +94,7 @@ The skill must be usable across all major coding agents. All agents except Claud
 | Agent | Skill loading mechanism | Task tracking |
 |-------|------------------------|---------------|
 | Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
+| Codex | Auto-discovered skills or bundled plugin skills | Native task tools |
 | Gemini CLI | `~/.gemini/skills/` or `~/.agents/skills/` | Native task tools |
 | OpenCode | `~/.agents/skills/` (auto-discovered) | Native task tools |
 | Cursor | `~/.cursor/skills/` or `~/.agents/skills/` | File-based notes |

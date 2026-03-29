@@ -1,0 +1,32 @@
+{
+  "name": "autogrind",
+  "version": "1.4.0",
+  "description": "Let the agent work continuously and fully autonomously without stopping. Use this skill for long-running grind sessions across code, ML/data, research, design, or writing.",
+  "author": {
+    "name": "ttttonyhe",
+    "url": "https://github.com/ttttonyhe"
+  },
+  "homepage": "https://github.com/ttttonyhe/autogrind-skills",
+  "repository": "https://github.com/ttttonyhe/autogrind-skills",
+  "license": "MIT",
+  "keywords": [
+    "autogrind",
+    "autonomous",
+    "continuous",
+    "grind",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AutoGrind",
+    "shortDescription": "Continuous auto-work mode for long-running sessions",
+    "developerName": "ttttonyhe",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/ttttonyhe/autogrind-skills",
+    "defaultPrompt": ["on this project"],
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "screenshots": []
+  }
+}

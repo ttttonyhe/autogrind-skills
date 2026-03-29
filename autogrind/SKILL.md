@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: "Use this skill when the user wants the agent to work continuously and fully autonomously without stopping — long-running grind sessions across code, ML/data, research, design, or writing. Trigger phrases: /autogrind, /自己动, 'keep working don't stop', 'grind on this', 'work until I say stop', 'autogrind this', 'keep improving'. Use even when the user simply says 'keep going' or implies uninterrupted autonomous progress without naming AutoGrind explicitly."
+description: "Let the agent work continuously and fully autonomously without stopping. Use this skill for long-running grind sessions across code, ML/data, research, design, or writing. Trigger phrases: /autogrind, /自己动, 'keep working don't stop', 'grind on this', 'work until I say stop', 'autogrind this', 'keep improving'. Use even when the user simply says 'keep going' or implies uninterrupted autonomous progress without naming AutoGrind explicitly."
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
 metadata:
@@ -65,6 +65,7 @@ digraph autogrind {
 ### Phase 1 - Overview
 
 Assess current project state. Adapt to domain:
+
 - **Code**: `git log --oneline -20`, `git status`, run test suite, scan `TODO`/`FIXME`
 - **ML/research**: review experiment log or training runs, check latest metrics, scan open questions
 - **Design/writing**: review revision history, open feedback, check revision backlog
@@ -111,6 +112,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 ### Phase 5 - Reflect
 
 **Step 1 — Grounded signals first.** Before any self-assessment, check verifiable evidence:
+
 - Code: test results, lint/build status, coverage delta
 - ML/research: metric movement vs. last cycle, experiment outcomes
 - Design/writing: reviewer feedback received, revision diff, checklist completion
@@ -121,26 +123,26 @@ These facts anchor the reflection. Do not skip to self-assessment when execution
 
 **Core deliverable check**: Did this cycle directly improve the PRIMARY OUTPUT (the skill, model, paper, design, feature)? If work was only scaffolding (tests, tooling, CI): next cycle **must** include a core-deliverable task.
 
-**Self-audit**: Am I fixing real problems or adapting to symptoms? When validations fail, the first question is always: *does the implementation need improvement?* Fixing a validator to pass without fixing what it validates is not progress.
+**Self-audit**: Am I fixing real problems or adapting to symptoms? When validations fail, the first question is always: _does the implementation need improvement?_ Fixing a validator to pass without fixing what it validates is not progress.
 
 **Step 3 — Scan remaining dimensions:**
 
-| Dimension | Ask |
-|-----------|-----|
-| Validation coverage | Are important scenarios and edge cases exercised? |
-| Error/edge-case handling | Are failure modes handled gracefully? |
-| Documentation | Complete, accurate, up to date? |
-| Performance | Any obvious bottlenecks? |
-| UX / output | Is feedback clear and helpful? |
-| Observability | Is logging/reporting adequate? |
-| Security | Any obvious attack surfaces? |
-| Work quality | Anything to simplify or clarify? |
+| Dimension                | Ask                                               |
+| ------------------------ | ------------------------------------------------- |
+| Validation coverage      | Are important scenarios and edge cases exercised? |
+| Error/edge-case handling | Are failure modes handled gracefully?             |
+| Documentation            | Complete, accurate, up to date?                   |
+| Performance              | Any obvious bottlenecks?                          |
+| UX / output              | Is feedback clear and helpful?                    |
+| Observability            | Is logging/reporting adequate?                    |
+| Security                 | Any obvious attack surfaces?                      |
+| Work quality             | Anything to simplify or clarify?                  |
 
 **Step 4 — Cross-cycle pattern check.** Compare this cycle's top observations to the previous cycle's. If the same dimension is flagged with the same diagnosis and no progress — this signals a stuck loop. On the next cycle, **Refresh**: deliberately target a different dimension rather than continuing on the stuck one.
 
 **Step 5 — Extract one heuristic.** Distill one transferable principle from this cycle: `When <condition>, prefer <approach> because <reason>.` Add it to Session Heuristics (prepend; keep max 5, drop oldest when full).
 
-End Reflect with: *"Next cycle focus: [area]."*
+End Reflect with: _"Next cycle focus: [area]."_
 
 ### Inter-Cycle Pause
 
@@ -178,34 +180,34 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 
 ## Common Rationalizations
 
-| Rationalization | Reality |
-|-----------------|---------|
-| "I should check in with the user" | Work. They'll stop you when they need to. |
-| "End of cycle is a natural stop point" | End of cycle = beginning of next cycle. |
-| "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding. |
-| "All done here — nothing left to improve" | Run Reflect. There is always a weakest dimension. |
-| "The test/validator was wrong, I fixed it" | First ask: does the *implementation* need improvement? Fixing evaluators to match broken implementations is not progress. |
-| "I improved tests/scaffolding this cycle" | Supporting work only. The core deliverable must also advance each cycle. |
-| "The same issue keeps coming up" | Refresh to a different dimension; stuck loops are not progress. |
+| Rationalization                             | Reality                                                                                                                   |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| "I should check in with the user"           | Work. They'll stop you when they need to.                                                                                 |
+| "End of cycle is a natural stop point"      | End of cycle = beginning of next cycle.                                                                                   |
+| "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding.                                                                         |
+| "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
+| "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
+| "I improved tests/scaffolding this cycle"   | Supporting work only. The core deliverable must also advance each cycle.                                                  |
+| "The same issue keeps coming up"            | Refresh to a different dimension; stuck loops are not progress.                                                           |
 
 ## Platform Notes
 
 Where `TaskCreate`/`TaskUpdate` appear in this skill, use your platform's equivalent:
 
-| Agent | Skill loading | Task tracking |
-|-------|--------------|---------------|
-| Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
-| Codex | `activate_skill` tool | Native task tools |
-| Gemini CLI | GEMINI.md conventions | Native task tools |
-| OpenCode | AGENTS.md conventions | Native task tools |
-| Cursor | `.cursorrules` or explicit load | File-based notes |
-| Windsurf | `~/.codeium/windsurf/skills/` or `~/.agents/skills/` | Native task tools |
-| Roocode | `~/.roo/skills/` or `~/.agents/skills/` | Native task tools |
-| Cline | `~/.cline/skills/` or `~/.agents/skills/` | Native task tools |
-| Trae | `~/.trae/skills/` or `~/.agents/skills/` | Native task tools |
-| Kimi Code | `~/.config/agents/skills/` or `.kimi/skills/` | `/skill:autogrind` |
-| GitHub Copilot | `~/.copilot/skills/` or `~/.agents/skills/` | Native task tools |
-| Goose | `~/.agents/skills/` | Native task tools |
-| AmpCode | `~/.config/agents/skills/` or `~/.agents/skills/` | Native task tools |
-| Kilo / Kiro / Factory | `~/.agents/skills/` | Native task tools |
-| Hermes Agent (NousResearch) | `~/.agents/skills/` | Native task tools |
+| Agent                       | Skill loading                                        | Task tracking               |
+| --------------------------- | ---------------------------------------------------- | --------------------------- |
+| Claude Code                 | `Skill` tool                                         | `TaskCreate` / `TaskUpdate` |
+| Codex                       | Auto-discovered skills or bundled plugin skills      | Native task tools           |
+| Gemini CLI                  | GEMINI.md conventions                                | Native task tools           |
+| OpenCode                    | AGENTS.md conventions                                | Native task tools           |
+| Cursor                      | `.cursorrules` or explicit load                      | File-based notes            |
+| Windsurf                    | `~/.codeium/windsurf/skills/` or `~/.agents/skills/` | Native task tools           |
+| Roocode                     | `~/.roo/skills/` or `~/.agents/skills/`              | Native task tools           |
+| Cline                       | `~/.cline/skills/` or `~/.agents/skills/`            | Native task tools           |
+| Trae                        | `~/.trae/skills/` or `~/.agents/skills/`             | Native task tools           |
+| Kimi Code                   | `~/.config/agents/skills/` or `.kimi/skills/`        | `/skill:autogrind`          |
+| GitHub Copilot              | `~/.copilot/skills/` or `~/.agents/skills/`          | Native task tools           |
+| Goose                       | `~/.agents/skills/`                                  | Native task tools           |
+| AmpCode                     | `~/.config/agents/skills/` or `~/.agents/skills/`    | Native task tools           |
+| Kilo / Kiro / Factory       | `~/.agents/skills/`                                  | Native task tools           |
+| Hermes Agent (NousResearch) | `~/.agents/skills/`                                  | Native task tools           |

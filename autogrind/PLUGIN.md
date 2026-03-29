@@ -1,30 +1,61 @@
-# AutoGrind Plugin
+# AutoGrind Plugins
 
-AutoGrind is available as a native plugin for **Claude Code**, in addition to the
+AutoGrind is available as a native plugin for **Claude Code** and **OpenAI Codex**, in addition to the
 [skill](SKILL.md) that works across all other compatible agents.
 
 ---
 
 ## Claude Code
 
-### Install from this repo
+### One-line install
 
-```shell
+```bash
+claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin install autogrind@autogrind-skills
+```
+
+### In-app install
+
+```text
 /plugin marketplace add ttttonyhe/autogrind-skills
 /plugin install autogrind@autogrind-skills
 ```
 
 ### Invoke
 
-```shell
+```text
 /autogrind:autogrind
 ```
 
-Or use a trigger phrase — Claude Code recognises these automatically:
-`keep working, don't stop`, `autogrind this project`
+Or use a trigger phrase such as `keep working, don't stop` or `autogrind this project`.
 
 ### Update
 
-```shell
-/plugin update autogrind
+```bash
+claude plugin update autogrind
 ```
+
+Run `/reload-plugins` in an active session after install or update if the new plugin state does not appear immediately.
+
+---
+
+## Codex
+
+### One-click install from this repo
+
+1. Open this repository in Codex.
+2. Open `plugins`.
+3. Install `autogrind` from the repo marketplace shipped in [`.agents/plugins/marketplace.json`](../.agents/plugins/marketplace.json).
+
+### Invoke
+
+Use a natural trigger phrase such as `autogrind this project`, `keep working, don't stop`, or `continue improving until I say stop`.
+
+### Personal install outside this repo
+
+If you want AutoGrind to appear in Codex across other repositories, copy [`autogrind/`](./) into a personal plugin location and add an equivalent entry to `~/.agents/plugins/marketplace.json`, following the official Codex plugin marketplace format.
+
+---
+
+## Raw Skill Install
+
+If you do not want either native plugin, the core skill still works directly through the usual skills directories documented in the repository [README](../README.md).

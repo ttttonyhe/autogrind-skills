@@ -1,0 +1,20 @@
+{
+  "name": "autogrind-skills",
+  "interface": {
+    "displayName": "AutoGrind"
+  },
+  "plugins": [
+    {
+      "name": "autogrind",
+      "source": {
+        "source": "local",
+        "path": "./autogrind"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

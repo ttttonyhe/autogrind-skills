@@ -8,6 +8,8 @@ Works for any long-running workflow: code, ML, research, design, writing.
 
 Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research; see [RESEARCH.md](RESEARCH.md).
 
+[English](README.md) | [简体中文](README.zh.md)
+
 ---
 
 ## Install
@@ -25,6 +27,8 @@ Then invoke it:
 ```
 /autogrind
 ```
+
+If you use Claude Code or Codex and prefer native plugins, see the [plugin installation guide](autogrind/PLUGIN.md).
 
 Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
 
@@ -66,17 +70,27 @@ cp -r autogrind ~/.claude/skills/autogrind
 
 **Invoke:** `/autogrind` or `"keep working, don't stop"`
 
+Optional native plugin:
+
+```bash
+claude plugin marketplace add ttttonyhe/autogrind-skills && claude plugin install autogrind@autogrind-skills
+```
+
 ---
 
 ### Codex
+
+Preferred native plugin path: open this repo in Codex, run `/plugins`, and install `autogrind` from the repo marketplace. Full instructions: [autogrind/PLUGIN.md](autogrind/PLUGIN.md).
+
+For direct skill install or local authoring/testing, the raw skill still works:
 
 ```bash
 cp -r autogrind ~/.agents/skills/autogrind
 ```
 
-Codex discovers skills automatically. Enable full auto-approval in your Codex config so tool calls are not gated on confirmation.
+Codex discovers raw skills automatically from `~/.agents/skills/`. Enable full auto-approval in your Codex config so tool calls are not gated on confirmation.
 
-**Invoke:** `activate_skill autogrind` or `"autogrind this project"`
+**Invoke:** `"autogrind this project"` or `"keep working, don't stop"`
 
 ---
 
@@ -243,10 +257,9 @@ cp -r autogrind ~/.agents/skills/autogrind
 
 </details>
 
-### Native plugin (Claude Code)
+### Optional Native Plugins
 
-Claude Code users can install AutoGrind as a native plugin directly from this repository —
-no cloning required. See the [plugin installation guide](PLUGIN.md).
+If you prefer native plugin UX on Claude Code or Codex, use the install paths in [autogrind/PLUGIN.md](autogrind/PLUGIN.md). Both native plugins wrap the same `autogrind` skill instead of replacing it.
 
 ---
 
