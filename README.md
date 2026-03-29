@@ -1,0 +1,186 @@
+# AutoGrind
+
+**Tell your agent to start working. Walk away. Come back to finished work.**
+
+AutoGrind is a skill for AI coding agents that makes them work continuously and autonomously — grinding through improvements, fixes, tests, and polish in repeating cycles until *you* say stop. No hand-holding. No "should I continue?" No stopping because the TODO list looks empty.
+
+---
+
+## The Grind Cycle
+
+```mermaid
+flowchart TD
+    INIT["🔍 INIT — once\nDetect CLAUDE.md / AGENTS.md\nExtract goals & conventions"]
+    OV["1. OVERVIEW\ngit log · git status · run tests\nScan TODOs & open issues"]
+    UN["2. UNDERSTAND\nRead relevant code & history"]
+    PL["3. PLAN\n3–8 prioritized tasks"]
+    WK["4. WORK\nImplement · test · commit"]
+    RF["5. REFLECT\nEvaluate 8 quality dimensions\nSeed next cycle"]
+    ST{"Explicit stop\nsignal?"}
+    STOP(["STOP"])
+    NEVER["🚫 NEVER stop\non your own"]
+
+    INIT --> OV --> UN --> PL --> WK --> RF --> ST
+    ST -->|yes| STOP
+    ST -->|no — always| OV
+    ST -.->|tempted to stop| NEVER
+```
+
+The agent evaluates 8 quality dimensions every Reflect phase — test coverage, error handling, docs, performance, UX, observability, security, code quality — so it always finds the next thing to improve.
+
+---
+
+## Use Cases
+
+### Go to bed. Wake up to finished work.
+
+```
+You:   autogrind this — i'm going to bed
+Agent: [starts grinding]
+       cycle 1 → fixed broken import, added 12 tests
+       cycle 2 → documented all exported functions
+       cycle 3 → reduced DB query count by 40%
+       cycle 4 → added input validation, edge case tests
+       ...
+You:   [8 hours later] stop
+```
+
+AutoGrind runs unsupervised. No prompts. No check-ins. It keeps finding work until you interrupt it.
+
+### Clean up a codebase while you're in meetings
+
+Point it at a messy repo before your standup. It'll fix linting, improve test coverage, fill documentation gaps, and refactor the worst offenders — in priority order, with meaningful commits.
+
+### Ship a feature end-to-end
+
+Describe what you want in `CLAUDE.md`. Let AutoGrind plan, implement, test, and polish it while you work on something else.
+
+### Continuous improvement on a mature codebase
+
+Even well-maintained repos have weak spots. AutoGrind's Reflect phase always finds them — the module with 60% coverage, the API endpoint missing error handling, the function that deserves a comment.
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+# 1. Clone this repo
+git clone https://github.com/your-org/autogrind-skills.git
+cd autogrind-skills
+
+# 2. Symlink the skill (live updates from this repo)
+ln -sfn "$(pwd)/autogrind" ~/.claude/skills/autogrind
+
+# — or copy for a stable install —
+cp -r autogrind ~/.claude/skills/autogrind
+```
+
+**Enable unrestricted tool use** so AutoGrind can run commands, read files, and commit without permission prompts on every action:
+
+```bash
+# In Claude Code settings, or pass the flag at startup:
+claude --dangerously-skip-permissions
+```
+
+> Without this, AutoGrind will pause on every tool call. It technically works — but defeats the point.
+
+**Invoke:**
+
+```
+/autogrind
+# or: "autogrind this project"
+# or: "keep working, don't stop"
+```
+
+---
+
+### Codex
+
+```bash
+# Copy to the Codex skills directory
+cp -r autogrind ~/.agents/skills/autogrind
+```
+
+Codex loads skills via the `activate_skill` tool. AutoGrind detects this and uses Codex-native task tools internally.
+
+To run unsupervised, enable full auto-approval in your Codex config so tool calls aren't gated on confirmation.
+
+---
+
+### Gemini CLI
+
+Add the skill content to your `GEMINI.md` (project root or `~/.gemini/GEMINI.md`), or reference it:
+
+```bash
+cp -r autogrind ~/.gemini/skills/autogrind
+```
+
+Then in `GEMINI.md`:
+
+```markdown
+# Skills
+Use the AutoGrind skill from ~/.gemini/skills/autogrind/SKILL.md when asked to work continuously.
+```
+
+Run Gemini with full tool permissions so it can execute commands without interruption.
+
+---
+
+### OpenCode
+
+Copy `autogrind/SKILL.md` content into your project's `AGENTS.md` under a `## Skills` section, or reference it directly:
+
+```bash
+cp -r autogrind ~/.config/opencode/skills/autogrind
+```
+
+In `AGENTS.md`:
+
+```markdown
+## Skills
+When asked to grind or work autonomously, follow the AutoGrind skill at skills/autogrind/SKILL.md.
+```
+
+---
+
+### Cursor
+
+Paste the skill content into `.cursorrules` in your project root, or reference it in your global Cursor rules:
+
+```bash
+cat autogrind/SKILL.md >> .cursorrules
+```
+
+Enable auto-run for terminal commands in Cursor settings so it doesn't prompt on every shell execution.
+
+---
+
+## The Only Stop Condition
+
+AutoGrind stops when you say **stop**. That's it.
+
+Recognized: `"stop"`, `"pause"`, `"halt"`, `"exit autogrind"`, `"that's enough"`, or any unambiguous termination request.
+
+Everything else — "looks done", silence, empty backlog, "good enough" — is not a stop signal.
+
+---
+
+## How It Knows What to Work On
+
+On first run, AutoGrind scans for guidance files in order:
+
+1. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` / `.cursorrules`
+2. `opencode.md`
+3. `README.md`
+
+It extracts your project goals, tech stack, conventions, and known issues. If none exist, it infers from directory structure, package files, and test output.
+
+Write a `CLAUDE.md` describing what matters. AutoGrind will respect it.
+
+---
+
+## What Gets Committed
+
+AutoGrind commits after each task — one logical change per commit, with a meaningful message. When you wake up, `git log` tells the full story.
