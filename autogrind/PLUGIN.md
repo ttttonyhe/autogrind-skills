@@ -39,6 +39,9 @@ Or use a trigger phrase — Claude Code recognises these automatically:
 
 ### Test locally (developers)
 
+Use `--plugin-dir` to load the plugin directly — do **not** use `/plugin marketplace add` for
+local testing, as the marketplace's `git-subdir` source requires the repo to be live on GitHub.
+
 ```bash
 claude --plugin-dir ./autogrind
 ```
