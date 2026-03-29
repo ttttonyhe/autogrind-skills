@@ -1,0 +1,25 @@
+{
+  "name": "autogrind",
+  "owner": {
+    "name": "ttttonyhe"
+  },
+  "metadata": {
+    "description": "AutoGrind skill — continuous autonomous agent grind loop"
+  },
+  "plugins": [
+    {
+      "name": "autogrind",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/ttttonyhe/autogrind-skills.git",
+        "path": "autogrind"
+      },
+      "description": "Continuous autonomous grind loop — works until you say stop",
+      "license": "MIT",
+      "homepage": "https://github.com/ttttonyhe/autogrind-skills",
+      "repository": "https://github.com/ttttonyhe/autogrind-skills",
+      "category": "productivity",
+      "keywords": ["autogrind", "autonomous", "grind"]
+    }
+  ]
+}
