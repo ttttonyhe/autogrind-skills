@@ -255,7 +255,7 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/
 
 </details>
 
-### 可选原生插件
+### 通过插件安装
 
 如果你更喜欢 Claude Code 或 Codex 的原生插件体验，请使用 [PLUGIN.md](PLUGIN.md) 中的安装方式。两个原生插件都只是围绕同一份 `autogrind` 技能的包装层。
 
