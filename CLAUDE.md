@@ -18,15 +18,14 @@ autogrind/
 
 ## Plugin Structure
 
-`autogrind/` serves three distribution formats simultaneously:
+`autogrind/` serves two distribution formats simultaneously:
 
 ```
 autogrind/
 ├── SKILL.md                        # agentskills.io root (must match skills/autogrind/SKILL.md)
 ├── .claude-plugin/plugin.json      # Claude Code plugin manifest
-├── .codex-plugin/plugin.json       # Codex plugin manifest
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
-├── assets/                         # icon.png, logo.png for Codex marketplace
+├── commands/autogrind.md           # /autogrind slash command
 └── PLUGIN.md                       # plugin installation guide
 ```
 
@@ -39,9 +38,8 @@ files diverge. When editing the skill, update both files before committing.
 ### Version bumping
 
 When making significant skill changes, bump `metadata.version` in `autogrind/SKILL.md`
-(and therefore in `autogrind/skills/autogrind/SKILL.md`) **and** bump `"version"` in both
-`autogrind/.claude-plugin/plugin.json` and `autogrind/.codex-plugin/plugin.json`. All four
-must stay in sync.
+(and therefore in `autogrind/skills/autogrind/SKILL.md`) **and** bump `"version"` in
+`autogrind/.claude-plugin/plugin.json`. All three must stay in sync.
 
 ### SKILL.md Frontmatter
 
@@ -85,7 +83,6 @@ The skill must be usable across all major coding agents. All agents except Claud
 | Agent | Skill loading mechanism | Task tracking |
 |-------|------------------------|---------------|
 | Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
-| Codex | `activate_skill` tool | Native task tools |
 | Gemini CLI | `~/.gemini/skills/` or `~/.agents/skills/` | Native task tools |
 | OpenCode | `~/.agents/skills/` (auto-discovered) | Native task tools |
 | Cursor | `~/.cursor/skills/` or `~/.agents/skills/` | File-based notes |

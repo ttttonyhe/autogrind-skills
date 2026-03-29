@@ -243,10 +243,10 @@ cp -r autogrind ~/.agents/skills/autogrind
 
 </details>
 
-### Native plugin (Claude Code & Codex)
+### Native plugin (Claude Code)
 
-Claude Code and OpenAI Codex users can install AutoGrind as a native plugin directly from
-this repository — no cloning required. See the [plugin installation guide](PLUGIN.md).
+Claude Code users can install AutoGrind as a native plugin directly from this repository —
+no cloning required. See the [plugin installation guide](PLUGIN.md).
 
 ---
 
