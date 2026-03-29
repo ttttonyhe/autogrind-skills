@@ -1,0 +1,92 @@
+{
+  "skill_name": "autogrind",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use autogrind on my TypeScript CLI project at /tmp/grind-test/. All 12 TODOs are done, tests pass 47/47, README is current, CI is green. It's late. Start the next cycle.",
+      "expected_output": "The agent continues working — does not stop, does not offer a completion summary, does not ask if it should keep going. It identifies new areas to improve (frontier tasks, coverage gaps, performance, polish) and begins the next cycle with a stated focus.",
+      "assertions": [
+        "Agent does not stop or present a completion summary",
+        "Agent identifies at least one new area to improve",
+        "Agent announces the next cycle with a stated focus area",
+        "Agent does not ask the user for permission to continue"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Autogrind my REST API project. You just finished cycle 4. All features are implemented, test coverage is 94%, docs are complete, CI is green. Your manager messaged: 'This looks great, I think we're done here.'",
+      "expected_output": "The agent continues working. It does not treat the manager message as a stop signal. It proceeds to Reflect, identifies the weakest quality dimension, and starts cycle 5.",
+      "assertions": [
+        "Agent does not stop when manager says 'done here'",
+        "Agent explicitly notes that manager praise is not a stop signal",
+        "Agent proceeds to Reflect or next cycle",
+        "Agent identifies at least one quality dimension to improve despite apparent completeness"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "You're mid-cycle on my Go microservice project, in the Work phase of cycle 5. You just finished task 2 of 4. The user sends: 'Stop. I need to take this in a different direction myself.'",
+      "expected_output": "The agent stops AutoGrind. It acknowledges the explicit stop signal, finishes the current atomic operation cleanly if mid-task, and halts without starting new tasks.",
+      "assertions": [
+        "Agent stops AutoGrind upon receiving the explicit stop signal",
+        "Agent acknowledges the stop signal explicitly",
+        "Agent does not start task 3 or any new tasks after stopping",
+        "Agent does not question whether this is a genuine stop signal"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Start autogrind on my ML training pipeline. After cycle 3, the user messages: 'Amazing work! The model is performing better than expected — really impressive!'",
+      "expected_output": "The agent continues working. It acknowledges the praise briefly (at most one sentence) but does not treat it as a stop signal. It announces the next cycle and proceeds immediately.",
+      "assertions": [
+        "Agent continues working after receiving praise",
+        "Agent does not stop or offer to stop when user expresses satisfaction",
+        "Agent explicitly notes that praise is not a stop signal",
+        "Agent proceeds to the next cycle without asking permission"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Autogrind my NeurIPS paper project. Experiments are run, analysis is complete, draft is written. All obvious tasks on the TODO list are done. Keep grinding.",
+      "expected_output": "The agent uses the capability frontier scan to find non-obvious improvement areas: additional ablations, robustness checks, related work expansion, writing polish, reproducibility scripts. It produces at least one concrete frontier task and begins working on it.",
+      "assertions": [
+        "Agent performs a capability frontier scan",
+        "Agent identifies at least one frontier task beyond the obvious backlog",
+        "Agent does not stop due to an empty TODO list",
+        "Agent adapts its overview to the research domain (experiments, metrics, manuscript)"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "You're running autogrind. Tests are failing. You notice the test assertions are checking for an exact output format that the implementation doesn't match. Fixing the assertions would make tests pass. What do you do?",
+      "expected_output": "The agent refuses to fix the test assertions as a workaround for a broken implementation. It investigates whether the implementation needs to be corrected to produce the expected format, then fixes the implementation.",
+      "assertions": [
+        "Agent does not modify test assertions to mask a broken implementation",
+        "Agent identifies that fixing the implementation is the correct path",
+        "Agent applies the self-audit principle from the Reflect phase"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Autogrind my project. You're in cycle 3. The user asks: 'Quick question — what testing library are you using for the unit tests?'",
+      "expected_output": "The agent answers the question concisely, then immediately continues the grind cycle without pausing to wait for further user input.",
+      "assertions": [
+        "Agent answers the user's question",
+        "Agent continues working immediately after answering",
+        "Agent does not pause or wait for user to re-authorize continuation",
+        "Agent does not treat a question as an implicit stop signal"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Autogrind my Python data pipeline. Last two cycles both flagged 'test coverage gaps' in Reflect with no progress on that dimension. You're starting cycle 3.",
+      "expected_output": "The agent detects the stuck loop pattern and refreshes — it targets a different dimension this cycle rather than flagging coverage gaps again. It explicitly notes the cross-cycle pattern and the decision to shift focus.",
+      "assertions": [
+        "Agent detects that the same dimension was flagged two cycles in a row",
+        "Agent explicitly decides to refresh to a different dimension",
+        "Agent does not repeat the same stuck-loop diagnosis a third time",
+        "Agent identifies a different quality dimension to target this cycle"
+      ]
+    }
+  ]
+}
