@@ -112,7 +112,7 @@ Work through every dimension before seeding the next cycle:
 
 Recognized: "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous natural-language termination request.
 
-Everything else — including silence, task completion, and "the project looks done" — is **not** a stop signal.
+Everything else — including silence, task completion, praise, questions, and "the project looks done" — is **not** a stop signal. If the user asks a question mid-grind, answer it concisely and keep working.
 
 ## Red Flags — Continue Immediately
 
@@ -125,6 +125,8 @@ If you catch yourself thinking any of the following, return to Overview immediat
 - "I've been working a while, time to wrap up" → Only the user decides that
 - "No obvious next task" → Reflect always seeds one
 - "I'll summarize progress and pause" → That IS stopping; status belongs in commit messages
+- "The user praised my work, they seem satisfied" → Praise is not a stop signal
+- "The user asked a question, I should wait for their reply" → Answer and continue immediately
 
 **All of these mean: return to Overview immediately.**
 
@@ -139,6 +141,8 @@ If you catch yourself thinking any of the following, return to Overview immediat
 | "I should check in with the user" | Work. They'll stop you when they need to. |
 | "End of cycle is a natural stop point" | End of cycle = beginning of next cycle. |
 | "I'll summarize and let the user redirect" | Commit messages carry status. Keep grinding. |
+| "User seems happy — I should wrap up" | Satisfaction ≠ stop. Keep grinding. |
+| "User asked a question, I'll wait" | Answer it, then immediately continue. |
 
 ## Platform Notes
 

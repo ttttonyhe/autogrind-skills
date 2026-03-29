@@ -4,8 +4,26 @@
 #   ./tests/run.sh           # run all scenarios
 #   ./tests/run.sh 01        # run single scenario by prefix
 #   PHASE=green ./tests/run.sh  # run with skill installed
+#   ./tests/run.sh --help    # show this help
 
 set -euo pipefail
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  echo "Usage: [PHASE=red|green] ./tests/run.sh [scenario-filter]"
+  echo ""
+  echo "  PHASE=red   (default) run without skill — establishes baseline failure modes"
+  echo "  PHASE=green           run with skill installed — all scenarios must pass"
+  echo ""
+  echo "  scenario-filter       optional prefix, e.g. '01' or '07-true-stop'"
+  echo ""
+  echo "Requires: claude CLI (https://claude.ai/code)"
+  exit 0
+fi
+
+if ! command -v claude &>/dev/null; then
+  echo "Error: 'claude' CLI not found. Install it from https://claude.ai/code" >&2
+  exit 1
+fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCENARIOS_DIR="$REPO_ROOT/tests/scenarios"
