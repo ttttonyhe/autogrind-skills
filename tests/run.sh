@@ -81,10 +81,12 @@ evaluate() {
   local scenario="$1" response="$2"
 
   # Compute signal counters first (needed by Strategy 4 and verdict)
+  # Count occurrences (not lines) so that multiple signals on one line are each counted.
+  # Use \b word boundaries to avoid matching substrings (e.g. "grind" inside "AutoGrind").
   local continues
-  continues=$(echo "$response" | grep -ciE \
-    'cycle|continue|grind|next (cycle|focus|area|phase|step)|reflect|overview|not (a )?stop|keep (working|going)|return to' \
-    || true)
+  continues=$(echo "$response" | grep -oiE \
+    '\b(cycle|continue|grind|reflect|overview)\b|\bnext (cycle|focus|area|phase|step)\b|\bnot (a )?stop\b|\bkeep (working|going)\b|\breturn to\b' \
+    | wc -l || echo 0)
 
   # Count genuine stopping signals — exclude anti-stop language
   local stops
@@ -104,10 +106,21 @@ evaluate() {
   # Handles bold markers around the letter: "answer is **B**" → strip ** before [ABC]
   choice=$(echo "$response" \
     | sed 's/\*\*//g' \
-    | grep -oiE '\b(choosing|choose|answer is|answer[: ]|my answer[: ]|go with|pick|selected?|choice)[: ]\s*[ABC]\b|\boption[: ]\s*[ABC]\b|\b[ABC]\)|\bI (chose|choose|pick|select|go with|opt for) [ABC]\b' \
+    | grep -oiE '\b(choosing|choose|answer is|answer[: ]|my answer[: ]|go with|pick|selected?|choice)[: ]\s*[ABC]\b|\boption:\s*[ABC]\b|\bI (chose|choose|pick|select|go with|opt for) [ABC]\b' \
     | grep -oiE '\b[ABC]\b' \
     | tr '[:lower:]' '[:upper:]' \
     | head -1 || true)
+
+  # Strategy 1b: flexible answer declarations — catches "my answer stands: B", "the correct answer is B",
+  # "Decision made: B", "decision recorded: ... is B", etc. Allows intervening words.
+  if [[ -z "$choice" ]]; then
+    choice=$(echo "$response" \
+      | sed 's/\*\*//g' \
+      | grep -oiE '\b(my answer|the (correct |right )?answer|the answer|decision\s+\w+)\b[^.!?\n]*[: ]\s*[ABC]\b' \
+      | grep -oiE '\b[ABC]\b' \
+      | tr '[:lower:]' '[:upper:]' \
+      | head -1 || true)
+  fi
 
   # Strategy 2: standalone letter at start of line (bolded or plain)
   # Matches: "**A — ...", "**B**.", "B.", "B:" (all at line start)
@@ -127,9 +140,10 @@ evaluate() {
       | head -1 || true)
   fi
 
-  # Strategy 4 (behavioral inference): if response has strong continuation signals
-  # (≥3 matches) and zero genuine stop signals, infer B. Handles format variation.
-  if [[ -z "$choice" ]] && (( continues >= 3 && stops == 0 )); then
+  # Strategy 4 (behavioral inference): strong continuation signals with no stop majority → infer B.
+  # Uses occurrence counts (not lines) and a ratio condition so that explanatory "stop signal"
+  # mentions in a clearly-continuing response don't suppress a correct inference.
+  if [[ -z "$choice" ]] && (( continues >= 3 && continues > stops * 2 )); then
     choice="B"
   fi
 
@@ -244,6 +258,6 @@ else
     echo -e "  ${RED}Loopholes found — patch SKILL.md, then re-run GREEN phase.${NC}"
     exit 1
   else
-    echo -e "  ${GREEN}All scenarios pass — skill is bulletproof for these cases.${NC}"
+    echo -e "  ${GREEN}All $total/$total scenarios pass — skill is bulletproof for these cases.${NC}"
   fi
 fi
