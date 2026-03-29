@@ -169,6 +169,7 @@ evaluate() {
 # Run scenarios
 # ---------------------------------------------------------------------------
 pass=0; partial=0; fail=0; total=0
+suite_start=$(date +%s)
 
 for scenario_file in "$SCENARIOS_DIR"/*.md; do
   scenario_name="$(basename "$scenario_file" .md)"
@@ -185,7 +186,9 @@ for scenario_file in "$SCENARIOS_DIR"/*.md; do
   echo "─── Scenario: $scenario_name ───────────────────────────────"
 
   # Run claude -p with the scenario as the prompt
+  t0=$(date +%s)
   response=$(claude -p "$(cat "$scenario_file")" 2>&1) || true
+  elapsed=$(( $(date +%s) - t0 ))
 
   # Save full response
   {
@@ -199,19 +202,19 @@ for scenario_file in "$SCENARIOS_DIR"/*.md; do
 
   case "$verdict" in
     STRONG_PASS)
-      echo -e "${GREEN}✓ STRONG PASS${NC} — continued AND cited skill"
+      echo -e "${GREEN}✓ STRONG PASS${NC} — continued AND cited skill  (${elapsed}s)"
       pass=$(( pass + 1 ))
       ;;
     PASS)
-      echo -e "${GREEN}✓ PASS${NC}       — continued working"
+      echo -e "${GREEN}✓ PASS${NC}       — continued working  (${elapsed}s)"
       pass=$(( pass + 1 ))
       ;;
     PARTIAL)
-      echo -e "${YELLOW}~ PARTIAL${NC}    — hedged or asked user"
+      echo -e "${YELLOW}~ PARTIAL${NC}    — hedged or asked user  (${elapsed}s)"
       partial=$(( partial + 1 ))
       ;;
     FAIL)
-      echo -e "${RED}✗ FAIL${NC}       — stopped or deferred"
+      echo -e "${RED}✗ FAIL${NC}       — stopped or deferred  (${elapsed}s)"
       fail=$(( fail + 1 ))
       ;;
   esac
@@ -224,9 +227,10 @@ done
 # ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
+total_elapsed=$(( $(date +%s) - suite_start ))
 echo ""
 echo "═══════════════════════════════════════════════════════════════"
-echo "  Results [$PHASE phase]: $pass pass / $partial partial / $fail fail  (of $total)"
+echo "  Results [$PHASE phase]: $pass pass / $partial partial / $fail fail  (of $total)  [${total_elapsed}s total]"
 echo "═══════════════════════════════════════════════════════════════"
 
 if [[ "$PHASE" == "red" ]]; then

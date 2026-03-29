@@ -210,6 +210,17 @@ Write a `CLAUDE.md` describing what matters. AutoGrind will respect it.
 
 AutoGrind commits after each task — one logical change per commit, with a meaningful message. When you wake up, `git log` tells the full story.
 
+```
+$ git log --oneline
+f3a1b2c Reduce N+1 queries in UserRepository.findByOrg()
+e8d4c91 Test: cover AuthService.refreshToken() null and expired cases
+b7a3f52 Fix: null pointer dereference in SessionManager.cleanup()
+a91e2b4 Docs: add JSDoc to all public ApiClient methods
+9c4d718 Refactor: extract retry logic from ApiClient into RetryHandler
+8b2f1e7 Test: add integration tests for /auth/refresh endpoint
+...
+```
+
 ---
 
 ## Development
