@@ -8,7 +8,7 @@
       "name": "autogrind",
       "source": {
         "source": "local",
-        "path": "./autogrind"
+        "path": "."
       },
       "policy": {
         "installation": "AVAILABLE",

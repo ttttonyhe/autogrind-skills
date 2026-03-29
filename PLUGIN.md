@@ -52,7 +52,7 @@ Use a natural trigger phrase such as `autogrind this project`, `keep working, do
 
 ### Personal install outside this repo
 
-If you want AutoGrind to appear in Codex across other repositories, copy [`autogrind/`](./) into a personal plugin location and add an equivalent entry to `~/.agents/plugins/marketplace.json`, following the official Codex plugin marketplace format.
+If you want AutoGrind to appear in Codex across other repositories, clone this repo into a personal plugin location and add an equivalent entry to `~/.agents/plugins/marketplace.json`, following the official Codex plugin marketplace format.
 
 ---
 

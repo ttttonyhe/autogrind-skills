@@ -8,48 +8,38 @@ This repository contains the **AutoGrind** skill - a cross-agent autonomous deve
 
 ## Skill File Format
 
-Skills follow the superpowers skill format. Each skill lives in its own directory:
-
-```
-autogrind/
-  SKILL.md         # Main skill content (required)
-  [supporting]     # Only if truly necessary (heavy reference, reusable tools)
-```
+The repo root IS the skill package — `SKILL.md` lives at the root to satisfy the AgentSkills spec. Agents discover it by symlinking or cloning the repo root directly into their skills directory.
 
 ## Plugin Structure
 
-`autogrind/` stays skill-first and serves three distribution formats simultaneously:
+The repo root serves three distribution formats simultaneously:
 
 ```
-autogrind/
+autogrind-skills/           (repo root = skill root)
 ├── SKILL.md                        # agentskills.io root (must match skills/autogrind/SKILL.md)
-├── .claude-plugin/plugin.json      # Claude Code plugin manifest
+├── .claude-plugin/
+│   ├── plugin.json                 # Claude Code plugin manifest
+│   └── marketplace.json            # Claude Code marketplace catalog
 ├── .codex-plugin/plugin.json       # Codex plugin manifest
+├── .agents/plugins/marketplace.json # Codex repo marketplace catalog
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
 ├── commands/autogrind.md           # /autogrind slash command
 └── PLUGIN.md                       # plugin installation guide
 ```
 
-Repo-level marketplace catalogs live outside `autogrind/`:
-
-```text
-.claude-plugin/marketplace.json     # Claude Code marketplace catalog
-.agents/plugins/marketplace.json    # Codex repo marketplace catalog
-```
-
-Both native plugins are complements to the core skill package. Do not restructure the repo around either plugin unless explicitly requested.
+Both native plugins are complements to the core skill package. Do not restructure the repo unless explicitly requested.
 
 ### SKILL.md sync rule
 
-`autogrind/SKILL.md` and `autogrind/skills/autogrind/SKILL.md` must always be identical.
+`SKILL.md` and `skills/autogrind/SKILL.md` must always be identical.
 A pre-commit hook (`.git/hooks/pre-commit`) enforces this — it blocks commits where the
 files diverge. When editing the skill, update both files before committing.
 
 ### Version bumping
 
-When making significant skill changes, bump `metadata.version` in `autogrind/SKILL.md`
-(and therefore in `autogrind/skills/autogrind/SKILL.md`) **and** bump `"version"` in
-both `autogrind/.claude-plugin/plugin.json` and `autogrind/.codex-plugin/plugin.json`.
+When making significant skill changes, bump `metadata.version` in `SKILL.md`
+(and therefore in `skills/autogrind/SKILL.md`) **and** bump `"version"` in
+both `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
 All four must stay in sync.
 
 ### SKILL.md Frontmatter
@@ -73,7 +63,7 @@ Rules:
 - `compatibility`: space for all supported agents — update when new agents add agentskills.io support
 - `metadata.version`: bump when making significant changes to skill logic
 - Total frontmatter ≤ 1024 characters
-- Validate with `npx skills-ref validate ./autogrind` before committing
+- Validate with `npx skills-ref validate .` before committing
 
 ## Skill Design Goals
 
@@ -165,23 +155,23 @@ The reflect phase must always produce at least one focus area for the next cycle
 
 ```bash
 # Validate against agentskills.io spec
-npx skills-ref validate ./autogrind
+npx skills-ref validate .
 
 # Check frontmatter
-head -12 autogrind/SKILL.md
+head -12 SKILL.md
 
 # Keep word count reasonable - frequently invoked skills should stay under 2000 words
-wc -w autogrind/SKILL.md
+wc -w SKILL.md
 ```
 
 ### Install locally for testing
 
 ```bash
-# Claude Code (live-editing symlink)
-ln -sfn $(pwd)/autogrind ~/.claude/skills/autogrind
+# Claude Code (live-editing symlink from repo root)
+ln -sfn $(pwd) ~/.claude/skills/autogrind
 
-# Copy for stable install
-cp -r autogrind ~/.claude/skills/autogrind
+# Or clone directly to skills location
+git clone --depth 1 https://github.com/ttttonyhe/autogrind-skills.git ~/.claude/skills/autogrind
 ```
 
 ### Run the test suite

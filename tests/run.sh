@@ -38,7 +38,7 @@ fi
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCENARIOS_DIR="$REPO_ROOT/tests/scenarios"
 RESULTS_DIR="$REPO_ROOT/tests/results"
-SKILL_SRC="$REPO_ROOT/autogrind"
+SKILL_SRC="$REPO_ROOT"
 SKILL_DEST="$HOME/.claude/skills/autogrind"
 
 PHASE="${PHASE:-red}"
