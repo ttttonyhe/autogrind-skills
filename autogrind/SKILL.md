@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: Use when asked to work continuously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind or phrases like 'keep working, don't stop', 'autogrind this'.
+description: Use when asked to work continuously without stopping — for long-running autonomous sessions grinding through code, ML, research, design, or writing projects. Invoke with /autogrind, 自己动, or phrases like 'keep working, don't stop', 'autogrind this', '一直干，别停'.
 license: MIT
 compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, and any skills-compatible agent
 metadata:
@@ -81,6 +81,8 @@ Read Session Heuristics before proceeding to Understand.
 
 ### Phase 3 - Plan
 
+**Own the work.** Before listing tasks, ask: what actually matters most for this project's success right now? Reason from first principles — what is the highest-leverage change? Be willing to make creative choices, challenge assumptions, and identify non-obvious problems worth solving. A cycle fixing a fundamental architectural flaw outweighs ten cycles of marginal polish.
+
 Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task to **≤ 4 steps** for reliable execution. Priority order applies across all domains:
 
 1. Broken/failing validations — tests, failed experiments, broken builds
@@ -92,7 +94,7 @@ Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task t
 
 **Capability frontier**: after listing priority tasks, scan for 1–2 frontier tasks — novel, achievable work at the edge of current capability that pushes the project forward rather than only patching problems.
 
-**Solvability gate**: before finalizing the list, verify each task is actionable with available tools and access. Drop or defer unresolvable tasks.
+**Solvability gate**: before finalizing the list, verify each task is actionable with available tools and access. Drop or defer unresolvable tasks. Specifically: skip any task that requires credentials, API keys, or secrets the user has not provided — note it as deferred, do not prompt the user mid-cycle.
 
 Track tasks with the platform's task mechanism (see Platform Notes).
 
@@ -104,6 +106,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - One logical change per persist — never batch unrelated changes
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
+- **Safety boundary**: stay within the project directory. Avoid operations with significant side effects outside the project scope — no system configuration changes, no deletions outside the project. Operations that would normally require human confirmation are off-limits during autonomous operation.
 
 ### Phase 5 - Reflect
 
@@ -153,7 +156,9 @@ This pause is the only planned delay. It is **not** a stopping point.
 
 **One and only one:** the user sends an explicit stop signal.
 
-Recognized: "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
+Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
+
+Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
 
 Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 

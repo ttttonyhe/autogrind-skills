@@ -26,6 +26,12 @@ Then invoke it:
 /autogrind
 ```
 
+Or in Simplified Chinese (普通话支持):
+
+```
+自己动
+```
+
 Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
 
 ```bash
@@ -118,6 +124,26 @@ Enable auto-run for terminal commands in Cursor settings.
 **Invoke:** `"Keep working on this project autonomously. Don't stop."`
 
 </details>
+
+---
+
+## Update
+
+Paste this into any agent chat:
+
+```
+Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind-skills.
+```
+
+Or manually:
+
+```bash
+# If installed as symlink — no action needed, repo changes are live immediately.
+
+# If installed as copy, re-run the install command:
+cp -r autogrind ~/.claude/skills/autogrind    # Claude Code
+cp -r autogrind ~/.agents/skills/autogrind    # Universal / Codex / Gemini / OpenCode / Cursor
+```
 
 ---
 
