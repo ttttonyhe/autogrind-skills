@@ -17,13 +17,7 @@
     "longDescription": "AutoGrind keeps the agent continuously working through a five-phase cycle: Overview → Understand → Plan → Work → Reflect → 60s pause → repeat. The agent never decides the project is done enough. Only the user decides when to stop.",
     "developerName": "ttttonyhe",
     "category": "Productivity",
-    "capabilities": ["Read", "Write", "Execute"],
-    "defaultPrompt": [
-      "/autogrind",
-      "keep working, don't stop",
-      "autogrind this project"
-    ],
-    "composerIcon": "./assets/icon.png",
-    "logo": "./assets/logo.png"
+    "icon": "../assets/icon.png",
+    "logo": "../assets/logo.png"
   }
 }
