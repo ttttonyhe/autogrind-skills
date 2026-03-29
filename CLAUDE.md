@@ -16,6 +16,33 @@ autogrind/
   [supporting]     # Only if truly necessary (heavy reference, reusable tools)
 ```
 
+## Plugin Structure
+
+`autogrind/` serves three distribution formats simultaneously:
+
+```
+autogrind/
+├── SKILL.md                        # agentskills.io root (must match skills/autogrind/SKILL.md)
+├── .claude-plugin/plugin.json      # Claude Code plugin manifest
+├── .codex-plugin/plugin.json       # Codex plugin manifest
+├── skills/autogrind/SKILL.md       # plugin-format skill copy
+├── assets/                         # icon.png, logo.png for Codex marketplace
+└── PLUGIN.md                       # plugin installation guide
+```
+
+### SKILL.md sync rule
+
+`autogrind/SKILL.md` and `autogrind/skills/autogrind/SKILL.md` must always be identical.
+A pre-commit hook (`.git/hooks/pre-commit`) enforces this — it blocks commits where the
+files diverge. When editing the skill, update both files before committing.
+
+### Version bumping
+
+When making significant skill changes, bump `metadata.version` in `autogrind/SKILL.md`
+(and therefore in `autogrind/skills/autogrind/SKILL.md`) **and** bump `"version"` in both
+`autogrind/.claude-plugin/plugin.json` and `autogrind/.codex-plugin/plugin.json`. All four
+must stay in sync.
+
 ### SKILL.md Frontmatter
 
 ```yaml
