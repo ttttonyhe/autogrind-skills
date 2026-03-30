@@ -3,3 +3,6 @@ tests/results/*.txt
 docs/
 .claude/
 memory
+# eval workspace artifacts (produced during eval runs, not committed)
+evals/workspace/
+*-workspace/

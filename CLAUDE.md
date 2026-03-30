@@ -199,10 +199,13 @@ The primary test artifact is `evals/evals.json`, following the [agentskills.io e
 
 ```
 evals/
-└── evals.json        # Primary: agentskills.io-standard eval cases
-skills/autogrind/evals/evals.json           # Must stay in sync
-plugins/autogrind/skills/autogrind/evals/evals.json  # Must stay in sync
+├── evals.json              # Output quality evals (12 cases)
+└── eval_queries.json      # Description trigger queries (18 queries, 9 each way)
+skills/autogrind/evals/     # Must stay in sync with evals/
+plugins/autogrind/skills/autogrind/evals/  # Must stay in sync with evals/
 ```
+
+`evals/eval_queries.json` follows the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: a flat array of `{"query": "...", "should_trigger": true/false}` objects used to test whether the skill description triggers reliably on relevant prompts and not on irrelevant ones.
 
 **evals.json sync rule**: all three copies must be identical. The pre-commit hook enforces this.
 

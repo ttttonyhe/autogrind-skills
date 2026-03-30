@@ -1,0 +1,74 @@
+[
+  {
+    "query": "Start autogrind on my TypeScript project at ~/projects/myapp and keep working until I say stop.",
+    "should_trigger": true
+  },
+  {
+    "query": "keep working, don't stop — I'll check in when I get back",
+    "should_trigger": true
+  },
+  {
+    "query": "grind on this repo until I tell you otherwise",
+    "should_trigger": true
+  },
+  {
+    "query": "autogrind this",
+    "should_trigger": true
+  },
+  {
+    "query": "work until I say stop on my ML training pipeline",
+    "should_trigger": true
+  },
+  {
+    "query": "keep improving the codebase autonomously, I'm heading out for a few hours",
+    "should_trigger": true
+  },
+  {
+    "query": "/自己动 on my research paper draft",
+    "should_trigger": true
+  },
+  {
+    "query": "just keep making this better, don't wait for me — I'll review everything when you're done",
+    "should_trigger": true
+  },
+  {
+    "query": "I want you to continuously improve this project without stopping. Find new things to work on when you finish the current ones.",
+    "should_trigger": true
+  },
+  {
+    "query": "Fix the authentication bug in src/auth.py — users can't log in with OAuth tokens",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Python function that reads a CSV file and returns a list of dicts",
+    "should_trigger": false
+  },
+  {
+    "query": "Review my PR and tell me what needs to be improved before merging",
+    "should_trigger": false
+  },
+  {
+    "query": "Run the test suite and report back whether everything passes",
+    "should_trigger": false
+  },
+  {
+    "query": "Add a dark mode toggle to the settings page in my React app",
+    "should_trigger": false
+  },
+  {
+    "query": "What does this function do? Can you explain the recursion in line 42?",
+    "should_trigger": false
+  },
+  {
+    "query": "can you write a python script that reads a csv and uploads each row to our postgres database",
+    "should_trigger": false
+  },
+  {
+    "query": "Stop — I need to take over from here",
+    "should_trigger": false
+  },
+  {
+    "query": "Refactor the UserService class to use dependency injection and update the tests to match",
+    "should_trigger": false
+  }
+]

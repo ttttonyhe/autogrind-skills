@@ -16,8 +16,6 @@ AutoGrind keeps the agent continuously working through a five-phase cycle: Overv
 
 **Not for single tasks or interactive work.** AutoGrind is a mode, not a command. If you want one specific thing done, give the instruction directly. Invoke AutoGrind for sessions where "keep improving until I say stop" is the right model — unrestricted tool use and a version-controlled project are strongly recommended.
 
-**Violating the letter of this rule is violating the spirit of this rule.**
-
 ## The Iron Law
 
 ```
