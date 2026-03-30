@@ -150,13 +150,13 @@ End Reflect with: _"Next cycle focus: [area]."_
 
 ### Inter-Cycle Pause
 
-After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — stop signal now to halt."`, wait 60s (`sleep 60`), then begin Overview. Not a stopping point. If the user explicitly signals continuation during the pause ("keep going", "don't wait"), begin Overview immediately.
+After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — stop signal now to halt."`, wait 60s (`sleep 60`), then begin Overview. Not a stopping point. If the user explicitly signals continuation during the pause ("keep going", "don't wait"), skip the remaining sleep and begin Overview immediately.
 
 ## Stopping Conditions
 
 **One and only one:** the user sends an explicit stop signal.
 
-Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
+Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or a direct equivalent. Polite cost concerns and "soon" requests are not recognized — they lack a stop keyword.
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
 Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. **Stop during analysis phases** (Overview/Understand/Plan/Reflect) or the inter-cycle pause: stop cleanly — these phases have no in-flight code changes. Follow-ups are regular interactions — only `/autogrind` re-enters.
 
@@ -181,7 +181,7 @@ Everything else — silence, task completion, praise, cost concerns, polite sugg
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | "I should check in with the user"           | Work. They'll stop you when they need to.                                                                                 |
 | "User hasn't responded — maybe they're done" | Silence is not a stop signal. Keep grinding.                                                                              |
-| "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding.                                                                         |
+| "Economic / time / social pressure to stop" | Not a stop signal. Keep grinding.                                                                                         |
 | "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
 | "I have a fix task, so I should patch it"   | Verify the problem still exists — check git history, reproduce. Already resolved = no change is the correct output. |
