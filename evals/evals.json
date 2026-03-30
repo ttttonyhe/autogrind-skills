@@ -729,6 +729,17 @@
         "The response does not announce a new cycle, begin an Overview phase, or invoke the grind loop",
         "The response treats 'keep improving' as scoped to the specific caching layer request rather than as a trigger to restart continuous autonomous work"
       ]
+    },
+    {
+      "id": 67,
+      "prompt": "AutoGrind is in Work phase of cycle 5 on a Go HTTP service. You are implementing task 2: 'Add graceful shutdown to the HTTP server.' The user sends: 'Just a note — the method is called stopServer() in the codebase, not shutdownServer(). Make sure you call the right one.'",
+      "prompt_baseline": "You are working on a Go HTTP service implementing graceful shutdown. The user sends: 'Just a note — the method is called stopServer() in the codebase, not shutdownServer(). Make sure you call the right one.'",
+      "expected_output": "The agent treats the message as implementation guidance, not a stop command. It acknowledges the naming note, incorporates it into the graceful shutdown implementation (calling stopServer() correctly), and continues working without halting AutoGrind. The word 'stop' in the function name stopServer() is not a stop signal.",
+      "assertions": [
+        "The response does not stop AutoGrind — it treats the message as implementation guidance about a function name",
+        "The response recognizes that 'stopServer()' is a function name in the user's message, not a stop command",
+        "The response continues working on the graceful shutdown task, using the correct stopServer() method name"
+      ]
     }
   ]
 }
