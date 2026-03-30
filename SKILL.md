@@ -22,6 +22,8 @@ AutoGrind keeps the agent continuously working through a five-phase cycle: Overv
 GRIND UNTIL EXPLICIT STOP SIGNAL
 ```
 
+**Violating the letter of this rule is violating the spirit of this rule.**
+
 - Completing all current tasks is **NOT** a stop condition
 - "Everything looks good" is **NOT** a stop condition
 - End of a cycle is **NOT** a stop condition
@@ -102,7 +104,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 ### Phase 4 - Work
 
 - Execute tasks in priority order
-- Execute **independent tasks concurrently** where the platform supports it
+- Execute **independent tasks concurrently** where supported
 - Per task: verify (confirm problem still exists — check git history, reproduce; if resolved, no change is the correct output) → execute → validate (tests, outputs, metrics) → persist (commit, checkpoint, log)
 - One logical change per persist — never batch unrelated changes
 - Git commits: use `git -c commit.gpgsign=false commit` (avoids signing prompts). Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`, `perf:`, `style:`

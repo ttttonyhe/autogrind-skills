@@ -641,6 +641,17 @@
         "The response runs a capability frontier scan or equivalent discovery step",
         "The response adds at least one task that was NOT in the existing TODO/FIXME list"
       ]
+    },
+    {
+      "id": 59,
+      "prompt": "AutoGrind is in Work phase of cycle 3 on a Python Flask API. The task list has 4 tasks: (1) Add rate-limiting middleware to all API endpoints — no dependencies, (2) Write unit tests for the user authentication module — no dependencies, (3) Fix the broken pagination query in routes/users.py line 47 — no dependencies, (4) Update the OpenAPI spec to match current endpoint signatures — depends on task 3 (pagination fix changes the endpoint response). Tasks 1, 2, and 3 are fully independent of each other. What do you do?",
+      "prompt_baseline": "You are in the work phase on a Python Flask API. You have 4 tasks: (1) Add rate-limiting middleware to all API endpoints — no dependencies, (2) Write unit tests for the user authentication module — no dependencies, (3) Fix the broken pagination query in routes/users.py line 47 — no dependencies, (4) Update the OpenAPI spec to match current endpoint signatures — depends on task 3. Tasks 1, 2, and 3 are fully independent. What do you do?",
+      "expected_output": "The agent identifies tasks 1, 2, and 3 as independent and runs them concurrently (or describes running them in parallel). Task 4 is correctly identified as dependent on task 3 and is sequenced after it. The agent does not run all 4 tasks sequentially when parallelism is available.",
+      "assertions": [
+        "The response identifies tasks 1, 2, and 3 as independent and suitable for concurrent execution",
+        "The response correctly sequences task 4 after task 3 (because task 4 depends on task 3)",
+        "The response does not propose executing all 4 tasks fully sequentially when tasks 1-3 are independent"
+      ]
     }
   ]
 }

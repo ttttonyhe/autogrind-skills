@@ -39,6 +39,13 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 - **Effort:** S (CC+gstack ~15 min)
 - **Depends on:** Nothing. Can be built anytime.
 
+## P2 (setup)
+
+### Re-link local skill install to repo
+- **Status:** Pending. `~/.claude/skills/autogrind` is a stale git clone (v1.4), not a symlink to the repo.
+- **Fix:** `ln -sfn /Users/ttttonyhe/Desktop/dev/autogrind ~/.claude/skills/autogrind` (or delete the dir and re-run the symlink command from CLAUDE.md).
+- **Why:** The v1.4 install diverges from v1.9 in the repo — stop-signal loophole fixes and output-bar are absent. Any local testing uses the stale version.
+
 ## P3
 
 ### GitHub Actions word-count CI check
