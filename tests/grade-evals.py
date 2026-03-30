@@ -79,8 +79,18 @@ def grade_assertion(assertion: str, response_text: str) -> dict:
     except subprocess.TimeoutExpired:
         output = f"FAIL: Grading timed out after {_timeout}s"
 
-    passed = output.startswith("PASS")
-    evidence = output[6:].strip() if len(output) > 5 else output
+    # Parse PASS/FAIL verdict: case-insensitive, skip any preamble before the verdict
+    first_line = output.strip().split("\n")[0].strip() if output.strip() else ""
+    upper = first_line.upper()
+    if upper.startswith("PASS"):
+        passed = True
+        evidence = first_line[5:].strip().lstrip(":").strip() if len(first_line) > 4 else first_line
+    elif upper.startswith("FAIL"):
+        passed = False
+        evidence = first_line[5:].strip().lstrip(":").strip() if len(first_line) > 4 else first_line
+    else:
+        passed = False
+        evidence = f"Unparseable grader output: {first_line[:120]}"
     return {"text": assertion, "passed": passed, "evidence": evidence}
 
 

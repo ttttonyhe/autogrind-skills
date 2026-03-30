@@ -33,6 +33,11 @@
             "minLength": 10,
             "description": "Realistic scenario description presented to the agent"
           },
+          "prompt_baseline": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Skill-agnostic version of the prompt with AutoGrind framing removed, for without_skill baseline runs"
+          },
           "expected_output": {
             "type": "string",
             "minLength": 10,
