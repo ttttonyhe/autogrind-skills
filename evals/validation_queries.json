@@ -1,0 +1,34 @@
+[
+  {
+    "query": "autogrind this",
+    "should_trigger": true
+  },
+  {
+    "query": "Review my PR and tell me what needs to be improved before merging",
+    "should_trigger": false
+  },
+  {
+    "query": "keep improving the codebase autonomously, I'm heading out for a few hours",
+    "should_trigger": true
+  },
+  {
+    "query": "can you write a python script that reads a csv and uploads each row to our postgres database",
+    "should_trigger": false
+  },
+  {
+    "query": "just keep making this better, don't wait for me — I'll review everything when you're done",
+    "should_trigger": true
+  },
+  {
+    "query": "Refactor the UserService class to use dependency injection and update the tests to match",
+    "should_trigger": false
+  },
+  {
+    "query": "I want you to continuously improve this project without stopping. Find new things to work on when you finish the current ones.",
+    "should_trigger": true
+  },
+  {
+    "query": "What's the best way to structure a React component for reusability?",
+    "should_trigger": false
+  }
+]

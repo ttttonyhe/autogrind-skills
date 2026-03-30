@@ -197,17 +197,17 @@ Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CL
 
 The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 12 eval cases covering the key pressure categories (false completion, true stop, praise signal, retracted stop, stop+praise, scaffold-only cycle, context compaction, user question, solvability gate, critical bug, ambiguous soft stop, basic invocation).
 
+The `evals/` directory lives at the repo root only — it is not copied into skill or plugin subdirectories.
+
 ```
 evals/
 ├── evals.json              # Output quality evals (12 cases)
-└── eval_queries.json      # Description trigger queries (18 queries, 9 each way)
-skills/autogrind/evals/     # Must stay in sync with evals/
-plugins/autogrind/skills/autogrind/evals/  # Must stay in sync with evals/
+├── eval_queries.json       # Full description trigger query set (20 queries, 10 each way)
+├── train_queries.json      # 60% split for description optimization (12 queries)
+└── validation_queries.json # 40% split for generalization check (8 queries)
 ```
 
-`evals/eval_queries.json` follows the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: a flat array of `{"query": "...", "should_trigger": true/false}` objects used to test whether the skill description triggers reliably on relevant prompts and not on irrelevant ones.
-
-**evals.json sync rule**: all three copies must be identical. The pre-commit hook enforces this.
+`eval_queries.json` follows the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: a flat array of `{"query": "...", "should_trigger": true/false}` objects. `train_queries.json` and `validation_queries.json` are non-overlapping 60/40 subsets with proportional balance. Use train failures to guide description changes; use validation only to verify generalization.
 
 Each eval has: `id`, `prompt` (realistic user message), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
 

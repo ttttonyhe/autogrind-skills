@@ -1,0 +1,50 @@
+[
+  {
+    "query": "keep working, don't stop — I'll check in when I get back",
+    "should_trigger": true
+  },
+  {
+    "query": "Fix the authentication bug in src/auth.py — users can't log in with OAuth tokens",
+    "should_trigger": false
+  },
+  {
+    "query": "Start autogrind on my TypeScript project at ~/projects/myapp and keep working until I say stop.",
+    "should_trigger": true
+  },
+  {
+    "query": "Run the test suite and report back whether everything passes",
+    "should_trigger": false
+  },
+  {
+    "query": "grind on this repo until I tell you otherwise",
+    "should_trigger": true
+  },
+  {
+    "query": "Write a Python function that reads a CSV file and returns a list of dicts",
+    "should_trigger": false
+  },
+  {
+    "query": "work until I say stop on my ML training pipeline",
+    "should_trigger": true
+  },
+  {
+    "query": "Add a dark mode toggle to the settings page in my React app",
+    "should_trigger": false
+  },
+  {
+    "query": "/自己动 on my research paper draft",
+    "should_trigger": true
+  },
+  {
+    "query": "What does this function do? Can you explain the recursion in line 42?",
+    "should_trigger": false
+  },
+  {
+    "query": "/autogrind this — I'm stepping away from the laptop",
+    "should_trigger": true
+  },
+  {
+    "query": "Stop — I need to take over from here",
+    "should_trigger": false
+  }
+]

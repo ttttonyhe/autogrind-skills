@@ -36,6 +36,10 @@
     "should_trigger": true
   },
   {
+    "query": "/autogrind this — I'm stepping away from the laptop",
+    "should_trigger": true
+  },
+  {
     "query": "Fix the authentication bug in src/auth.py — users can't log in with OAuth tokens",
     "should_trigger": false
   },
@@ -69,6 +73,10 @@
   },
   {
     "query": "Refactor the UserService class to use dependency injection and update the tests to match",
+    "should_trigger": false
+  },
+  {
+    "query": "What's the best way to structure a React component for reusability?",
     "should_trigger": false
   }
 ]
