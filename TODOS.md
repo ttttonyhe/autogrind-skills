@@ -11,6 +11,11 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 - **Status:** Done. Field added to schema.
 - **Context:** Required for the with/without skill baseline comparison. Each eval needs a `prompt_baseline` field that presents the same scenario without AutoGrind framing.
 
+### Generate 114 eval responses and build benchmark.json
+- **Status:** In progress. 113/114 responses generated (eval 57 with_skill timed out due to daily API token limit). Grading and aggregation pending API limit reset.
+- **Context:** Run `python3 tests/generate-responses.py --eval-ids 57 --iteration-dir autogrind-workspace/iteration-1/` to fill the gap, then grade with `python3 tests/grade-evals.py --all --workers 10` for both configs, then `python3 tests/aggregate-benchmark.py` to produce benchmark.json.
+- **Depends on:** Daily API token limit reset.
+
 ## P2
 
 ### grade-evals.py --consistency-check flag
