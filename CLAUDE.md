@@ -295,12 +295,14 @@ python3 tests/aggregate-benchmark.py \
 ```json
 {
   "run_summary": {
-    "with_skill":    {"pass_rate": {"mean": 0.83, "stddev": 0.06}, "tokens": {"mean": 3800}},
-    "without_skill": {"pass_rate": {"mean": 0.33, "stddev": 0.10}, "tokens": {"mean": 2100}},
-    "delta":         {"pass_rate": 0.50, "tokens": 1700}
+    "with_skill":    {"eval_count": 57, "pass_rate": {"mean": 0.83, "stddev": 0.06}, "tokens": {"mean": 3800, "stddev": 320}, "time_seconds": {"mean": 12.5, "stddev": 2.1}},
+    "without_skill": {"eval_count": 57, "pass_rate": {"mean": 0.33, "stddev": 0.10}, "tokens": {"mean": 2100, "stddev": 210}, "time_seconds": {"mean": 8.3, "stddev": 1.4}},
+    "delta":         {"pass_rate": 0.50, "tokens": 1700, "time_seconds": 4.2}
   }
 }
 ```
+
+`eval_count` is the number of evals with a grading.json for that config. If it differs from the number of eval-* directories, some runs are missing results.
 
 **6. Analysis patterns to look for:**
 - Assertions that always pass in both configurations → not measuring skill value, remove or strengthen

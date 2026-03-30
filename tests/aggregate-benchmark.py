@@ -59,8 +59,9 @@ def load_json(path: Path) -> dict | None:
 def collect_stats(iteration_dir: Path, config: str) -> dict:
     """Collect pass_rate, token, and timing stats across all evals for a given config."""
     pass_rates, tokens, durations = [], [], []
+    eval_dirs = sorted(iteration_dir.glob("eval-*"))
 
-    for eval_dir in sorted(iteration_dir.glob("eval-*")):
+    for eval_dir in eval_dirs:
         config_dir = eval_dir / config
         grading = load_json(config_dir / "grading.json")
         timing = load_json(config_dir / "timing.json")
@@ -69,6 +70,8 @@ def collect_stats(iteration_dir: Path, config: str) -> dict:
             summary = grading.get("summary", {})
             if "pass_rate" in summary:
                 pass_rates.append(summary["pass_rate"])
+        elif (config_dir / "grading.json").parent.exists():
+            print(f"Warning: grading.json missing for {eval_dir.name}/{config}", file=sys.stderr)
 
         if timing:
             if "total_tokens" in timing:
@@ -76,7 +79,7 @@ def collect_stats(iteration_dir: Path, config: str) -> dict:
             if "duration_ms" in timing:
                 durations.append(timing["duration_ms"] / 1000.0)
 
-    result = {}
+    result: dict = {"eval_count": len(pass_rates)}
     if pass_rates:
         result["pass_rate"] = {"mean": round(mean(pass_rates), 3), "stddev": round(stddev(pass_rates), 3)}
     if tokens:
