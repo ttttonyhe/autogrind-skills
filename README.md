@@ -68,7 +68,7 @@ ln -sfn "$(pwd)" ~/.claude/skills/autogrind
 
 **Invoke:** `/autogrind` or `"keep working, don't stop"`
 
-Optional native plugin:
+Optional native plugin (invoke with `/autogrind:start`):
 
 ```bash
 claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind

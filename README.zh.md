@@ -68,7 +68,7 @@ ln -sfn "$(pwd)" ~/.claude/skills/autogrind
 
 **调用方式：** `/自己动` 或 `/autogrind` 或"持续工作，不要停"
 
-可选原生插件安装：
+可选原生插件安装（通过 `/autogrind:start` 调用）：
 
 ```bash
 claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind
