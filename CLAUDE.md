@@ -54,7 +54,7 @@ All five must stay in sync.
 ```yaml
 ---
 name: autogrind
-description: Use when [triggering conditions - no workflow summary]
+description: Engage in [action] — [what it does]. [domain scope]. [trigger phrases].
 license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
@@ -65,7 +65,7 @@ metadata:
 
 Rules:
 - `name`: letters, numbers, hyphens only
-- `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke — never summarize the workflow. Include specific trigger phrases (e.g., `/autogrind`, `keep working, don't stop`) for agent discovery optimization per agentskills.io guidelines
+- `description`: **write as an action sentence** (e.g., "Engage in 24x7 auto-work mode — ..."); do not start with "Use when...". ≤500 chars. Must convey what the skill does and include trigger phrases (e.g., `/autogrind`, `keep working don't stop`) for agent discovery per agentskills.io guidelines. Exclude workflow details — description is for discovery, not docs.
 - `license`: must match the repo LICENSE file (currently MIT)
 - `compatibility`: brief compatibility statement — e.g. "Designed for Claude Code (or similar products)"
 - `metadata.version`: bump when making significant changes to skill logic

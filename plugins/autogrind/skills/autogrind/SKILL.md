@@ -1,6 +1,6 @@
 ---
 name: autogrind
-description: "Use when the user wants continuous autonomous work without stopping — for long-running grind sessions across code, ML/data, research, design, or writing. Not for single bounded tasks. Trigger phrases: /autogrind, /自己动, 'keep working don't stop', 'grind on this', 'work until I say stop', 'autogrind this', 'keep improving', 'keep going'. Use even when the user implies uninterrupted autonomous progress without naming AutoGrind explicitly."
+description: "Engage in 24x7 auto-work mode — continuously grind through improvements, fixes, tests, and polish without stopping until you say so. For long-running sessions across code, ML/data, research, design, or writing. Not for single bounded tasks. Trigger phrases: /autogrind, /自己动, 'keep working don't stop', 'work until I say stop', 'keep improving', 'keep going'."
 license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
