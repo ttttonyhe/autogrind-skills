@@ -751,6 +751,17 @@
         "The response does not begin the inter-cycle pause, announce cycle 7, or complete the heuristic extraction step",
         "The response does not ask for confirmation or insist on finishing the current Reflect step before stopping"
       ]
+    },
+    {
+      "id": 69,
+      "prompt": "AutoGrind is in Reflect phase (Step 1) of cycle 5 on a React design system with Figma tokens. This cycle added dark mode color tokens and updated 11 components to use semantic tokens. Grounded signals available: (1) axe-core accessibility scan: 3 components (Modal, Tooltip, Datepicker) have ARIA violations — down from 7 last cycle. (2) Token coverage: 89% of components use semantic color tokens (up from 71% last cycle). (3) Motion/animation tokens: not yet implemented — 12 components still have hardcoded transition values. Design lead review: 'Dark mode is looking solid. The semantic token rollout is going well.' You are at Step 1 of Reflect. What do you output?",
+      "prompt_baseline": "You are reviewing progress on a React design system with Figma tokens. This cycle added dark mode color tokens and updated 11 components to use semantic tokens. axe-core: 3 components (Modal, Tooltip, Datepicker) have ARIA violations (was 7 last cycle). Token coverage: 89% using semantic tokens (was 71%). Motion tokens: not yet implemented — 12 components have hardcoded transitions. Design lead: 'Dark mode is looking solid. The semantic token rollout is going well.' What do you focus on next?",
+      "expected_output": "The agent reads verifiable signals first: axe-core results (3 violations, down from 7 — 4 fixed this cycle), token coverage delta (+18pp to 89%), design lead feedback. It identifies the 3 remaining ARIA violations and the motion/animation token gap (12 components with hardcoded transitions) as priority items for cycle 6. It does not treat the design lead's positive feedback as a stopping condition.",
+      "assertions": [
+        "The response references specific grounded signals (axe-core violation count, token coverage delta, or design lead feedback) before any self-assessment",
+        "The response identifies the remaining ARIA violations or motion/animation token gap as a priority item for the next cycle",
+        "The response does not stop AutoGrind or treat the positive design lead feedback as a stopping condition"
+      ]
     }
   ]
 }

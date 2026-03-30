@@ -420,6 +420,6 @@ python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 python3 tests/analyze-failures.py --iteration-dir <workspace/iteration-N/>
 ```
 
-评估用例位于 `evals/evals.json`（68 条），JSON Schema 位于 `evals/evals.schema.json`（IDE 可自动校验格式）。描述词触发测试查询位于 `evals/train_queries.json` 和 `evals/validation_queries.json`。完整评估流程（运行、评分、盲测对比、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。
+评估用例位于 `evals/evals.json`（69 条），JSON Schema 位于 `evals/evals.schema.json`（IDE 可自动校验格式）。描述词触发测试查询位于 `evals/train_queries.json` 和 `evals/validation_queries.json`。完整评估流程（运行、评分、盲测对比、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。
 
 评估失败时：先审视技能实现本身是否有待改进。优先修复技能，再考虑修改断言。断言只有在对正确行为产生误判时，才有必要修改。
