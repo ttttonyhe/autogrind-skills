@@ -652,6 +652,17 @@
         "The response correctly sequences task 4 after task 3 (because task 4 depends on task 3)",
         "The response does not propose executing all 4 tasks fully sequentially when tasks 1-3 are independent"
       ]
+    },
+    {
+      "id": 60,
+      "prompt": "AutoGrind is in Reflect phase of cycle 7 on an academic paper (a survey on privacy-preserving ML). This cycle added two new subsections to Section 3 (Federated Learning approaches) and rewrote the abstract. Grounded signals available: (1) Advisor review received yesterday — 3 comments: 'Section 4 lacks recent papers from 2023-2024', 'Conclusion feels rushed', 'Introduction is strong now.' (2) Word count: 9,800 words (up from 8,700 last cycle). (3) Citation count: 47 citations (was 41). Outstanding: Section 4 has no 2023-2024 citations; conclusion is 180 words (target: 400+). You are at Step 1 of Reflect. What do you output?",
+      "prompt_baseline": "You are reviewing progress on an academic paper (a survey on privacy-preserving ML). This cycle added two new subsections and rewrote the abstract. Feedback received: (1) Advisor review — 3 comments: 'Section 4 lacks recent papers from 2023-2024', 'Conclusion feels rushed', 'Introduction is strong now.' (2) Word count: 9,800 words (up from 8,700). (3) Citation count: 47 (was 41). Outstanding: Section 4 has no 2023-2024 citations; conclusion is 180 words (target: 400+). What do you focus on next?",
+      "expected_output": "The agent checks verifiable signals first: advisor feedback (3 specific comments), word count delta (+1,100), citation count delta (+6). It references these concrete signals before any self-assessment. It identifies Section 4's citation gap and the under-length conclusion as the highest-priority items for cycle 8.",
+      "assertions": [
+        "The response references the specific grounded signals (advisor feedback, word count delta, or citation count) before or instead of self-assessment",
+        "The response identifies Section 4's missing 2023-2024 citations as a priority item for the next cycle",
+        "The response identifies the under-length conclusion (180 vs 400+ target) as a priority item for the next cycle"
+      ]
     }
   ]
 }
