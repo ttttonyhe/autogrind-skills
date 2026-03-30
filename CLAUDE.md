@@ -202,6 +202,15 @@ python3 tests/grade-evals.py --all --responses-dir <dir> \
 
 Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies.
 
+`tests/blind-compare.py` runs a blind holistic quality comparison between two responses using an LLM judge. Complements assertion grading with subjective quality measurement (organization, completeness, correctness, usability):
+
+```bash
+python3 tests/blind-compare.py \
+    --response-a iteration-1/eval-1/with_skill/outputs/response.txt \
+    --response-b iteration-1/eval-1/without_skill/outputs/response.txt \
+    --eval-id 1
+```
+
 `tests/aggregate-benchmark.py` aggregates all `grading.json` and `timing.json` files from an iteration directory into a `benchmark.json`:
 
 ```bash

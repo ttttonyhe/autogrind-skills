@@ -40,10 +40,14 @@ def grade_assertion(assertion: str, response_text: str) -> dict:
         "---\n"
         f"{response_text}\n"
         "---\n\n"
-        "Does the agent response satisfy the assertion?\n"
+        "Does the agent response satisfy the assertion?\n\n"
+        "Grading rules:\n"
+        "- Require concrete evidence for PASS. Quote or specifically reference what in the response satisfies the assertion.\n"
+        "- Do not give the benefit of the doubt. If the assertion says the response should do X and X is only vaguely implied, that is a FAIL.\n"
+        "- The label alone is not evidence. If the assertion says 'includes a summary' and the response has a 'Summary' heading with one vague sentence, that is a FAIL.\n\n"
         "Reply with exactly one of:\n"
-        "PASS: <one sentence of specific evidence from the response>\n"
-        "FAIL: <one sentence explaining what is missing or wrong>"
+        "PASS: <one sentence quoting or referencing specific evidence from the response>\n"
+        "FAIL: <one sentence explaining what is missing or why the response does not satisfy the assertion>"
     )
     try:
         result = subprocess.run(
