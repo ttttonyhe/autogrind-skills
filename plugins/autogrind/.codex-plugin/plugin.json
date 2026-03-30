@@ -1,6 +1,6 @@
 {
   "name": "autogrind",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Let the agent work continuously and fully autonomously without stopping. Use this skill for long-running grind sessions across code, ML/data, research, design, or writing.",
   "author": {
     "name": "ttttonyhe",

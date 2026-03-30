@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
-  version: "1.8"
+  version: "1.9"
 ---
 
 # AutoGrind
@@ -93,6 +93,8 @@ Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task t
 
 **Capability frontier**: after listing priority tasks, identify 1–2 frontier tasks — work that introduces something the project currently lacks: a capability not yet built, a property not yet measured, a path with no coverage. They will not appear on any existing TODO list.
 
+**Output bar**: at least one task must be discovered — a problem not on any TODO, a non-obvious improvement, or a deeper solution over an obvious patch. If all tasks were already listed, run the frontier scan at higher ambition.
+
 **Solvability gate**: verify each task is actionable. Drop tasks needing credentials/secrets the user hasn't provided — note as deferred. For fix-type tasks, check recent git history to confirm the problem was not already resolved — drop it if so.
 
 Track tasks with the platform's task mechanism (see Platform Notes).
@@ -156,7 +158,7 @@ After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds �
 
 Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or any unambiguous termination request.
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
-Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. Follow-ups are regular interactions — only `/autogrind` re-enters.
+Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. **Stop during analysis phases** (Overview/Understand/Plan/Reflect) or the inter-cycle pause: stop cleanly — these phases have no in-flight code changes. Follow-ups are regular interactions — only `/autogrind` re-enters.
 
 Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 
@@ -171,6 +173,7 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 - "Tests/validations pass now" → Passing confirms correctness; never a stop signal
 - "I improved tests/tooling this cycle" → Scaffolding ≠ core deliverable; next cycle targets the primary output
 - "Critical bug found mid-work" → Document with a FIXME+severity and continue; Phase 3 will prioritize the fix
+- "Every task was already on a TODO/FIXME list" → frontier scan at higher ambition; discover at least one task
 
 ## Common Rationalizations
 
