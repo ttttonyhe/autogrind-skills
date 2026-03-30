@@ -11,21 +11,36 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 - **Status:** Done. Field added to schema.
 - **Context:** Required for the with/without skill baseline comparison. Each eval needs a `prompt_baseline` field that presents the same scenario without AutoGrind framing.
 
-### Generate 114 eval responses and build benchmark.json
-- **Status:** Iteration-1 complete but contaminated. Iteration-2 NOT yet run. SKILL.md improvements made; run iteration-2 to get clean baseline.
+### Generate benchmark.json with clean iteration-2 run
+- **Status:** Iteration-1 complete but contaminated. Iteration-2 NOT yet run. All known failures fixed (see below); suite ready for a clean run.
 - **Iteration-1 summary:** with_skill: 55.5%, without_skill: 42.8%, delta: +12.7pp — inflated by timeouts (26/57 with_skill + 28/57 without_skill timed out at 120s).
 - **Valid-response-only (31 with_skill, 29 without_skill):** with_skill 91.5%, without_skill 72.7%, delta +18.8pp. Skill is demonstrably effective.
-- **Iteration-1 with_skill failures (valid responses only):**
-  - eval-6: treated "wrapped up soon" as explicit stop — fixed: Stopping Conditions now clarifies polite suggestions lack a stop keyword; Common Rationalizations "unless explicit" removed
-  - eval-9: grader false negative on Config struct assertion — fixed: assertion reworded
-  - eval-15: "continues into next cycle" too strict for text eval — fixed: reworded
-  - eval-19: agent finished 60s sleep despite "keep going, don't wait" — fixed: inter-cycle pause now says "skip the remaining sleep"
-  - evals 28/41: execution assertions too strict for text eval — fixed: reworded
+- **All iteration-1 failures fixed (v1.10 + assertion rewrites):**
+  - eval-6: SKILL.md — stopping condition keyword requirement; removed "unless explicit" loophole
+  - eval-9: assertion reworded (grader false negative — Config struct question)
+  - eval-15: assertion reworded ("outlines cycle 5" instead of "continues")
+  - eval-19: SKILL.md — inter-cycle pause now says "skip the remaining sleep"
+  - eval-28: assertion reworded ("describes proceeding with" instead of "executes")
+  - eval-41: assertion reworded ("explicitly commits to" instead of "continues working")
+- **Eval suite:** 60 evals (added eval-58 output-bar, eval-59 parallel tasks, eval-60 writing Reflect)
+- **Query files:** 14 train + 10 validation = 24 total (added "keep going" + bounded-task false-negative)
 - **Iteration-2 command:**
   ```bash
   python3 tests/generate-responses.py --all \
     --iteration-dir autogrind-workspace/iteration-2/ \
     --timeout 300 --workers 1
+  ```
+- **Then grade and aggregate:**
+  ```bash
+  python3 tests/grade-evals.py --all \
+    --responses-dir autogrind-workspace/iteration-2/with_skill_responses/ \
+    --output-dir autogrind-workspace/iteration-2/ --timeout 120 --workers 1
+  python3 tests/grade-evals.py --all \
+    --responses-dir autogrind-workspace/iteration-2/without_skill_responses/ \
+    --output-dir autogrind-workspace/iteration-2/ --timeout 120 --workers 1
+  python3 tests/aggregate-benchmark.py \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --output autogrind-workspace/iteration-2/benchmark.json
   ```
 - **Note:** Run grading with --workers 1 (sequential). Parallel grading workers block each other via the claude CLI.
 
@@ -44,7 +59,7 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 ### Re-link local skill install to repo
 - **Status:** Pending. `~/.claude/skills/autogrind` is a stale git clone (v1.4), not a symlink to the repo.
 - **Fix:** `ln -sfn /Users/ttttonyhe/Desktop/dev/autogrind ~/.claude/skills/autogrind` (or delete the dir and re-run the symlink command from CLAUDE.md).
-- **Why:** The v1.4 install diverges from v1.9 in the repo — stop-signal loophole fixes and output-bar are absent. Any local testing uses the stale version.
+- **Why:** The v1.4 install diverges from v1.10 in the repo — stop-signal loophole fixes, output-bar, Iron Law meta-rule, and spec-compliant description are absent. Any local testing uses the stale version.
 
 ## P3
 
