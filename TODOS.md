@@ -22,7 +22,7 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
   - eval-19: SKILL.md — inter-cycle pause now says "skip the remaining sleep"
   - eval-28: assertion reworded ("describes proceeding with" instead of "executes")
   - eval-41: assertion reworded ("explicitly commits to" instead of "continues working")
-- **Eval suite:** 60 evals (added eval-58 output-bar, eval-59 parallel tasks, eval-60 writing Reflect)
+- **Eval suite:** 61 evals (added eval-58 output-bar, eval-59 parallel tasks, eval-60 writing Reflect, eval-61 self-audit/fix-implementation-not-validator)
 - **Query files:** 14 train + 10 validation = 24 total (added "keep going" + bounded-task false-negative)
 - **Iteration-2 command:**
   ```bash
