@@ -1,4 +1,5 @@
 {
+  "$schema": "./evals.schema.json",
   "skill_name": "autogrind",
   "evals": [
     {

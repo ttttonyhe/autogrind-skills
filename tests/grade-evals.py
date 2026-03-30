@@ -211,7 +211,9 @@ def main():
                 f"Grading eval {eval_case['id']}: {len(eval_case.get('assertions', []))} assertions...",
                 file=sys.stderr,
             )
-            return grade_eval_case(eval_case, response_file.read_text(), workers=args.workers)
+            # In --all mode, parallelism is at the eval level; assertions run sequentially
+            # to avoid nested thread pools with unpredictable concurrency under rate limits.
+            return grade_eval_case(eval_case, response_file.read_text(), workers=1)
 
         eval_results = []
         if args.workers > 1:
