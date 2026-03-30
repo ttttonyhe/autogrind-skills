@@ -275,7 +275,7 @@ autogrind-workspace/
     ├── eval-<N>/
     │   ├── with_skill/
     │   │   ├── outputs/       # Agent response file(s)
-    │   │   ├── timing.json    # {"total_tokens": N, "duration_ms": N}
+    │   │   ├── timing.json    # {"duration_s": N} (auto-generated); also accepts {"total_tokens": N, "duration_ms": N}
     │   │   └── grading.json   # Assertion results (from grade-evals.py)
     │   └── without_skill/
     │       ├── outputs/

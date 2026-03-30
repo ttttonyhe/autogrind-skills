@@ -1,7 +1,7 @@
 {
   "name": "autogrind",
   "version": "1.10.0",
-  "description": "Use when the user wants continuous autonomous work without stopping — for long-running grind sessions across code, ML/data, research, design, or writing. Not for single bounded tasks.",
+  "description": "Engage in 24x7 auto-work mode — continuously grind through improvements, fixes, tests, and polish without stopping until you say so. For long-running sessions: code, ML/data, research, design, writing.",
   "author": {
     "name": "ttttonyhe",
     "url": "https://github.com/ttttonyhe"
