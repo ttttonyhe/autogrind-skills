@@ -396,11 +396,16 @@ a91e2b4 文档：为所有公共 ApiClient 方法添加 JSDoc
 # 验证技能结构
 npx skills-ref validate skills/autogrind
 
+# 生成完整评估运行的智能体响应（含技能 / 不含技能）
+python3 tests/generate-responses.py --all \
+    --iteration-dir autogrind-workspace/iteration-N/ \
+    --timeout 300 --workers 1
+
 # 对单个评估用例进行评分
 python3 tests/grade-evals.py --response <响应文件> --eval-id <N>
 
 # 批量评分（responses-dir 目录须包含 eval-<N>.txt 文件）
-python3 tests/grade-evals.py --all --responses-dir <目录>
+python3 tests/grade-evals.py --all --responses-dir <目录> --config with_skill
 
 # 并行评分以加快批量运行（推荐 5-10 个 worker）
 python3 tests/grade-evals.py --all --responses-dir <目录> --workers 8
@@ -410,6 +415,9 @@ python3 tests/blind-compare.py --response-a <文件A> --response-b <文件B> --e
 
 # 将评分结果汇总为 benchmark.json
 python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
+
+# 分类评估通过/失败模式，识别需要关注的问题
+python3 tests/analyze-failures.py --iteration-dir <workspace/iteration-N/>
 ```
 
 评估用例位于 `evals/evals.json`（67 条），JSON Schema 位于 `evals/evals.schema.json`（IDE 可自动校验格式）。描述词触发测试查询位于 `evals/train_queries.json` 和 `evals/validation_queries.json`。完整评估流程（运行、评分、盲测对比、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。

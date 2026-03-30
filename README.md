@@ -396,11 +396,16 @@ Write a `CLAUDE.md` describing what matters. AutoGrind will respect it.
 # Validate skill structure
 npx skills-ref validate skills/autogrind
 
+# Generate agent responses for a full eval run (with_skill and without_skill)
+python3 tests/generate-responses.py --all \
+    --iteration-dir autogrind-workspace/iteration-N/ \
+    --timeout 300 --workers 1
+
 # Grade a single eval against an agent response
 python3 tests/grade-evals.py --response <response-file> --eval-id <N>
 
 # Grade all evals (responses-dir must contain eval-<N>.txt files)
-python3 tests/grade-evals.py --all --responses-dir <dir>
+python3 tests/grade-evals.py --all --responses-dir <dir> --config with_skill
 
 # Parallel grading for faster batch runs (5-10 workers recommended)
 python3 tests/grade-evals.py --all --responses-dir <dir> --workers 8
@@ -410,6 +415,9 @@ python3 tests/blind-compare.py --response-a <file-a> --response-b <file-b> --eva
 
 # Aggregate grading results into benchmark.json
 python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
+
+# Classify eval pass/fail patterns to identify what needs attention
+python3 tests/analyze-failures.py --iteration-dir <workspace/iteration-N/>
 ```
 
 Evals are in `evals/evals.json` (67 cases) with a JSON schema at `evals/evals.schema.json` for IDE validation. Description trigger queries for optimizing the skill description are in `evals/train_queries.json` and `evals/validation_queries.json`. See `CLAUDE.md` for the full eval workflow: spawning runs, grading, blind comparison, aggregation, analysis, human review, and iteration.
