@@ -14,7 +14,7 @@ metadata:
 
 AutoGrind keeps the agent continuously working through a five-phase cycle: Overview → Understand → Plan → Work → Reflect → 60s pause → repeat. The agent never decides the project is "done enough." Only the user decides when to stop.
 
-**Not for single tasks or interactive work.** AutoGrind is a mode, not a command. If you want one specific thing done, give the instruction directly. Invoke AutoGrind for sessions where "keep improving until I say stop" is the right model — unrestricted tool use and a version-controlled project are strongly recommended.
+**Not for single tasks or interactive work.** AutoGrind is a mode, not a command. Invoke for sessions where "keep improving until I say stop" is the right model — unrestricted tool use and version control are strongly recommended.
 
 ## The Iron Law
 
@@ -80,7 +80,7 @@ Read Session Heuristics before proceeding to Understand.
 
 ### Phase 3 - Plan
 
-**Own the work.** Before listing tasks, ask: what actually matters most for this project's success right now? Reason from first principles — what is the highest-leverage change? Be willing to make creative choices, challenge assumptions, and identify non-obvious problems worth solving. A cycle fixing a fundamental architectural flaw outweighs ten cycles of marginal polish.
+**Own the work.** What is the highest-leverage change right now? Reason from first principles — challenge assumptions, find non-obvious problems. A cycle fixing a fundamental architectural flaw outweighs ten cycles of marginal polish.
 
 Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task to **≤ 4 steps** for reliable execution. **Each task must produce a visible, verifiable output change.** Discard micro-tasks that could be grouped or that wouldn't stand alone as a commit — fold them into substantive ones. Priority order applies across all domains:
 
@@ -105,7 +105,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - Execute **independent tasks concurrently** where the platform supports it
 - Per task: verify (confirm problem still exists — check git history, reproduce; if resolved, no change is the correct output) → execute → validate (tests, outputs, metrics) → persist (commit, checkpoint, log)
 - One logical change per persist — never batch unrelated changes
-- Git commits: use `git -c commit.gpgsign=false commit` to avoid signing prompts that require human intervention. Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`, `perf:`, `style:`
+- Git commits: use `git -c commit.gpgsign=false commit` (avoids signing prompts). Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`, `perf:`, `style:`
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
 - User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
@@ -121,7 +121,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - ML/research: metric movement vs. last cycle, experiment outcomes
 - Design/writing: reviewer feedback received, revision diff, checklist completion
 
-These facts anchor the reflection. Do not skip to self-assessment when execution signals are available.
+Do not skip to self-assessment — these facts anchor the reflection.
 
 **Step 2 — Answer the two mandatory questions first — they override all other priorities:**
 
