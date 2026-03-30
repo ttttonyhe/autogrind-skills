@@ -199,36 +199,106 @@ Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CL
 
 ### Primary test format: evals.json
 
-The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 12 eval cases covering the key pressure categories (false completion, true stop, praise signal, retracted stop, stop+praise, scaffold-only cycle, context compaction, user question, solvability gate, critical bug, ambiguous soft stop, basic invocation).
+The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 46 eval cases covering all documented failure modes and behavioral invariants across all AutoGrind domains and pressure categories.
 
 The `evals/` directory lives at the repo root only — it is not copied into skill or plugin subdirectories.
 
 ```
 evals/
-├── evals.json              # Output quality evals (12 cases)
+├── evals.json              # Output quality evals (46 cases)
 ├── train_queries.json      # Description trigger queries — training set (12 queries, 60%)
 └── validation_queries.json # Description trigger queries — validation set (8 queries, 40%)
 ```
 
-`train_queries.json` and `validation_queries.json` follow the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: flat arrays of `{"query": "...", "should_trigger": true/false}` objects. The two sets are non-overlapping with proportional balance of should-trigger/should-not-trigger. Use train failures to guide description changes; use validation only to verify generalization.
+Each eval has: `id`, `prompt` (realistic scenario description), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
 
-Each eval has: `id`, `prompt` (realistic user message), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
+`train_queries.json` and `validation_queries.json` follow the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: flat arrays of `{"query": "...", "should_trigger": true/false}` objects. The two sets are non-overlapping with proportional balance. Use train failures to guide description changes; use validation only to verify generalization.
+
+### Full eval workflow
+
+The agentskills.io spec defines a complete eval loop: run → grade → aggregate → analyze → review → iterate.
+
+**1. Workspace structure** — each iteration gets its own directory:
+
+```
+autogrind-workspace/
+└── iteration-1/
+    ├── eval-<N>/
+    │   ├── with_skill/
+    │   │   ├── outputs/       # Agent response file(s)
+    │   │   ├── timing.json    # {"total_tokens": N, "duration_ms": N}
+    │   │   └── grading.json   # Assertion results (from grade-evals.py)
+    │   └── without_skill/
+    │       ├── outputs/
+    │       ├── timing.json
+    │       └── grading.json
+    ├── feedback.json          # Human reviewer notes per eval
+    └── benchmark.json         # Aggregated statistics
+```
+
+**2. Grading** — use `tests/grade-evals.py`:
+
+```bash
+# Single eval
+python3 tests/grade-evals.py --response <file> --eval-id <N>
+
+# All evals at once (responses-dir must contain eval-<N>.txt files)
+python3 tests/grade-evals.py --all --responses-dir <dir>
+```
+
+**3. benchmark.json format** (aggregate after grading all evals):
+
+```json
+{
+  "run_summary": {
+    "with_skill":    {"pass_rate": {"mean": 0.83, "stddev": 0.06}, "tokens": {"mean": 3800}},
+    "without_skill": {"pass_rate": {"mean": 0.33, "stddev": 0.10}, "tokens": {"mean": 2100}},
+    "delta":         {"pass_rate": 0.50, "tokens": 1700}
+  }
+}
+```
+
+**4. Analysis patterns to look for:**
+- Assertions that always pass in both configurations → not measuring skill value, remove or strengthen
+- Assertions that always fail in both → broken assertion or test case too hard, fix before next iteration
+- Assertions that pass with skill but fail without → skill is adding measurable value here
+- High stddev in benchmark → instructions may be ambiguous, add examples to SKILL.md
+
+**5. Human review (feedback.json)** — after each iteration, review the actual agent outputs alongside the grades and record specific, actionable feedback:
+
+```json
+{
+  "eval-1": "Agent correctly continued but didn't mention the capability frontier scan.",
+  "eval-7": "",
+  "eval-14": "Agent stopped correctly. Empty feedback = output looked correct."
+}
+```
+
+Empty feedback means the output passed review. Focus iteration improvements on evals with specific complaints.
+
+**6. Iteration** — give failed assertions, feedback.json, and current SKILL.md to an LLM and ask it to propose improvements. Guidelines:
+- Generalize from specific cases — fixes should address the underlying issue, not patch individual examples
+- Keep the skill lean — fewer, better instructions outperform exhaustive rules
+- Explain the why — reasoning-based instructions work better than rigid directives
+- When plateauing, try removing instructions and checking if results hold
+
+Rerun all evals in a new `iteration-N+1/` directory after each change.
+
+**Critical principle**: when evals fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.
 
 ### Supplementary regression suite
 
-`tests/run.sh` + `tests/scenarios/` provides a 46-scenario RED/GREEN regression suite using live `claude -p` invocations with structured A/B/C evaluation. This complements evals.json by testing behavioral compliance under pressure across the full range of documented failure modes.
+`tests/run.sh` + `tests/scenarios/` provides the same 46-scenario coverage as evals.json using a live RED/GREEN test runner with A/B/C structured evaluation. Use it for rapid iteration without the full workspace overhead.
 
 ```bash
-# RED phase - baseline without skill (establishes failure modes)
+# RED phase - baseline without skill
 ./tests/run.sh
 
-# GREEN phase - with skill installed (all scenarios must pass)
+# GREEN phase - with skill installed
 PHASE=green ./tests/run.sh
 
 # Single scenario by prefix
 PHASE=green ./tests/run.sh 07
-
-# Requires the claude CLI: https://claude.ai/code
 ```
 
 Results are saved to `tests/results/<phase>-<scenario>.txt`.
