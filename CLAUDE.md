@@ -92,12 +92,13 @@ The skill must be usable across all major coding agents. All agents except Claud
 |-------|------------------------|---------------|
 | Claude Code | `Skill` tool | `TaskCreate` / `TaskUpdate` |
 | Codex | Auto-discovered skills or bundled plugin skills | Native task tools |
-| Gemini CLI | `~/.gemini/skills/` or `~/.agents/skills/` | Native task tools |
-| OpenCode | `~/.agents/skills/` (auto-discovered) | Native task tools |
-| Cursor | `~/.cursor/skills/` or `~/.agents/skills/` | File-based notes |
-| Windsurf / Roocode / Goose | `~/.agents/skills/` | Native task tools |
-| AmpCode / Kilo / Kiro / Factory | `~/.agents/skills/` | Native task tools |
-| GitHub Copilot | `~/.agents/skills/` | Native task tools |
+| Gemini CLI | GEMINI.md conventions | Native task tools |
+| OpenCode | AGENTS.md conventions | Native task tools |
+| Cursor | `.cursorrules` or explicit load | File-based notes |
+| Kimi Code | `.kimi/skills/` or `~/.agents/skills/` | `/skill:autogrind` |
+| Junie | `~/.junie/skills/` or `~/.agents/skills/` | Native task tools |
+| Kiro | `~/.kiro/skills/` or `~/.agents/skills/` | Native task tools |
+| All others | `~/.agents/skills/` | Native task tools |
 
 Write platform-agnostic instructions where possible; provide explicit platform alternatives where divergence is necessary. The platform notes table in SKILL.md is the authoritative mapping — keep it in sync with this table.
 

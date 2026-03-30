@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
-  version: "1.7"
+  version: "1.8"
 ---
 
 # AutoGrind
@@ -105,7 +105,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - Execute **independent tasks concurrently** where the platform supports it
 - Per task: verify (confirm problem still exists — check git history, reproduce; if resolved, no change is the correct output) → execute → validate (tests, outputs, metrics) → persist (commit, checkpoint, log)
 - One logical change per persist — never batch unrelated changes
-- Git commits: use `git -c commit.gpgsign=false commit` to avoid signing prompts that require human intervention
+- Git commits: use `git -c commit.gpgsign=false commit` to avoid signing prompts that require human intervention. Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`, `perf:`, `style:`
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
 - User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
@@ -192,20 +192,14 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 
 Where `TaskCreate`/`TaskUpdate` appear in this skill, use your platform's equivalent:
 
-| Agent                       | Skill loading                                        | Task tracking               |
-| --------------------------- | ---------------------------------------------------- | --------------------------- |
-| Claude Code                 | `Skill` tool                                         | `TaskCreate` / `TaskUpdate` |
-| Codex                       | Auto-discovered skills or bundled plugin skills      | Native task tools           |
-| Gemini CLI                  | GEMINI.md conventions                                | Native task tools           |
-| OpenCode                    | AGENTS.md conventions                                | Native task tools           |
-| Cursor                      | `.cursorrules` or explicit load                      | File-based notes            |
-| Windsurf                    | `~/.codeium/windsurf/skills/` or `~/.agents/skills/` | Native task tools           |
-| Roocode                     | `~/.roo/skills/` or `~/.agents/skills/`              | Native task tools           |
-| Cline                       | `~/.cline/skills/` or `~/.agents/skills/`            | Native task tools           |
-| Trae                        | `~/.trae/skills/` or `~/.agents/skills/`             | Native task tools           |
-| Kimi Code                   | `~/.config/agents/skills/` or `.kimi/skills/`        | `/skill:autogrind`          |
-| GitHub Copilot              | `~/.copilot/skills/` or `~/.agents/skills/`          | Native task tools           |
-| Goose                       | `~/.agents/skills/`                                  | Native task tools           |
-| AmpCode                     | `~/.config/agents/skills/` or `~/.agents/skills/`    | Native task tools           |
-| Kilo / Kiro / Factory       | `~/.agents/skills/`                                  | Native task tools           |
-| Hermes Agent (NousResearch) | `~/.agents/skills/`                                  | Native task tools           |
+| Agent      | Skill loading                                   | Task tracking               |
+| ---------- | ----------------------------------------------- | --------------------------- |
+| Claude Code | `Skill` tool                                   | `TaskCreate` / `TaskUpdate` |
+| Codex      | Auto-discovered skills or bundled plugin skills | Native task tools           |
+| Gemini CLI | GEMINI.md conventions                           | Native task tools           |
+| OpenCode   | AGENTS.md conventions                           | Native task tools           |
+| Cursor     | `.cursorrules` or explicit load                 | File-based notes            |
+| Kimi Code  | `.kimi/skills/` or `~/.agents/skills/`         | `/skill:autogrind`          |
+| Junie      | `~/.junie/skills/` or `~/.agents/skills/`      | Native task tools           |
+| Kiro       | `~/.kiro/skills/` or `~/.agents/skills/`       | Native task tools           |
+| All others | `~/.agents/skills/`                            | Native task tools           |
