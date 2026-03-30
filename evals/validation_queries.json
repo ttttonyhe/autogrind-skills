@@ -30,5 +30,13 @@
   {
     "query": "What's the best way to structure a React component for reusability?",
     "should_trigger": false
+  },
+  {
+    "query": "run experiments on this model and keep iterating until I tell you to stop",
+    "should_trigger": true
+  },
+  {
+    "query": "fix the failing test in auth_test.go and let me know when it's done",
+    "should_trigger": false
   }
 ]

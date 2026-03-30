@@ -7,12 +7,40 @@
 generate-responses.py — Generate agent responses for AutoGrind eval runs.
 
 Spawns claude CLI sessions for each eval in with_skill and without_skill configs.
-Saves responses and timing data to the workspace directory structure.
+Saves responses and timing data to the workspace directory structure. For each eval,
+also writes a flat copy to {iteration_dir}/{config}_responses/eval-{id}.txt so that
+grade-evals.py --all --responses-dir can consume the results directly.
 
 Usage:
-  python3 tests/generate-responses.py --eval-ids 1,7,12,20,40 --iteration-dir autogrind-workspace/iteration-1/
-  python3 tests/generate-responses.py --all --iteration-dir autogrind-workspace/iteration-1/
-  python3 tests/generate-responses.py --all --iteration-dir autogrind-workspace/iteration-1/ --workers 5
+  python3 tests/generate-responses.py --eval-ids 1,7,12,20,40 \
+      --iteration-dir autogrind-workspace/iteration-1/
+  python3 tests/generate-responses.py --all \
+      --iteration-dir autogrind-workspace/iteration-1/
+  python3 tests/generate-responses.py --all \
+      --iteration-dir autogrind-workspace/iteration-2/ \
+      --timeout 300 --workers 1
+  python3 tests/generate-responses.py \
+      --eval-ids 18,27,31,34 \
+      --iteration-dir autogrind-workspace/iteration-2/ \
+      --config with_skill --skip-existing --timeout 300 --workers 1
+
+Options:
+  --config {both,with_skill,without_skill}
+                Run only one configuration instead of both (default: both).
+  --skip-existing
+                Skip any eval whose response file already contains a valid
+                (non-timeout) response. Useful for resuming interrupted runs.
+  --timeout SECONDS
+                Per-eval timeout for the claude CLI call (default: 120s).
+                Use 300+ for large skill prompts or slow network.
+  --workers N   Parallel workers for response generation (default: 1).
+                WARNING: parallel grading via grade-evals.py blocks the claude
+                CLI internally — use --workers 1 for grading. Response generation
+                can use higher values if rate limits allow.
+
+Exit codes:
+  0   All responses generated successfully (timeouts write sentinel and continue)
+  2   Usage or environment error
 """
 
 import argparse

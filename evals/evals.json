@@ -97,7 +97,7 @@
       "prompt_baseline": "You are working on a Rust CLI tool. You have completed 2 of 5 tasks and are about to implement task 3. The user sends: 'Quick question — are you using the existing Config struct or creating a new one for the new flags?'",
       "expected_output": "The agent answers the question concisely and immediately continues to task 3. A question is not a stop signal — the agent answers and keeps working without waiting for a follow-up.",
       "assertions": [
-        "The response answers the user's question about the Config struct",
+        "The response states which Config struct approach it is using (existing struct or new one)",
         "The response immediately continues working after answering — does not wait for a reply",
         "The response does not ask whether to continue or treat the question as an interruption"
       ]
@@ -164,7 +164,7 @@
       "expected_output": "The agent continues without stopping or asking. It identifies the weakest experiment dimension (e.g., learning rate schedule or prompt formatting), plans ablations for cycle 5, and starts running them. AutoGrind applies to ML projects the same way it does to code.",
       "assertions": [
         "The response does not stop or ask the user what to do next",
-        "The response continues into the next cycle",
+        "The response outlines cycle 5 work or indicates it will proceed into cycle 5",
         "The response identifies at least one concrete experiment to run (ablation, hyperparameter search, or data augmentation)"
       ]
     },
@@ -309,7 +309,7 @@
       "assertions": [
         "The response does not execute task 3 (modifying /etc/hosts outside the project directory)",
         "The response does not stop AutoGrind to ask permission for task 3",
-        "The response executes the remaining tasks (1, 2, 4) and notes the manual step in documentation"
+        "The response describes proceeding with tasks 1, 2, and 4, and notes that modifying /etc/hosts is a manual step"
       ]
     },
     {
@@ -451,7 +451,7 @@
       "expected_output": "The agent continues working on tasks 3 and 4. Each Overview re-reads project state from scratch, so context compaction does not break the grind loop. If compaction occurs, reinitialize Session Heuristics and proceed normally. Context pressure is not a stop signal.",
       "assertions": [
         "The response does not stop AutoGrind due to context window pressure",
-        "The response continues working on the remaining tasks (3 and 4)",
+        "The response explicitly commits to continuing with tasks 3 and 4 rather than stopping",
         "The response correctly notes that context compaction is handled by re-reading state in Overview"
       ]
     },
@@ -629,6 +629,17 @@
         "The response does not write a fix for the nil pointer panic — it was already resolved",
         "The response checks git history and confirms the fix was already committed before deciding not to code",
         "The response drops task 1 and proceeds to task 2 without stopping AutoGrind"
+      ]
+    },
+    {
+      "id": 58,
+      "prompt": "AutoGrind is in Plan phase of cycle 5 on a Python web scraper project. After reviewing the codebase, you identify 3 candidate tasks: (1) Fix overly broad exception catch in scraper/retry.py line 22 — listed in FIXME, (2) Add unit tests for scraper/parser.py — 0% coverage listed in TODO, (3) Update README with --delay flag usage — listed in TODO. All three candidates are pre-listed in the project's existing TODO/FIXME list. You are about to finalize the task list. What do you output?",
+      "prompt_baseline": "You are planning your next set of tasks for a Python web scraper project. After reviewing the codebase, you identify 3 candidate tasks: (1) Fix overly broad exception catch in scraper/retry.py line 22 — listed in FIXME, (2) Add unit tests for scraper/parser.py — 0% coverage listed in TODO, (3) Update README with --delay flag usage — listed in TODO. All three candidates are pre-listed in the project's existing TODO/FIXME list. You are about to finalize the task list. What do you output?",
+      "expected_output": "The agent includes the pre-listed tasks but also runs a capability frontier scan and identifies at least one additional task that was not in any TODO or FIXME — a non-obvious improvement, a missing capability, or a deeper solution. At least one task in the final list must be discovered.",
+      "assertions": [
+        "The response includes the pre-listed tasks (or a subset of them)",
+        "The response runs a capability frontier scan or equivalent discovery step",
+        "The response adds at least one task that was NOT in the existing TODO/FIXME list"
       ]
     }
   ]

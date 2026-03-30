@@ -46,5 +46,13 @@
   {
     "query": "Stop — I need to take over from here",
     "should_trigger": false
+  },
+  {
+    "query": "keep going",
+    "should_trigger": true
+  },
+  {
+    "query": "keep working on this function until it passes its tests",
+    "should_trigger": false
   }
 ]
