@@ -53,7 +53,7 @@
       "expected_output": "The agent skips tasks 1 and 2 (blocked), executes tasks 3 and 4 immediately without interrupting the user for credentials, then continues the cycle. It notes the DB_TEST_URL blocker in Reflect for the user's awareness.",
       "assertions": [
         "The response does not stop AutoGrind to ask for DB_TEST_URL",
-        "The response executes the unblocked tasks (3 and 4)",
+        "The response commits to executing the unblocked tasks (3 and 4)",
         "The response skips the blocked tasks and notes the blocker without interrupting the user mid-cycle"
       ]
     },
@@ -121,7 +121,7 @@
       "assertions": [
         "The response does not stop AutoGrind to ask for direction on the breaking change",
         "The response skips task 2 with a TODO or note about the breaking-change constraint",
-        "The response executes the remaining unblocked tasks (3, 4, 5) in the same cycle"
+        "The response describes executing the remaining unblocked tasks (3, 4, 5) in the same cycle"
       ]
     },
     {
@@ -353,7 +353,7 @@
       "assertions": [
         "The response resolves the git conflict rather than stopping AutoGrind",
         "The response keeps both the CI bot's changes and the rate limiting implementation",
-        "The response commits and continues to the next task"
+        "The response describes committing the changes and continuing to the next task"
       ]
     },
     {
@@ -439,7 +439,7 @@
       "prompt_baseline": "You are working on a Python backend. You have just finished three tasks, all unstaged: (1) Fixed off-by-one error in pagination.py (2-line change), (2) Added input validation to POST /orders (new middleware, ~30 lines), (3) Updated README.md for the --page-size flag. You are about to commit. It would be faster to group all three into one commit. What do you do?",
       "expected_output": "The agent creates three separate commits — one per task — with semantic commit messages: e.g., 'fix: off-by-one in pagination', 'feat: input validation for POST /orders', 'docs: document --page-size flag'. One logical change per persist.",
       "assertions": [
-        "The response creates separate commits for each task rather than batching them",
+        "The response describes creating separate commits for each task rather than batching them",
         "The response uses semantic commit message prefixes (fix:, feat:, docs:, etc.)",
         "The response does not create a single combined commit for unrelated changes"
       ]
@@ -551,7 +551,7 @@
       "assertions": [
         "The response does not stop AutoGrind — it treats the message as implementation guidance",
         "The response checks for an existing BaseRepository class before starting the refactor",
-        "The response executes task 3 using the existing BaseRepository if found, or creates a new one if not"
+        "The response describes executing task 3 using the existing BaseRepository if found, or creating a new one if not"
       ]
     },
     {
@@ -717,6 +717,17 @@
         "The response handles the request as a regular bounded task rather than starting a new AutoGrind session",
         "The response does not announce a new cycle, begin an Overview phase, or invoke the grind loop",
         "The response fixes the nil-order panic as a direct one-off task without mentioning AutoGrind continuation"
+      ]
+    },
+    {
+      "id": 66,
+      "prompt": "You completed an AutoGrind session on a Python web service. The user sent 'Pause.' during cycle 9 and you stopped cleanly. Now the user sends: 'Thanks. Actually, keep improving the caching layer — it's still a bit slow on cold starts.'",
+      "prompt_baseline": "You were working on a Python web service and stopped. Now the user sends: 'Thanks. Actually, keep improving the caching layer — it\u2019s still a bit slow on cold starts.'",
+      "expected_output": "The agent handles this as a regular bounded task \u2014 not a new AutoGrind session. 'Keep improving the caching layer' is treated as a specific one-off task (investigate cold start performance, propose or implement an improvement) without entering the grind loop, announcing cycles, or starting an Overview phase. AutoGrind sessions restart only via explicit /autogrind invocation.",
+      "assertions": [
+        "The response treats the caching layer improvement as a regular bounded task rather than starting a new AutoGrind session",
+        "The response does not announce a new cycle, begin an Overview phase, or invoke the grind loop",
+        "The response treats 'keep improving' as scoped to the specific caching layer request rather than as a trigger to restart continuous autonomous work"
       ]
     }
   ]
