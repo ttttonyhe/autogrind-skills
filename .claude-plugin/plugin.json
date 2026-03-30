@@ -1,6 +1,6 @@
 {
   "name": "autogrind",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Continuous autonomous grind loop — works until you say stop",
   "author": {
     "name": "ttttonyhe",

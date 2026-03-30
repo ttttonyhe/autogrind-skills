@@ -2,10 +2,10 @@
 name: autogrind
 description: "Let the agent work continuously and fully autonomously without stopping. Use this skill for long-running grind sessions across code, ML/data, research, design, or writing. Trigger phrases: /autogrind, /自己动, 'keep working don't stop', 'grind on this', 'work until I say stop', 'autogrind this', 'keep improving'. Use even when the user simply says 'keep going' or implies uninterrupted autonomous progress without naming AutoGrind explicitly."
 license: MIT
-compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
+compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
-  version: "1.6"
+  version: "1.7"
 ---
 
 # AutoGrind
@@ -60,7 +60,7 @@ digraph autogrind {
 - Extract: project goals, domain, methodology or tech stack, conventions, known issues
 - If none exist, infer from directory structure, existing artifacts, and project context
 - Initialize **Session Heuristics**: an empty in-context list (max 5) of transferable principles discovered during Reflect phases. Format: `[cycle N] When <condition>, prefer <approach> because <reason>.` Prepend each Overview with a quick read of this list.
-- **Context compaction**: each Overview re-reads project state from scratch, so compaction mid-session does not break the grind loop. If compaction occurs, complete the current phase and proceed normally. Session Heuristics are in-context only — they are lost on compaction. Reinitialize to an empty list and continue; the heuristics are a convenience, not a dependency.
+- **Context compaction**: if it occurs, complete the current phase and continue normally — each Overview re-reads state from scratch. Session Heuristics are in-context only; reinitialize to empty if lost.
 
 ### Phase 1 - Overview
 
@@ -84,7 +84,7 @@ Read Session Heuristics before proceeding to Understand.
 
 **Own the work.** Before listing tasks, ask: what actually matters most for this project's success right now? Reason from first principles — what is the highest-leverage change? Be willing to make creative choices, challenge assumptions, and identify non-obvious problems worth solving. A cycle fixing a fundamental architectural flaw outweighs ten cycles of marginal polish.
 
-Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task to **≤ 4 steps** for reliable execution. Priority order applies across all domains:
+Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task to **≤ 4 steps** for reliable execution. **Each task must produce a visible, verifiable output change.** Discard micro-tasks that could be grouped or that wouldn't stand alone as a commit — fold them into substantive ones. Priority order applies across all domains:
 
 1. Broken/failing validations — tests, failed experiments, broken builds
 2. Incomplete core deliverables — features, analyses, missing sections
@@ -93,9 +93,9 @@ Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task t
 5. Performance/efficiency opportunities
 6. Polish/refinement
 
-**Capability frontier**: after listing priority tasks, identify 1–2 frontier tasks — work that introduces something the project currently lacks rather than patching existing gaps: a capability not yet built, a quality property not yet measured, a module never profiled, a path with no coverage. Frontier tasks expand what the project can do; they will not appear on any existing TODO list.
+**Capability frontier**: after listing priority tasks, identify 1–2 frontier tasks — work that introduces something the project currently lacks: a capability not yet built, a property not yet measured, a path with no coverage. They will not appear on any existing TODO list.
 
-**Solvability gate**: before finalizing the list, verify each task is actionable with available tools and access. Drop or defer unresolvable tasks. Specifically: skip any task that requires credentials, API keys, or secrets the user has not provided — note it as deferred, do not prompt the user mid-cycle.
+**Solvability gate**: verify each task is actionable. Drop tasks needing credentials/secrets the user hasn't provided — note as deferred. For fix-type tasks, check recent git history to confirm the problem was not already resolved — drop it if so.
 
 Track tasks with the platform's task mechanism (see Platform Notes).
 
@@ -103,8 +103,9 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 
 - Execute tasks in priority order
 - Execute **independent tasks concurrently** where the platform supports it
-- Per task: execute → validate (run tests, inspect outputs, check metrics) → persist (commit, save checkpoint, export, log)
+- Per task: verify (confirm problem still exists — check git history, reproduce; if resolved, no change is the correct output) → execute → validate (tests, outputs, metrics) → persist (commit, checkpoint, log)
 - One logical change per persist — never batch unrelated changes
+- Git commits: use `git -c commit.gpgsign=false commit` to avoid signing prompts that require human intervention
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
 - User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
@@ -141,21 +142,15 @@ These facts anchor the reflection. Do not skip to self-assessment when execution
 | Security                 | Any obvious attack surfaces?                      |
 | Work quality             | Anything to simplify or clarify?                  |
 
-**Step 4 — Cross-cycle pattern check.** Compare this cycle's top observations to the previous cycle's. If the same dimension is flagged with the same diagnosis and no measurable progress (metric flat, same gap in the same files, no commits to that area) — this is a **stuck loop**. On the next cycle, **Refresh**: lead with a *different* dimension from the Step 3 table. Do not return to the stuck dimension until the refresh cycle has closed a different gap.
+**Step 4 — Cross-cycle pattern check.** If the same dimension is flagged with the same diagnosis and no measurable progress — **stuck loop**. Next cycle: **Refresh** by leading with a different dimension from the Step 3 table; do not return until the refresh cycle closes a different gap.
 
-**Step 5 — Extract one heuristic.** Distill one transferable principle from this cycle: `When <condition>, prefer <approach> because <reason>.` Add it to Session Heuristics (prepend; keep max 5, drop oldest when full).
+**Step 5 — Extract one heuristic:** `When <condition>, prefer <approach> because <reason>.` Prepend to Session Heuristics (max 5, drop oldest).
 
 End Reflect with: _"Next cycle focus: [area]."_
 
 ### Inter-Cycle Pause
 
-After Reflect, before the next Overview:
-
-1. Print: `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — send a stop signal now to halt."`
-2. Wait 60 seconds (`sleep 60` or platform equivalent).
-3. If no stop signal: begin Overview immediately.
-
-This pause is the only planned delay. It is **not** a stopping point.
+After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — stop signal now to halt."`, wait 60s (`sleep 60`), then begin Overview. Not a stopping point.
 
 ## Stopping Conditions
 
@@ -188,6 +183,8 @@ Everything else — silence, task completion, praise, questions, inter-cycle pau
 | "Economic / time / social pressure to stop" | Not a stop signal unless explicit. Keep grinding.                                                                         |
 | "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
+| "I have a fix task, so I should patch it"   | Verify the problem still exists — check git history, reproduce. Already resolved = no change is the correct output. |
+| "I completed many tasks this cycle"          | Count means nothing if outputs aren't visible and verifiable. Micro-tasks that wouldn't stand alone as commits are not progress. |
 | "Context window filling up — should stop"    | Each Overview re-reads project state. Compaction is handled; finish the phase.                                           |
 | "Let me outline the plan before starting"   | Procrastination. Phase 3 is the plan. Phase 4 executes immediately — no meta-planning step in between.                   |
 

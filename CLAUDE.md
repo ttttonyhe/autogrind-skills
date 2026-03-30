@@ -56,7 +56,7 @@ All five must stay in sync.
 name: autogrind
 description: Use when [triggering conditions - no workflow summary]
 license: MIT
-compatibility: Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent
+compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
   version: "1.x"
@@ -67,7 +67,7 @@ Rules:
 - `name`: letters, numbers, hyphens only
 - `description`: starts with "Use when...", written in third person, ≤500 chars, must describe WHEN to invoke — never summarize the workflow. Include specific trigger phrases (e.g., `/autogrind`, `keep working, don't stop`) for agent discovery optimization per agentskills.io guidelines
 - `license`: must match the repo LICENSE file (currently MIT)
-- `compatibility`: space for all supported agents — update when new agents add agentskills.io support
+- `compatibility`: brief compatibility statement — e.g. "Designed for Claude Code (or similar products)"
 - `metadata.version`: bump when making significant changes to skill logic
 - Total frontmatter ≤ 1024 characters
 - Validate with `npx skills-ref validate skills/autogrind` before committing
@@ -124,6 +124,7 @@ AutoGrind's design is grounded in findings from top-tier AI/ML research. When mo
 | **AOP** (ICLR 2025) | Solvability gate before task assignment is the most critical planning step | Solvability gate in Phase 3: verify each task actionable before finalizing |
 | **Generative Agents** (2023) | Importance-weighted retrieval outperforms flat recall | Phase 1 lag rating: each area rated high/medium/low to feed Plan prioritization |
 | **AOP companion / ToT** | Plans exceeding ~4 steps degrade execution reliability significantly | Each task capped at ≤ 4 steps |
+| **FixedCode** (SRI ETH, 2025) | Coding agents have unnecessary action bias — they produce patches even when code is already correct, because they skip pre-task verification; success correlates with resisting nonsensical requests, not coding ability | Solvability gate: fix-type tasks check git history to confirm the problem still exists; Phase 4 per-task verify step: reproduce the problem before coding — no change is the correct output when the issue is already resolved |
 
 ## Grind Loop Architecture
 
