@@ -409,6 +409,6 @@ python3 tests/blind-compare.py --response-a <文件A> --response-b <文件B> --e
 python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 ```
 
-评估用例位于 `evals/evals.json`（55 条）。描述词触发测试查询位于 `evals/train_queries.json` 和 `evals/validation_queries.json`。完整评估流程（运行、评分、盲测对比、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。
+评估用例位于 `evals/evals.json`（57 条）。描述词触发测试查询位于 `evals/train_queries.json` 和 `evals/validation_queries.json`。完整评估流程（运行、评分、盲测对比、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。
 
 评估失败时：先审视技能实现本身是否有待改进。优先修复技能，再考虑修改断言。断言只有在对正确行为产生误判时，才有必要修改。

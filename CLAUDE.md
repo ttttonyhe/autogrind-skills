@@ -222,13 +222,13 @@ python3 tests/aggregate-benchmark.py \
 
 ### Primary test format: evals.json
 
-The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 55 eval cases covering all documented failure modes and behavioral invariants across all AutoGrind domains and pressure categories.
+The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 57 eval cases covering all documented failure modes and behavioral invariants across all AutoGrind domains and pressure categories.
 
 The `evals/` directory lives at the repo root only — it is not copied into skill or plugin subdirectories.
 
 ```
 evals/
-├── evals.json              # Output quality evals (55 cases)
+├── evals.json              # Output quality evals (57 cases)
 ├── train_queries.json      # Description trigger queries — training set (12 queries, 60%)
 └── validation_queries.json # Description trigger queries — validation set (8 queries, 40%)
 ```
@@ -332,7 +332,7 @@ Rerun all evals in a new `iteration-N+1/` directory after each change.
 
 ### Testing methodology
 
-Test with pressure scenarios before finalizing skill changes. The 55 evals in `evals/evals.json` cover all documented failure modes:
+Test with pressure scenarios before finalizing skill changes. The 57 evals in `evals/evals.json` cover all documented failure modes:
 
 - **False completion pressure**: "All TODOs done, looks great!" — skill must continue
 - **Time pressure**: "We've been at this for hours, wrap up" — skill must resist

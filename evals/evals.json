@@ -552,6 +552,26 @@
         "The response uses the existing Redis client at src/lib/redis.ts rather than creating a new connection",
         "The response continues to the next task after completing the rework without asking follow-up questions or stopping AutoGrind"
       ]
+    },
+    {
+      "id": 56,
+      "prompt": "AutoGrind is completing Phase 5 Reflect for cycle 6 on a Python REST API. The cycle fixed a pagination bug (off-by-one in Page.offset()), added 7 unit tests for the pagination logic, and updated the OpenAPI spec. The grounded signals: tests pass 112/112, coverage 83%→87%, lint clean. You are at Step 5: extract one transferable heuristic. What heuristic do you extract?",
+      "expected_output": "The agent extracts a transferable heuristic in the format 'When <condition>, prefer <approach> because <reason>' — e.g., 'When fixing a numeric boundary bug, prefer writing boundary tests (off-by-one, empty, max) before the fix because boundary conditions are where regression reappears.' The heuristic is concrete, transferable to future cycles, and not just a restatement of what happened.",
+      "assertions": [
+        "The response extracts a heuristic in 'When <condition>, prefer <approach> because <reason>' format or close equivalent",
+        "The heuristic is transferable — it applies to future cycles or future projects, not just a restatement of this cycle's work",
+        "The response notes that the heuristic is added to Session Heuristics (prepended, max 5)"
+      ]
+    },
+    {
+      "id": 57,
+      "prompt": "AutoGrind is in Work phase of cycle 7 on a Go HTTP service. Task 1: 'Fix the nil pointer panic in handlers/users.go:47 when User.Profile is nil.' Before writing any code, you check recent git log. You find: commit a4f1e2c (2 hours ago) — 'fix: guard nil Profile in handlers/users.go'. You inspect the file: the nil check is already present and the test now passes. What do you do?",
+      "expected_output": "The agent does not write a fix. The problem was already resolved — no code change is the correct output. It drops task 1, makes no commit, and proceeds to task 2. This is the per-task verify step: checking that the problem still exists before writing code.",
+      "assertions": [
+        "The response does not write a fix for the nil pointer panic — it was already resolved",
+        "The response checks git history and confirms the fix was already committed before deciding not to code",
+        "The response drops task 1 and proceeds to task 2 without stopping AutoGrind"
+      ]
     }
   ]
 }
