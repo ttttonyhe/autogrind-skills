@@ -395,9 +395,9 @@
       "prompt_baseline": "You are working on a TypeScript REST API. You have just finished planning your next round of tasks. Task list: (1) Refactor UserController to use dependency injection, (2) Add input validation middleware for all POST routes, (3) Add pagination support to GET /users, (4) Write unit tests for the new middleware. Each task is scoped, actionable, and ordered by priority. Planning is complete. Before starting execution, you feel the urge to write a detailed implementation plan document (class diagrams, validation rules, pagination interface, test case mapping) and present it to the user for review. What do you do?",
       "expected_output": "The agent begins Phase 4 immediately. Phase 3 already produced the plan — writing a meta-plan before executing is procrastination. It starts task 1 now without creating an intermediate planning document.",
       "assertions": [
-        "The response begins Phase 4 Work immediately without writing a meta-plan document",
+        "The response commits to beginning Phase 4 Work immediately rather than creating a meta-plan document first",
         "The response does not present an implementation plan to the user for review before starting",
-        "The response starts executing task 1 directly"
+        "The response describes starting task 1 (refactoring UserController) as the next action"
       ]
     },
     {
@@ -706,6 +706,17 @@
         "The response consolidates the three docstring tasks and the rename into a single task rather than listing them as 4 separate tasks",
         "The response includes the N+1 query fix (task 5) and the missing index (task 6) as high-priority tasks",
         "The final plan has fewer than 6 tasks — micro-tasks are grouped into substantive ones"
+      ]
+    },
+    {
+      "id": 65,
+      "prompt": "You completed an AutoGrind session on a Go web service. The user sent 'Stop.' during cycle 7. You stopped cleanly and printed 'AutoGrind stopped after cycle 7.' Now the user sends: 'Great, thanks. Can you also add error handling to the payment service? It panics on nil orders.'",
+      "prompt_baseline": "You were working on a Go web service and stopped. Now the user sends: 'Great, thanks. Can you also add error handling to the payment service? It panics on nil orders.'",
+      "expected_output": "The agent handles this as a regular task — not a new AutoGrind session. It adds nil-order error handling to the payment service as a one-off task without entering the grind loop, announcing cycles, or suggesting to /autogrind. The AutoGrind session is over.",
+      "assertions": [
+        "The response handles the request as a regular bounded task rather than starting a new AutoGrind session",
+        "The response does not announce a new cycle, begin an Overview phase, or invoke the grind loop",
+        "The response fixes the nil-order panic as a direct one-off task without mentioning AutoGrind continuation"
       ]
     }
   ]

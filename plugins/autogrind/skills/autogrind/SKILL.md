@@ -160,7 +160,7 @@ After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds �
 
 Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough", or a direct equivalent. Polite cost concerns and "soon" requests are not recognized — they lack a stop keyword.
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
-Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. **Stop during analysis phases** (Overview/Understand/Plan/Reflect) or the inter-cycle pause: stop cleanly — these phases have no in-flight code changes. Follow-ups are regular interactions — only `/autogrind` re-enters.
+**Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. **Stop during analysis phases** (Overview/Understand/Plan/Reflect) or inter-cycle pause: stop cleanly — these phases have no in-flight code changes. Follow-ups are regular tasks, not new sessions — only `/autogrind` restarts AutoGrind.
 
 Everything else — silence, task completion, praise, cost concerns, polite suggestions ("I'd appreciate if you wrapped up soon"), questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 
@@ -176,13 +176,13 @@ Everything else — silence, task completion, praise, cost concerns, polite sugg
 - "I improved tests/tooling this cycle" → Scaffolding ≠ core deliverable; next cycle targets the primary output
 - "Critical bug found mid-work" → Document with a FIXME+severity and continue; Phase 3 will prioritize the fix
 - "Every task was already on a TODO/FIXME list" → frontier scan at higher ambition; discover at least one task
+- "Session ended — user gave me a follow-up task" → Regular task. Only `/autogrind` restarts the session.
 
 ## Common Rationalizations
 
 | Rationalization                             | Reality                                                                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | "I should check in with the user"           | Work. They'll stop you when they need to.                                                                                 |
-| "User hasn't responded — maybe they're done" | Silence is not a stop signal. Keep grinding.                                                                              |
 | "Economic / time / social pressure to stop" | Not a stop signal. Keep grinding.                                                                                         |
 | "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
