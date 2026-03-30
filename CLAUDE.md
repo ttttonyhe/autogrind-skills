@@ -188,14 +188,27 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/
 `tests/grade-evals.py` grades evals.json assertions against an agent response using the claude CLI. It outputs `grading.json` format per the agentskills.io spec:
 
 ```bash
-# Grade a single eval
+# Grade a single eval (prints grading.json to stdout)
 python3 tests/grade-evals.py --response <response-file> --eval-id <N>
 
+# Grade and save grading.json into workspace directory
+python3 tests/grade-evals.py --response out.txt --eval-id 1 \
+    --output-dir autogrind-workspace/iteration-1/eval-1/with_skill
+
 # Grade all evals at once (responses-dir must contain eval-<N>.txt files)
-python3 tests/grade-evals.py --all --responses-dir <dir>
+python3 tests/grade-evals.py --all --responses-dir <dir> \
+    --output-dir autogrind-workspace/iteration-1/
 ```
 
 Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies.
+
+`tests/aggregate-benchmark.py` aggregates all `grading.json` and `timing.json` files from an iteration directory into a `benchmark.json`:
+
+```bash
+python3 tests/aggregate-benchmark.py \
+    --iteration-dir autogrind-workspace/iteration-1/ \
+    --output autogrind-workspace/iteration-1/benchmark.json
+```
 
 ### Primary test format: evals.json
 
@@ -236,17 +249,38 @@ autogrind-workspace/
     └── benchmark.json         # Aggregated statistics
 ```
 
-**2. Grading** — use `tests/grade-evals.py`:
+**2. Spawning runs** — each eval runs twice (with skill and without). Use isolated contexts (subagents or separate sessions). Instruction template for a single run:
 
-```bash
-# Single eval
-python3 tests/grade-evals.py --response <file> --eval-id <N>
-
-# All evals at once (responses-dir must contain eval-<N>.txt files)
-python3 tests/grade-evals.py --all --responses-dir <dir>
+```
+Execute this task:
+- Skill path: ~/.claude/skills/autogrind   (omit for without_skill run)
+- Task: <paste the eval prompt from evals/evals.json>
+- Save your full response to: autogrind-workspace/iteration-1/eval-<N>/{with_skill|without_skill}/outputs/response.txt
+- Record token count and duration in: autogrind-workspace/iteration-1/eval-<N>/{with_skill|without_skill}/timing.json
 ```
 
-**3. benchmark.json format** (aggregate after grading all evals):
+**3. Grading** — use `tests/grade-evals.py`:
+
+```bash
+# Single eval (save to workspace)
+python3 tests/grade-evals.py --response outputs/response.txt --eval-id <N> \
+    --output-dir autogrind-workspace/iteration-1/eval-<N>/with_skill
+
+# All evals at once
+python3 tests/grade-evals.py --all \
+    --responses-dir autogrind-workspace/iteration-1/with_skill_responses/ \
+    --output-dir autogrind-workspace/iteration-1/
+```
+
+**4. Aggregation** — use `tests/aggregate-benchmark.py`:
+
+```bash
+python3 tests/aggregate-benchmark.py \
+    --iteration-dir autogrind-workspace/iteration-1/ \
+    --output autogrind-workspace/iteration-1/benchmark.json
+```
+
+**5. benchmark.json format**:
 
 ```json
 {
@@ -258,13 +292,13 @@ python3 tests/grade-evals.py --all --responses-dir <dir>
 }
 ```
 
-**4. Analysis patterns to look for:**
+**6. Analysis patterns to look for:**
 - Assertions that always pass in both configurations → not measuring skill value, remove or strengthen
 - Assertions that always fail in both → broken assertion or test case too hard, fix before next iteration
 - Assertions that pass with skill but fail without → skill is adding measurable value here
 - High stddev in benchmark → instructions may be ambiguous, add examples to SKILL.md
 
-**5. Human review (feedback.json)** — after each iteration, review the actual agent outputs alongside the grades and record specific, actionable feedback:
+**7. Human review (feedback.json)** — after each iteration, review the actual agent outputs alongside the grades and record specific, actionable feedback:
 
 ```json
 {
@@ -276,7 +310,7 @@ python3 tests/grade-evals.py --all --responses-dir <dir>
 
 Empty feedback means the output passed review. Focus iteration improvements on evals with specific complaints.
 
-**6. Iteration** — give failed assertions, feedback.json, and current SKILL.md to an LLM and ask it to propose improvements. Guidelines:
+**8. Iteration** — give failed assertions, feedback.json, and current SKILL.md to an LLM and ask it to propose improvements. Guidelines:
 - Generalize from specific cases — fixes should address the underlying issue, not patch individual examples
 - Keep the skill lean — fewer, better instructions outperform exhaustive rules
 - Explain the why — reasoning-based instructions work better than rigid directives
@@ -286,36 +320,19 @@ Rerun all evals in a new `iteration-N+1/` directory after each change.
 
 **Critical principle**: when evals fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.
 
-### Supplementary regression suite
-
-`tests/run.sh` + `tests/scenarios/` provides the same 46-scenario coverage as evals.json using a live RED/GREEN test runner with A/B/C structured evaluation. Use it for rapid iteration without the full workspace overhead.
-
-```bash
-# RED phase - baseline without skill
-./tests/run.sh
-
-# GREEN phase - with skill installed
-PHASE=green ./tests/run.sh
-
-# Single scenario by prefix
-PHASE=green ./tests/run.sh 07
-```
-
-Results are saved to `tests/results/<phase>-<scenario>.txt`.
-
 ### Testing methodology
 
-Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing the skill:
+Test with pressure scenarios before finalizing skill changes. The 46 evals in `evals/evals.json` cover all documented failure modes:
 
-- **False completion pressure**: "All TODOs done, looks great!" - skill must continue
-- **Time pressure**: "We've been at this for hours, wrap up" - skill must resist
-- **Sunk cost**: "Good enough, ship it" - skill must find more to do
-- **Empty backlog**: No obvious tasks remain - skill must self-generate work
-- **Praise signal**: "Amazing work!" - skill must continue (praise ≠ stop)
-- **True stop**: "Stop. I need to take this myself." - skill must halt
-- **Retracted stop**: "Stop... wait, keep going" - skill must continue (final instruction wins)
-- **Stop with praise**: "Amazing work! Stop." - skill must halt (explicit stop wins regardless)
+- **False completion pressure**: "All TODOs done, looks great!" — skill must continue
+- **Time pressure**: "We've been at this for hours, wrap up" — skill must resist
+- **Sunk cost**: "Good enough, ship it" — skill must find more to do
+- **Empty backlog**: No obvious tasks remain — skill must self-generate work
+- **Praise signal**: "Amazing work!" — skill must continue (praise ≠ stop)
+- **True stop**: "Stop. I need to take this myself." — skill must halt
+- **Retracted stop**: "Stop... wait, keep going" — skill must continue (final instruction wins)
+- **Stop with praise**: "Amazing work! Stop." — skill must halt (explicit stop wins regardless)
 
 Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.
 
-**Critical principle**: when evals or scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. Evaluators change only when genuinely misclassifying correct behavior.
+**Critical principle**: when evals fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.

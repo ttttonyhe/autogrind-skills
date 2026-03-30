@@ -8,11 +8,14 @@ grade-evals.py — Grade AutoGrind eval assertions against an agent response.
 
 Reads assertions for a given eval ID from evals/evals.json, evaluates each
 assertion against the provided response text using the claude CLI, and outputs
-a grading.json result to stdout.
+a grading.json result.
 
 Usage:
-  python3 tests/grade-evals.py --response FILE --eval-id N [--evals FILE]
-  python3 tests/grade-evals.py --all --responses-dir DIR [--evals FILE]
+  python3 tests/grade-evals.py --response FILE --eval-id N [--output-dir DIR] [--evals FILE]
+  python3 tests/grade-evals.py --all --responses-dir DIR [--output-dir DIR] [--evals FILE]
+
+In --all mode, responses-dir must contain files named eval-<N>.txt for each eval ID.
+In --output-dir mode, grading.json is saved to the directory (and also printed to stdout).
 
 Exit codes:
   0   All assertions passed
@@ -81,6 +84,15 @@ def grade_eval_case(eval_case: dict, response_text: str) -> dict:
     }
 
 
+def save_output(result: dict, output_dir: Path | None, filename: str = "grading.json") -> None:
+    json_str = json.dumps(result, indent=2)
+    print(json_str)
+    if output_dir is not None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / filename).write_text(json_str)
+        print(f"Saved to {output_dir / filename}", file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="grade-evals.py",
@@ -90,10 +102,12 @@ def main():
             "Examples:\n"
             "  python3 tests/grade-evals.py --response response.txt --eval-id 1\n"
             "  python3 tests/grade-evals.py --response out.txt --eval-id 4 --evals evals/evals.json\n"
-            "  python3 tests/grade-evals.py --all --responses-dir evals/workspace/responses/\n\n"
-            "In --all mode, responses-dir must contain files named eval-<N>.txt for each eval ID.\n\n"
-            "Output is grading.json written to stdout. Pipe to a file to save:\n"
-            "  python3 tests/grade-evals.py --response out.txt --eval-id 1 > grading.json"
+            "  python3 tests/grade-evals.py --response out.txt --eval-id 1 \\\n"
+            "      --output-dir autogrind-workspace/iteration-1/eval-1/with_skill\n"
+            "  python3 tests/grade-evals.py --all --responses-dir evals/workspace/responses/ \\\n"
+            "      --output-dir autogrind-workspace/iteration-1/\n\n"
+            "Output is grading.json printed to stdout. Use --output-dir to also save to a file.\n"
+            "In --all mode, grading.json is saved to <output-dir>/eval-<N>/grading.json."
         ),
     )
     parser.add_argument(
@@ -113,12 +127,21 @@ def main():
         help="Directory containing eval-<N>.txt response files (batch mode)",
     )
     parser.add_argument(
+        "--output-dir", metavar="DIR",
+        help=(
+            "Directory to save grading.json (single: saves grading.json in DIR; "
+            "batch: saves eval-<N>/grading.json in DIR)"
+        ),
+    )
+    parser.add_argument(
         "--evals",
         default=str(Path(__file__).parent.parent / "evals" / "evals.json"),
         metavar="FILE",
         help="Path to evals.json (default: ../evals/evals.json relative to this script)",
     )
     args = parser.parse_args()
+
+    output_dir = Path(args.output_dir) if args.output_dir else None
 
     evals_path = Path(args.evals)
     if not evals_path.exists():
@@ -153,12 +176,19 @@ def main():
                 file=sys.stderr,
             )
             response_text = response_file.read_text()
-            eval_results.append(grade_eval_case(eval_case, response_text))
+            result = grade_eval_case(eval_case, response_text)
+            eval_results.append(result)
+
+            if output_dir is not None:
+                eval_out_dir = output_dir / f"eval-{eval_case['id']}"
+                eval_out_dir.mkdir(parents=True, exist_ok=True)
+                (eval_out_dir / "grading.json").write_text(json.dumps(result, indent=2))
+                print(f"Saved grading for eval {eval_case['id']} to {eval_out_dir}/grading.json", file=sys.stderr)
 
         total_evals = len(eval_results)
         total_assertions = sum(r["summary"]["total"] for r in eval_results)
         passed_assertions = sum(r["summary"]["passed"] for r in eval_results)
-        output = {
+        batch_output = {
             "eval_results": eval_results,
             "summary": {
                 "total_evals": total_evals,
@@ -168,7 +198,7 @@ def main():
                 "pass_rate": round(passed_assertions / total_assertions, 2) if total_assertions > 0 else 0.0,
             },
         }
-        print(json.dumps(output, indent=2))
+        print(json.dumps(batch_output, indent=2))
         any_failed = any(r["summary"]["failed"] > 0 for r in eval_results)
         sys.exit(1 if any_failed else 0)
 
@@ -204,7 +234,7 @@ def main():
     print(f"Grading eval {args.eval_id}: {len(assertions)} assertions...", file=sys.stderr)
 
     result = grade_eval_case(eval_case, response_text)
-    print(json.dumps(result, indent=2))
+    save_output(result, output_dir)
     sys.exit(1 if result["summary"]["failed"] > 0 else 0)
 
 
