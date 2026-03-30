@@ -74,25 +74,49 @@ def generate_response(prompt: str, skill_content: str | None, timeout: int) -> t
         sys.exit(2)
 
 
-def run_eval(eval_case: dict, skill_content: str, iteration_dir: Path, timeout: int) -> dict:
-    """Generate with_skill and without_skill responses for a single eval."""
+def run_eval(
+    eval_case: dict,
+    skill_content: str,
+    iteration_dir: Path,
+    timeout: int,
+    configs: list[str] | None = None,
+    skip_existing: bool = False,
+) -> dict:
+    """Generate with_skill and/or without_skill responses for a single eval."""
     eval_id = eval_case["id"]
     prompt = eval_case["prompt"]
     prompt_baseline = eval_case.get("prompt_baseline", prompt)
 
-    results = {}
-
-    for config, p, skill in [
+    all_configs = [
         ("with_skill", prompt, skill_content),
         ("without_skill", prompt_baseline, None),
-    ]:
+    ]
+    active_configs = [(c, p, s) for c, p, s in all_configs if configs is None or c in configs]
+
+    results = {}
+
+    for config, p, skill in active_configs:
         out_dir = iteration_dir / f"eval-{eval_id}" / config / "outputs"
+        response_file = out_dir / "response.txt"
+
+        if skip_existing and response_file.exists():
+            existing = response_file.read_text()
+            if not existing.startswith("[TIMEOUT"):
+                print(f"  Eval {eval_id} [{config}]: skipping (valid response exists)", file=sys.stderr)
+                results[config] = {"chars": len(existing), "skipped": True}
+                continue
+
         out_dir.mkdir(parents=True, exist_ok=True)
 
         print(f"  Eval {eval_id} [{config}]...", file=sys.stderr)
         response, duration = generate_response(p, skill, timeout)
 
-        (out_dir / "response.txt").write_text(response)
+        response_file.write_text(response)
+
+        # Also write a flat copy for use with grade-evals.py --all --responses-dir
+        flat_dir = iteration_dir / f"{config}_responses"
+        flat_dir.mkdir(parents=True, exist_ok=True)
+        (flat_dir / f"eval-{eval_id}.txt").write_text(response)
 
         timing = {"duration_s": round(duration, 1)}
         timing_path = iteration_dir / f"eval-{eval_id}" / config / "timing.json"
@@ -113,6 +137,8 @@ def main():
     parser.add_argument("--workers", type=int, default=1, help="Parallel workers (default: 1)")
     parser.add_argument("--config", choices=["both", "with_skill", "without_skill"], default="both",
                         help="Which config to run (default: both)")
+    parser.add_argument("--skip-existing", action="store_true",
+                        help="Skip evals where a valid (non-timeout) response already exists")
     args = parser.parse_args()
 
     evals_data = json.loads(Path(args.evals).read_text())
@@ -131,13 +157,17 @@ def main():
         print("Error: specify --all or --eval-ids", file=sys.stderr)
         sys.exit(2)
 
-    print(f"Generating responses for {len(eval_cases)} evals (workers={args.workers})...", file=sys.stderr)
+    configs = None if args.config == "both" else [args.config]
+    skip = args.skip_existing
+    print(f"Generating responses for {len(eval_cases)} evals (workers={args.workers}, config={args.config})...", file=sys.stderr)
 
     if args.workers > 1:
         all_results = []
         with ThreadPoolExecutor(max_workers=args.workers) as executor:
             futures = {
-                executor.submit(run_eval, ec, skill_content, iteration_dir, args.timeout): ec
+                executor.submit(
+                    run_eval, ec, skill_content, iteration_dir, args.timeout, configs, skip
+                ): ec
                 for ec in eval_cases
             }
             for future in as_completed(futures):
@@ -146,7 +176,9 @@ def main():
     else:
         all_results = []
         for ec in eval_cases:
-            all_results.append(run_eval(ec, skill_content, iteration_dir, args.timeout))
+            all_results.append(
+                run_eval(ec, skill_content, iteration_dir, args.timeout, configs, skip)
+            )
 
     print(json.dumps(all_results, indent=2))
 

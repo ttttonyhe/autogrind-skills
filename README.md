@@ -8,7 +8,7 @@ Works for any long-running workflow: code, ML, research, design, writing.
 
 Compatible with the [Agent Skills](https://agentskills.io) open standard; works across Claude Code, Codex, Gemini CLI, OpenCode, Cursor, Windsurf, Roocode, Cline, Trae, Kimi Code, GitHub Copilot, Goose, AmpCode, Kilo, Kiro, Factory, Hermes Agent, and any skills-compatible agent. Each mechanism is grounded in published AI/ML research; see [RESEARCH.md](RESEARCH.md).
 
-[English](README.md) | [简体中文](README.zh.md)
+English | [简体中文](README.zh.md)
 
 ---
 

@@ -76,7 +76,9 @@ def collect_stats(iteration_dir: Path, config: str) -> dict:
         if timing:
             if "total_tokens" in timing:
                 tokens.append(timing["total_tokens"])
-            if "duration_ms" in timing:
+            if "duration_s" in timing:
+                durations.append(timing["duration_s"])
+            elif "duration_ms" in timing:
                 durations.append(timing["duration_ms"] / 1000.0)
 
     result: dict = {"eval_count": len(pass_rates)}

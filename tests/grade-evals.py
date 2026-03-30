@@ -13,13 +13,17 @@ a grading.json result.
 Usage:
   python3 tests/grade-evals.py --response FILE --eval-id N [--output-dir DIR] [--evals FILE]
   python3 tests/grade-evals.py --all --responses-dir DIR [--output-dir DIR] [--evals FILE]
+  python3 tests/grade-evals.py --consistency-check --response FILE --eval-id N
+  python3 tests/grade-evals.py --consistency-check --all --responses-dir DIR
 
 In --all mode, responses-dir must contain files named eval-<N>.txt for each eval ID.
 In --output-dir mode, grading.json is saved to the directory (and also printed to stdout).
+--consistency-check grades each assertion twice and reports agreement rate; useful for
+measuring LLM judge reliability before trusting baselines.
 
 Exit codes:
-  0   All assertions passed
-  1   One or more assertions failed
+  0   All assertions passed (or all consistent in --consistency-check mode)
+  1   One or more assertions failed (or disagreements found in --consistency-check mode)
   2   Usage or environment error
 
 Requires: claude CLI (https://claude.ai/code)
@@ -120,6 +124,33 @@ def grade_eval_case(eval_case: dict, response_text: str, workers: int = 1) -> di
     }
 
 
+def consistency_check_eval(eval_case: dict, response_text: str) -> dict:
+    assertions = eval_case.get("assertions", [])
+    assertion_results = []
+    for assertion in assertions:
+        run_1 = grade_assertion(assertion, response_text)
+        run_2 = grade_assertion(assertion, response_text)
+        agreed = run_1["passed"] == run_2["passed"]
+        assertion_results.append({
+            "text": assertion,
+            "run_1": {"passed": run_1["passed"], "evidence": run_1["evidence"]},
+            "run_2": {"passed": run_2["passed"], "evidence": run_2["evidence"]},
+            "agreed": agreed,
+        })
+    total = len(assertion_results)
+    agreed_count = sum(1 for r in assertion_results if r["agreed"])
+    return {
+        "eval_id": eval_case["id"],
+        "assertion_consistency": assertion_results,
+        "summary": {
+            "total_assertions": total,
+            "agreed": agreed_count,
+            "disagreed": total - agreed_count,
+            "agreement_rate": round(agreed_count / total, 2) if total > 0 else 1.0,
+        },
+    }
+
+
 def save_output(result: dict, output_dir: Path | None, filename: str = "grading.json") -> None:
     json_str = json.dumps(result, indent=2)
     print(json_str)
@@ -141,7 +172,9 @@ def main():
             "  python3 tests/grade-evals.py --response out.txt --eval-id 1 \\\n"
             "      --output-dir autogrind-workspace/iteration-1/eval-1/with_skill\n"
             "  python3 tests/grade-evals.py --all --responses-dir evals/workspace/responses/ \\\n"
-            "      --output-dir autogrind-workspace/iteration-1/ --workers 8\n\n"
+            "      --output-dir autogrind-workspace/iteration-1/ --workers 8\n"
+            "  python3 tests/grade-evals.py --consistency-check --response out.txt --eval-id 1\n"
+            "  python3 tests/grade-evals.py --consistency-check --all --responses-dir responses/\n\n"
             "Output is grading.json printed to stdout. Use --output-dir to also save to a file.\n"
             "In --all mode, grading.json is saved to <output-dir>/eval-<N>/grading.json."
         ),
@@ -183,6 +216,13 @@ def main():
         "--workers", type=int, default=1, metavar="N",
         help="Number of parallel grader workers (default: 1; use 5-10 to speed up batch grading)",
     )
+    parser.add_argument(
+        "--consistency-check", action="store_true",
+        help=(
+            "Grade each assertion twice and report agreement rate. "
+            "Use to measure LLM judge reliability before trusting baselines."
+        ),
+    )
     args = parser.parse_args()
 
     global _timeout
@@ -196,6 +236,62 @@ def main():
         sys.exit(2)
 
     evals_data = json.loads(evals_path.read_text())
+
+    if args.consistency_check:
+        if args.all:
+            if not args.responses_dir:
+                print("Error: --responses-dir is required with --all", file=sys.stderr)
+                sys.exit(2)
+            responses_dir = Path(args.responses_dir)
+            if not responses_dir.is_dir():
+                print(f"Error: responses directory not found: {args.responses_dir}", file=sys.stderr)
+                sys.exit(2)
+            eval_results = []
+            for eval_case in evals_data["evals"]:
+                response_file = responses_dir / f"eval-{eval_case['id']}.txt"
+                if not response_file.exists():
+                    print(f"Warning: response file not found for eval {eval_case['id']}", file=sys.stderr)
+                    continue
+                print(f"Consistency check eval {eval_case['id']}...", file=sys.stderr)
+                eval_results.append(consistency_check_eval(eval_case, response_file.read_text()))
+            total_assertions = sum(r["summary"]["total_assertions"] for r in eval_results)
+            agreed = sum(r["summary"]["agreed"] for r in eval_results)
+            report = {
+                "eval_results": eval_results,
+                "summary": {
+                    "total_evals": len(eval_results),
+                    "total_assertions": total_assertions,
+                    "agreed": agreed,
+                    "disagreed": total_assertions - agreed,
+                    "agreement_rate": round(agreed / total_assertions, 2) if total_assertions > 0 else 1.0,
+                },
+            }
+            print(json.dumps(report, indent=2))
+            if output_dir:
+                output_dir.mkdir(parents=True, exist_ok=True)
+                (output_dir / "consistency_report.json").write_text(json.dumps(report, indent=2))
+                print(f"Saved to {output_dir}/consistency_report.json", file=sys.stderr)
+            sys.exit(0 if report["summary"]["disagreed"] == 0 else 1)
+        else:
+            if not args.response or args.eval_id is None:
+                print("Error: --response and --eval-id are required (or use --all)", file=sys.stderr)
+                sys.exit(2)
+            response_path = Path(args.response)
+            if not response_path.exists():
+                print(f"Error: response file not found: {args.response}", file=sys.stderr)
+                sys.exit(2)
+            eval_case = next((e for e in evals_data["evals"] if e["id"] == args.eval_id), None)
+            if eval_case is None:
+                print(f"Error: eval ID {args.eval_id} not found", file=sys.stderr)
+                sys.exit(2)
+            print(f"Consistency check eval {args.eval_id}...", file=sys.stderr)
+            result = consistency_check_eval(eval_case, response_path.read_text())
+            print(json.dumps(result, indent=2))
+            if output_dir:
+                output_dir.mkdir(parents=True, exist_ok=True)
+                (output_dir / "consistency_report.json").write_text(json.dumps(result, indent=2))
+                print(f"Saved to {output_dir}/consistency_report.json", file=sys.stderr)
+            sys.exit(0 if result["summary"]["disagreed"] == 0 else 1)
 
     if args.all:
         if not args.responses_dir:

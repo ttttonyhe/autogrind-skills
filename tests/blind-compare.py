@@ -14,6 +14,10 @@ subjective quality measurement.
 
 Usage:
   python3 tests/blind-compare.py --response-a FILE --response-b FILE [--eval-id N] [--output FILE]
+  python3 tests/blind-compare.py --all --iteration-dir DIR [--output FILE]
+
+In --all mode, compares with_skill vs without_skill for every eval in the iteration
+directory (A=with_skill, B=without_skill). Skips evals missing either response.
 
 The assignment of A/B to with_skill/without_skill is intentionally opaque to
 the judge. Record the mapping externally so you can interpret the result.
@@ -133,19 +137,30 @@ def main():
             "  python3 tests/blind-compare.py \\\n"
             "      --response-a iteration-1/eval-1/with_skill/outputs/response.txt \\\n"
             "      --response-b iteration-1/eval-1/without_skill/outputs/response.txt \\\n"
-            "      --eval-id 1\n\n"
-            "The judge does not know which response is A or B. Record the mapping\n"
-            "externally (e.g., A=with_skill, B=without_skill) to interpret the result.\n\n"
+            "      --eval-id 1\n"
+            "  python3 tests/blind-compare.py --all \\\n"
+            "      --iteration-dir autogrind-workspace/iteration-1/ \\\n"
+            "      --output autogrind-workspace/iteration-1/blind_compare.json\n\n"
+            "The judge does not know which response is A or B. In --all mode,\n"
+            "A=with_skill and B=without_skill for every eval.\n\n"
             "Output is JSON printed to stdout. Use --output to also save to a file."
         ),
     )
     parser.add_argument(
-        "--response-a", required=True, metavar="FILE",
-        help="Path to the first response file (label externally as with_skill or without_skill)",
+        "--all", action="store_true",
+        help="Compare with_skill vs without_skill for all evals in --iteration-dir (A=with_skill, B=without_skill)",
     )
     parser.add_argument(
-        "--response-b", required=True, metavar="FILE",
-        help="Path to the second response file",
+        "--iteration-dir", metavar="DIR",
+        help="Iteration directory for --all mode (e.g., autogrind-workspace/iteration-1/)",
+    )
+    parser.add_argument(
+        "--response-a", metavar="FILE",
+        help="Path to the first response file (single-eval mode)",
+    )
+    parser.add_argument(
+        "--response-b", metavar="FILE",
+        help="Path to the second response file (single-eval mode)",
     )
     parser.add_argument(
         "--eval-id", type=int, metavar="N",
@@ -171,6 +186,66 @@ def main():
     )
     args = parser.parse_args()
 
+    evals_path = Path(args.evals)
+    evals_data = json.loads(evals_path.read_text()) if evals_path.exists() else None
+
+    if args.all:
+        if not args.iteration_dir:
+            print("Error: --iteration-dir is required with --all", file=sys.stderr)
+            sys.exit(2)
+        iteration_dir = Path(args.iteration_dir)
+        if not iteration_dir.is_dir():
+            print(f"Error: iteration directory not found: {args.iteration_dir}", file=sys.stderr)
+            sys.exit(2)
+
+        eval_dirs = sorted(iteration_dir.glob("eval-*"), key=lambda p: int(p.name.split("-")[1]))
+        results = []
+        for eval_dir in eval_dirs:
+            path_a = eval_dir / "with_skill" / "outputs" / "response.txt"
+            path_b = eval_dir / "without_skill" / "outputs" / "response.txt"
+            if not path_a.exists() or not path_b.exists():
+                print(f"Skipping {eval_dir.name}: missing response file(s)", file=sys.stderr)
+                continue
+            eval_id = int(eval_dir.name.split("-")[1])
+            task_prompt = None
+            if evals_data:
+                eval_case = next((e for e in evals_data["evals"] if e["id"] == eval_id), None)
+                if eval_case:
+                    task_prompt = eval_case["prompt"]
+            if not task_prompt:
+                print(f"Skipping {eval_dir.name}: eval ID {eval_id} not in evals.json", file=sys.stderr)
+                continue
+            print(f"Comparing eval-{eval_id}...", file=sys.stderr)
+            result = run_blind_comparison(path_a.read_text(), path_b.read_text(), task_prompt, timeout=args.timeout)
+            result["eval_id"] = eval_id
+            result["mapping"] = {"A": "with_skill", "B": "without_skill"}
+            results.append(result)
+
+        winners = [r.get("winner") for r in results if "winner" in r]
+        summary = {
+            "total": len(results),
+            "A_wins": winners.count("A"),
+            "B_wins": winners.count("B"),
+            "ties": winners.count("TIE"),
+            "errors": len(results) - len(winners),
+            "mapping": {"A": "with_skill", "B": "without_skill"},
+        }
+        batch_result = {"results": results, "summary": summary}
+        json_str = json.dumps(batch_result, indent=2)
+        print(json_str)
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(json_str)
+            print(f"Saved to {args.output}", file=sys.stderr)
+        return
+
+    # Single-eval mode
+    if not args.response_a or not args.response_b:
+        print("Error: --response-a and --response-b are required (or use --all with --iteration-dir)", file=sys.stderr)
+        parser.print_help(sys.stderr)
+        sys.exit(2)
+
     if not args.eval_id and not args.task_prompt:
         print("Error: either --eval-id or --task-prompt is required", file=sys.stderr)
         parser.print_help(sys.stderr)
@@ -185,11 +260,11 @@ def main():
 
     task_prompt = args.task_prompt
     if args.eval_id:
-        evals_path = Path(args.evals)
         if not evals_path.exists():
             print(f"Error: evals file not found: {args.evals}", file=sys.stderr)
             sys.exit(2)
-        evals_data = json.loads(evals_path.read_text())
+        if evals_data is None:
+            evals_data = json.loads(evals_path.read_text())
         eval_case = next((e for e in evals_data["evals"] if e["id"] == args.eval_id), None)
         if eval_case is None:
             ids = [e["id"] for e in evals_data["evals"]]

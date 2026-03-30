@@ -160,7 +160,7 @@ Recognized (English): "stop", "pause", "halt", "exit autogrind", "that's enough"
 Recognized (中文): "停", "停止", "暂停", "够了", "结束", or any unambiguous 中文 termination request.
 Ctrl+C counts too. **Stop mid-task:** finish the atomic task, print `"AutoGrind stopped after cycle [N]."`, then stop. **Stop during analysis phases** (Overview/Understand/Plan/Reflect) or the inter-cycle pause: stop cleanly — these phases have no in-flight code changes. Follow-ups are regular interactions — only `/autogrind` re-enters.
 
-Everything else — silence, task completion, praise, questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
+Everything else — silence, task completion, praise, cost concerns, polite suggestions ("I'd appreciate if you wrapped up soon"), questions, inter-cycle pauses, "looks done" — is **not** a stop signal.
 
 ## Red Flags — Continue Immediately
 

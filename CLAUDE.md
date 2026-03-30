@@ -204,7 +204,7 @@ python3 tests/grade-evals.py --all --responses-dir <dir> \
 python3 tests/grade-evals.py --all --responses-dir <dir> --workers 8
 ```
 
-Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies. Use `--timeout SECONDS` (default 60) for slow model responses; `--workers N` to parallelize (default 1, sequential).
+Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies. Use `--timeout SECONDS` (default 60) for slow model responses; `--workers N` to parallelize (default 1, sequential). Use `--consistency-check` to grade each assertion twice and report agreement rate (measures LLM judge reliability).
 
 `tests/blind-compare.py` runs a blind holistic quality comparison between two responses using an LLM judge. Complements assertion grading with subjective quality measurement (organization, completeness, correctness, usability):
 
@@ -213,6 +213,11 @@ python3 tests/blind-compare.py \
     --response-a iteration-1/eval-1/with_skill/outputs/response.txt \
     --response-b iteration-1/eval-1/without_skill/outputs/response.txt \
     --eval-id 1
+
+# Batch mode: compare all evals in an iteration (A=with_skill, B=without_skill)
+python3 tests/blind-compare.py --all \
+    --iteration-dir autogrind-workspace/iteration-1/ \
+    --output autogrind-workspace/iteration-1/blind_compare.json
 ```
 
 `tests/aggregate-benchmark.py` aggregates all `grading.json` and `timing.json` files from an iteration directory into a `benchmark.json`:
@@ -262,7 +267,21 @@ autogrind-workspace/
     └── benchmark.json         # Aggregated statistics
 ```
 
-**2. Spawning runs** — each eval runs twice (with skill and without). Use isolated contexts (subagents or separate sessions). Instruction template for a single run:
+**2. Spawning runs** — each eval runs twice (with skill and without). Use `tests/generate-responses.py` for automated batch generation, or isolated subagent sessions for manual runs:
+
+```bash
+# Automated batch generation (writes to eval-N/{config}/outputs/response.txt and flat {config}_responses/ dirs)
+python3 tests/generate-responses.py --all \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --timeout 300 --workers 1
+
+# Re-generate only timed-out responses (skips valid existing ones)
+python3 tests/generate-responses.py --eval-ids 18,27,31 \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --config with_skill --timeout 300 --skip-existing
+```
+
+Manual instruction template for a single run (use when generate-responses.py is unavailable):
 
 ```
 Execute this task:
