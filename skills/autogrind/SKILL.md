@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
-  version: "1.10"
+  version: "1.11"
 ---
 
 # AutoGrind

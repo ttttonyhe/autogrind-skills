@@ -21,6 +21,7 @@ AutoGrind's design is grounded in findings from top-tier AI/ML research. Each ma
 | **AOP** (ICLR 2025) | Solvability gate before task assignment is the most critical planning step; unsolvable tasks waste full cycles | Solvability gate in Phase 3: each task verified as actionable with available tools and access before the list is finalized |
 | **Generative Agents** (2023) | Importance-weighted retrieval (recency × importance × relevance) outperforms flat recall for deciding what to act on | Phase 1 lag rating: each area rated high / medium / low, directly feeding Plan prioritization |
 | **AOP companion / ToT** | Plans exceeding ~4 steps degrade execution reliability significantly | Each task capped at ≤ 4 steps |
+| **FixedCode** (SRI ETH, 2025) | Coding agents have unnecessary action bias — they produce patches even when code is already correct because they skip pre-task verification; success correlates with resisting nonsensical requests, not coding ability | Phase 4 per-task verify step: reproduce the problem before writing any code — no change is the correct output when the issue is already resolved; solvability gate checks git history for fix-type tasks |
 
 ## Development Methodology
 
