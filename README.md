@@ -402,10 +402,13 @@ python3 tests/grade-evals.py --response <response-file> --eval-id <N>
 # Grade all evals (responses-dir must contain eval-<N>.txt files)
 python3 tests/grade-evals.py --all --responses-dir <dir>
 
+# Blind holistic comparison between two responses (with_skill vs without_skill)
+python3 tests/blind-compare.py --response-a <file-a> --response-b <file-b> --eval-id <N>
+
 # Aggregate grading results into benchmark.json
 python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 ```
 
-Evals are in `evals/evals.json` (46 cases). See `CLAUDE.md` for the full eval workflow: spawning runs, grading, aggregation, analysis, human review, and iteration.
+Evals are in `evals/evals.json` (46 cases). Description trigger queries for optimizing the skill description are in `evals/train_queries.json` and `evals/validation_queries.json`. See `CLAUDE.md` for the full eval workflow: spawning runs, grading, blind comparison, aggregation, analysis, human review, and iteration.
 
 When evals fail: first ask whether the skill implementation needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.
