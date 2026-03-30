@@ -183,7 +183,24 @@ ln -sfn $(pwd) ~/.claude/skills/autogrind
 git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/autogrind
 ```
 
-### Run the test suite
+### Primary test format: evals.json
+
+The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 12 eval cases covering the key pressure categories (false completion, true stop, praise signal, retracted stop, stop+praise, scaffold-only cycle, context compaction, user question, solvability gate, critical bug, ambiguous soft stop, basic invocation).
+
+```
+evals/
+└── evals.json        # Primary: agentskills.io-standard eval cases
+skills/autogrind/evals/evals.json           # Must stay in sync
+plugins/autogrind/skills/autogrind/evals/evals.json  # Must stay in sync
+```
+
+**evals.json sync rule**: all three copies must be identical. The pre-commit hook enforces this.
+
+Each eval has: `id`, `prompt` (realistic user message), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
+
+### Supplementary regression suite
+
+`tests/run.sh` + `tests/scenarios/` provides a 46-scenario RED/GREEN regression suite using live `claude -p` invocations with structured A/B/C evaluation. This complements evals.json by testing behavioral compliance under pressure across the full range of documented failure modes.
 
 ```bash
 # RED phase - baseline without skill (establishes failure modes)
@@ -215,4 +232,4 @@ Per superpowers `writing-skills`, test with pressure scenarios BEFORE finalizing
 
 Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.
 
-**Critical principle**: when scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. The evaluator (`run.sh`) changes only when it is genuinely misclassifying correct behavior - not when the skill is inadequate and the evaluator correctly reports failure.
+**Critical principle**: when evals or scenarios fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying the evaluator. Evaluators change only when genuinely misclassifying correct behavior.
