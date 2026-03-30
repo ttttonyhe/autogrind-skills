@@ -6,13 +6,13 @@ on:
       - 'SKILL.md'
       - 'skills/autogrind/SKILL.md'
       - 'plugins/autogrind/skills/autogrind/SKILL.md'
-      - 'commands/autogrind.md'
-      - 'plugins/autogrind/commands/autogrind.md'
+      - 'commands/start.md'
+      - 'plugins/autogrind/commands/start.md'
   push:
     branches: [main]
     paths:
       - 'SKILL.md'
-      - 'commands/autogrind.md'
+      - 'commands/start.md'
 
 jobs:
   word-count:
@@ -52,10 +52,10 @@ jobs:
           fi
           $ok || exit 1
 
-      - name: Verify commands/autogrind.md copies are identical
+      - name: Verify commands/start.md copies are identical
         run: |
-          root="commands/autogrind.md"
-          copy="plugins/autogrind/commands/autogrind.md"
+          root="commands/start.md"
+          copy="plugins/autogrind/commands/start.md"
           if ! diff -q "$root" "$copy" > /dev/null 2>&1; then
             echo "::error::$root and $copy are out of sync"
             exit 1

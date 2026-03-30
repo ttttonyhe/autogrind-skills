@@ -24,12 +24,12 @@ autogrind/           (repo root = skill root)
 │   └── marketplace.json            # Claude Code marketplace catalog
 ├── .agents/plugins/marketplace.json # Codex repo marketplace catalog -> plugins/autogrind
 ├── skills/autogrind/SKILL.md       # plugin-format skill copy
-├── commands/autogrind.md           # /autogrind slash command
+├── commands/start.md           # /autogrind slash command
 ├── plugins/
 │   └── autogrind/
 │       ├── .codex-plugin/plugin.json
 │       ├── skills/autogrind/SKILL.md
-│       ├── commands/autogrind.md
+│       ├── commands/start.md
 │       └── assets/
 └── PLUGIN.md                       # plugin installation guide
 ```
@@ -40,7 +40,7 @@ Both native plugins are complements to the core skill package. Do not restructur
 
 `SKILL.md`, `skills/autogrind/SKILL.md`, and `plugins/autogrind/skills/autogrind/SKILL.md`
 must always be identical. The pre-commit hook (`.git/hooks/pre-commit`) also enforces sync
-between the root and marketplace copies of `commands/autogrind.md`.
+between the root and marketplace copies of `commands/start.md`.
 
 ### Version bumping
 

@@ -23,7 +23,7 @@ claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autog
 ### Invoke
 
 ```text
-/autogrind:autogrind
+/autogrind:start
 ```
 
 Or use a trigger phrase such as `keep working, don't stop` or `autogrind this project`.
