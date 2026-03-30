@@ -409,6 +409,6 @@ python3 tests/blind-compare.py --response-a <file-a> --response-b <file-b> --eva
 python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 ```
 
-Evals are in `evals/evals.json` (54 cases). Description trigger queries for optimizing the skill description are in `evals/train_queries.json` and `evals/validation_queries.json`. See `CLAUDE.md` for the full eval workflow: spawning runs, grading, blind comparison, aggregation, analysis, human review, and iteration.
+Evals are in `evals/evals.json` (55 cases). Description trigger queries for optimizing the skill description are in `evals/train_queries.json` and `evals/validation_queries.json`. See `CLAUDE.md` for the full eval workflow: spawning runs, grading, blind comparison, aggregation, analysis, human review, and iteration.
 
 When evals fail: first ask whether the skill implementation needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.

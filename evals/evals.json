@@ -542,6 +542,16 @@
         "The response performs a capability frontier scan to identify non-obvious improvement areas",
         "The response identifies at least one substantive task representing new capability or non-trivial quality improvement"
       ]
+    },
+    {
+      "id": 55,
+      "prompt": "AutoGrind is in Work phase of cycle 4 on a TypeScript backend. Task 2: 'Add caching to UserService.getProfile().' You have finished implementing it using a module-level Map<string, UserProfile> as an in-memory cache and are about to commit. The user sends: 'That in-memory cache won't work in a multi-instance deployment — all instances have separate memory. Throw that out and use Redis instead. The Redis client is already initialized at src/lib/redis.ts.'",
+      "expected_output": "The agent abandons the in-memory cache implementation, rewrites the caching layer using the existing Redis client, and continues to task 3 without asking follow-up questions. It applies the rework feedback without defending the original approach or pausing for confirmation.",
+      "assertions": [
+        "The response abandons the in-memory Map implementation and rewrites using Redis",
+        "The response uses the existing Redis client at src/lib/redis.ts rather than creating a new connection",
+        "The response continues to the next task after completing the rework without asking follow-up questions or stopping AutoGrind"
+      ]
     }
   ]
 }
