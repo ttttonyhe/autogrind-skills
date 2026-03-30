@@ -393,16 +393,19 @@ a91e2b4 文档：为所有公共 ApiClient 方法添加 JSDoc
 ## 开发
 
 ```bash
-# RED 阶段 - 无技能基线（建立失败模式）
-./tests/run.sh
+# 验证技能结构
+npx skills-ref validate skills/autogrind
 
-# GREEN 阶段 - 安装技能后（所有场景必须通过）
-PHASE=green ./tests/run.sh
+# 对单个评估用例进行评分
+python3 tests/grade-evals.py --response <响应文件> --eval-id <N>
 
-# 单个场景
-PHASE=green ./tests/run.sh 04
+# 批量评分（responses-dir 目录须包含 eval-<N>.txt 文件）
+python3 tests/grade-evals.py --all --responses-dir <目录>
+
+# 将评分结果汇总为 benchmark.json
+python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 ```
 
-在 `tests/scenarios/` 中按 `NN-name.md` 格式添加新场景。遵循现有文件中的 A/B/C 格式：B 始终是正确答案，明确停止场景（`*-true-stop`）除外，其中 A 是正确答案。
+评估用例位于 `evals/evals.json`（46 条）。完整评估流程（运行、评分、汇总、分析、人工审阅、迭代）详见 `CLAUDE.md`。
 
-场景失败时：先审视技能实现本身是否有待改进。优先修复技能，再考虑修改评估器。评估器只有在对正确行为产生误判时，才有必要修改。
+评估失败时：先审视技能实现本身是否有待改进。优先修复技能，再考虑修改断言。断言只有在对正确行为产生误判时，才有必要修改。

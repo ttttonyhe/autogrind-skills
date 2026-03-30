@@ -393,16 +393,19 @@ Write a `CLAUDE.md` describing what matters. AutoGrind will respect it.
 ## Development
 
 ```bash
-# RED phase - baseline without skill (establishes failure modes)
-./tests/run.sh
+# Validate skill structure
+npx skills-ref validate skills/autogrind
 
-# GREEN phase - with skill installed (all scenarios must pass)
-PHASE=green ./tests/run.sh
+# Grade a single eval against an agent response
+python3 tests/grade-evals.py --response <response-file> --eval-id <N>
 
-# Single scenario
-PHASE=green ./tests/run.sh 04
+# Grade all evals (responses-dir must contain eval-<N>.txt files)
+python3 tests/grade-evals.py --all --responses-dir <dir>
+
+# Aggregate grading results into benchmark.json
+python3 tests/aggregate-benchmark.py --iteration-dir <workspace/iteration-N/>
 ```
 
-Add new scenarios in `tests/scenarios/` as `NN-name.md`. Follow the A/B/C format in existing files: B is always the correct answer except for explicit stop scenarios (`*-true-stop`) where A is correct.
+Evals are in `evals/evals.json` (46 cases). See `CLAUDE.md` for the full eval workflow: spawning runs, grading, aggregation, analysis, human review, and iteration.
 
-When scenarios fail: first ask whether the skill implementation needs improvement. Fix the skill before touching the evaluator. The evaluator changes only when it is genuinely misclassifying correct behavior.
+When evals fail: first ask whether the skill implementation needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.
