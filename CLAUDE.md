@@ -95,12 +95,20 @@ The skill must be usable across all major coding agents. All agents except Claud
 | Gemini CLI | GEMINI.md conventions | Native task tools |
 | OpenCode | AGENTS.md conventions | Native task tools |
 | Cursor | `.cursorrules` or explicit load | File-based notes |
-| Kimi Code | `.kimi/skills/` or `~/.agents/skills/` | `/skill:autogrind` |
+| Windsurf | `~/.codeium/windsurf/skills/` or `~/.agents/skills/` | Native task tools |
+| Roocode | `~/.roo/skills/` or `~/.agents/skills/` | Native task tools |
+| Cline | `~/.cline/skills/` or `~/.agents/skills/` | Native task tools |
+| Trae | `~/.trae/skills/` or `~/.agents/skills/` | Native task tools |
+| Kimi Code | `~/.config/agents/skills/` or `.kimi/skills/` | `/skill:autogrind` |
+| GitHub Copilot | `~/.copilot/skills/` or `~/.agents/skills/` | Native task tools |
+| Goose | `~/.agents/skills/` | Native task tools |
+| AmpCode | `~/.config/agents/skills/` or `~/.agents/skills/` | Native task tools |
 | Junie | `~/.junie/skills/` or `~/.agents/skills/` | Native task tools |
-| Kiro | `~/.kiro/skills/` or `~/.agents/skills/` | Native task tools |
+| Kilo / Kiro / Factory | `~/.agents/skills/` | Native task tools |
+| Hermes Agent (NousResearch) | `~/.agents/skills/` | Native task tools |
 | All others | `~/.agents/skills/` | Native task tools |
 
-Write platform-agnostic instructions where possible; provide explicit platform alternatives where divergence is necessary. The platform notes table in SKILL.md is the authoritative mapping — keep it in sync with this table.
+Write platform-agnostic instructions where possible; provide explicit platform alternatives where divergence is necessary. The SKILL.md Platform Notes table has a concise subset of this table (agents with unique loading paths or invocation methods); this table is the complete reference.
 
 ## Research Foundation
 
@@ -247,8 +255,8 @@ The `evals/` directory lives at the repo root only — it is not copied into ski
 ```
 evals/
 ├── evals.json              # Output quality evals (64 cases)
-├── train_queries.json      # Description trigger queries — training set (12 queries, 60%)
-└── validation_queries.json # Description trigger queries — validation set (8 queries, 40%)
+├── train_queries.json      # Description trigger queries — training set (14 queries, 60%)
+└── validation_queries.json # Description trigger queries — validation set (10 queries, 40%)
 ```
 
 Each eval has: `id`, `prompt` (realistic scenario description), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
