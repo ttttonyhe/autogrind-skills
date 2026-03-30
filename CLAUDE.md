@@ -183,6 +183,16 @@ ln -sfn $(pwd) ~/.claude/skills/autogrind
 git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/autogrind
 ```
 
+### Grading evals
+
+`tests/grade-evals.py` grades evals.json assertions against an agent response using the claude CLI. It outputs `grading.json` format per the agentskills.io spec:
+
+```bash
+python3 tests/grade-evals.py --response <response-file> --eval-id <N>
+```
+
+Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI.
+
 ### Primary test format: evals.json
 
 The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 12 eval cases covering the key pressure categories (false completion, true stop, praise signal, retracted stop, stop+praise, scaffold-only cycle, context compaction, user question, solvability gate, critical bug, ambiguous soft stop, basic invocation).
