@@ -12,12 +12,14 @@ a grading.json result.
 
 Usage:
   python3 tests/grade-evals.py --response FILE --eval-id N [--output-dir DIR] [--evals FILE]
-  python3 tests/grade-evals.py --all --responses-dir DIR [--output-dir DIR] [--evals FILE]
+  python3 tests/grade-evals.py --all --responses-dir DIR [--output-dir DIR] [--config {with_skill,without_skill}]
   python3 tests/grade-evals.py --consistency-check --response FILE --eval-id N
   python3 tests/grade-evals.py --consistency-check --all --responses-dir DIR
 
 In --all mode, responses-dir must contain files named eval-<N>.txt for each eval ID.
 In --output-dir mode, grading.json is saved to the directory (and also printed to stdout).
+Use --config {with_skill,without_skill} in batch mode to save to eval-<N>/<config>/grading.json so
+results from the two configurations don't overwrite each other.
 --consistency-check grades each assertion twice and reports agreement rate; useful for
 measuring LLM judge reliability before trusting baselines.
 
@@ -172,11 +174,12 @@ def main():
             "  python3 tests/grade-evals.py --response out.txt --eval-id 1 \\\n"
             "      --output-dir autogrind-workspace/iteration-1/eval-1/with_skill\n"
             "  python3 tests/grade-evals.py --all --responses-dir evals/workspace/responses/ \\\n"
-            "      --output-dir autogrind-workspace/iteration-1/ --workers 8\n"
+            "      --output-dir autogrind-workspace/iteration-1/ --config with_skill\n"
             "  python3 tests/grade-evals.py --consistency-check --response out.txt --eval-id 1\n"
             "  python3 tests/grade-evals.py --consistency-check --all --responses-dir responses/\n\n"
             "Output is grading.json printed to stdout. Use --output-dir to also save to a file.\n"
-            "In --all mode, grading.json is saved to <output-dir>/eval-<N>/grading.json."
+            "In --all mode without --config, grading.json is saved to <output-dir>/eval-<N>/grading.json.\n"
+            "In --all mode with --config, grading.json is saved to <output-dir>/eval-<N>/<config>/grading.json."
         ),
     )
     parser.add_argument(
@@ -221,6 +224,14 @@ def main():
         help=(
             "Grade each assertion twice and report agreement rate. "
             "Use to measure LLM judge reliability before trusting baselines."
+        ),
+    )
+    parser.add_argument(
+        "--config", choices=["with_skill", "without_skill"], metavar="{with_skill,without_skill}",
+        help=(
+            "Configuration label for this grading run. When set in batch mode (--all), "
+            "saves to eval-<N>/<config>/grading.json so results from both configs "
+            "coexist under the same --output-dir without overwriting each other."
         ),
     )
     args = parser.parse_args()
@@ -337,6 +348,8 @@ def main():
                     eval_results.append(result)
                     if output_dir is not None:
                         eval_out_dir = output_dir / f"eval-{eval_case['id']}"
+                        if args.config:
+                            eval_out_dir = eval_out_dir / args.config
                         eval_out_dir.mkdir(parents=True, exist_ok=True)
                         (eval_out_dir / "grading.json").write_text(json.dumps(result, indent=2))
                         print(f"Saved grading for eval {eval_case['id']} to {eval_out_dir}/grading.json", file=sys.stderr)
@@ -344,6 +357,8 @@ def main():
         if args.workers > 1 and output_dir is not None:
             for result in eval_results:
                 eval_out_dir = output_dir / f"eval-{result['eval_id']}"
+                if args.config:
+                    eval_out_dir = eval_out_dir / args.config
                 eval_out_dir.mkdir(parents=True, exist_ok=True)
                 (eval_out_dir / "grading.json").write_text(json.dumps(result, indent=2))
                 print(f"Saved grading for eval {result['eval_id']} to {eval_out_dir}/grading.json", file=sys.stderr)

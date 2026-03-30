@@ -228,6 +228,16 @@ python3 tests/aggregate-benchmark.py \
     --output autogrind-workspace/iteration-1/benchmark.json
 ```
 
+`tests/analyze-failures.py` classifies per-eval pass/fail patterns after aggregation to identify which evals discriminate well, which always pass or always fail, and what needs attention before the next iteration:
+
+```bash
+python3 tests/analyze-failures.py \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --output autogrind-workspace/iteration-2/failure_analysis.json
+```
+
+Categories: `strong_discriminator` (passes with skill, fails without — skill is working), `both_pass` (not measuring skill value — consider removing or strengthening), `both_fail` (assertion broken or too hard — fix before next iteration), `weak_discriminator` (inconclusive).
+
 ### Primary test format: evals.json
 
 The primary test artifact is `evals/evals.json`, following the [agentskills.io evaluating-skills](https://agentskills.io/skill-creation/evaluating-skills) standard. It contains 64 eval cases covering all documented failure modes and behavioral invariants across all AutoGrind domains and pressure categories.
@@ -298,10 +308,13 @@ Execute this task:
 python3 tests/grade-evals.py --response outputs/response.txt --eval-id <N> \
     --output-dir autogrind-workspace/iteration-1/eval-<N>/with_skill
 
-# All evals at once
+# All evals at once — use --config to avoid overwriting both configs' results
 python3 tests/grade-evals.py --all \
     --responses-dir autogrind-workspace/iteration-1/with_skill_responses/ \
-    --output-dir autogrind-workspace/iteration-1/
+    --output-dir autogrind-workspace/iteration-1/ --config with_skill
+python3 tests/grade-evals.py --all \
+    --responses-dir autogrind-workspace/iteration-1/without_skill_responses/ \
+    --output-dir autogrind-workspace/iteration-1/ --config without_skill
 ```
 
 **4. Aggregation** — use `tests/aggregate-benchmark.py`:
@@ -326,11 +339,19 @@ python3 tests/aggregate-benchmark.py \
 
 `eval_count` is the number of evals with a grading.json for that config. If it differs from the number of eval-* directories, some runs are missing results.
 
-**6. Analysis patterns to look for:**
-- Assertions that always pass in both configurations → not measuring skill value, remove or strengthen
-- Assertions that always fail in both → broken assertion or test case too hard, fix before next iteration
-- Assertions that pass with skill but fail without → skill is adding measurable value here
-- High stddev in benchmark → instructions may be ambiguous, add examples to SKILL.md
+**6. Analysis** — use `tests/analyze-failures.py` to classify evals automatically, then inspect the output for patterns:
+
+```bash
+python3 tests/analyze-failures.py \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --output autogrind-workspace/iteration-2/failure_analysis.json
+```
+
+- `strong_discriminator` evals → skill is working here; these validate the skill
+- `both_pass` evals → not measuring skill value; consider removing or strengthening assertions
+- `both_fail` evals → broken assertion or scenario too hard; fix before next iteration
+- `weak_discriminator` evals → inconclusive; review agent outputs manually
+- High stddev in benchmark → instructions may be ambiguous; add examples to SKILL.md
 
 **7. Human review (feedback.json)** — after each iteration, review the actual agent outputs alongside the grades and record specific, actionable feedback:
 

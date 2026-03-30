@@ -34,15 +34,17 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
   ```bash
   python3 tests/grade-evals.py --all \
     --responses-dir autogrind-workspace/iteration-2/with_skill_responses/ \
-    --output-dir autogrind-workspace/iteration-2/ --timeout 120 --workers 1
+    --output-dir autogrind-workspace/iteration-2/ \
+    --config with_skill --timeout 120 --workers 1
   python3 tests/grade-evals.py --all \
     --responses-dir autogrind-workspace/iteration-2/without_skill_responses/ \
-    --output-dir autogrind-workspace/iteration-2/ --timeout 120 --workers 1
+    --output-dir autogrind-workspace/iteration-2/ \
+    --config without_skill --timeout 120 --workers 1
   python3 tests/aggregate-benchmark.py \
     --iteration-dir autogrind-workspace/iteration-2/ \
     --output autogrind-workspace/iteration-2/benchmark.json
   ```
-- **Note:** Run grading with --workers 1 (sequential). Parallel grading workers block each other via the claude CLI.
+- **Note:** Run grading with --workers 1 (sequential). Parallel grading workers block each other via the claude CLI. The `--config` flag writes to `eval-N/<config>/grading.json` so both runs coexist under the same `--output-dir`.
 
 ## P2
 
