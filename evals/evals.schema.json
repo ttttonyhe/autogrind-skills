@@ -7,6 +7,10 @@
   "required": ["skill_name", "evals"],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
     "skill_name": {
       "type": "string",
       "description": "Name of the skill being evaluated"
