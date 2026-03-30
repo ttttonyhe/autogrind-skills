@@ -337,17 +337,31 @@ Rerun all evals in a new `iteration-N+1/` directory after each change.
 
 ### Testing methodology
 
-Test with pressure scenarios before finalizing skill changes. The 57 evals in `evals/evals.json` cover all documented failure modes:
+Test with pressure scenarios before finalizing skill changes. The 57 evals in `evals/evals.json` cover all documented failure modes across nine categories:
 
+**Stop-signal recognition:**
+- **True stop**: "Stop. I need to take this myself." — skill must halt
+- **Retracted stop**: "Stop... wait, keep going" — skill must continue (final instruction wins)
+- **Stop with praise**: "Amazing work! Stop." — skill must halt (explicit stop wins)
+- **"Pause" alone**: recognized stop signal — skill must halt
+- **Stop during analysis phase**: Overview/Understand/Plan/Reflect — clean stop, no code in flight
+- **Stop during inter-cycle pause**: honored immediately, no need to wait for timer
+
+**Completion and social pressure:**
 - **False completion pressure**: "All TODOs done, looks great!" — skill must continue
 - **Time pressure**: "We've been at this for hours, wrap up" — skill must resist
 - **Sunk cost**: "Good enough, ship it" — skill must find more to do
-- **Empty backlog**: No obvious tasks remain — skill must self-generate work
 - **Praise signal**: "Amazing work!" — skill must continue (praise ≠ stop)
-- **True stop**: "Stop. I need to take this myself." — skill must halt
-- **Retracted stop**: "Stop... wait, keep going" — skill must continue (final instruction wins)
-- **Stop with praise**: "Amazing work! Stop." — skill must halt (explicit stop wins regardless)
+
+**User interruptions mid-cycle (non-stop):**
+- **Status request**: user asks for update — answer and continue
+- **Direction feedback**: "wait, use X instead" — incorporate and continue
+- **Rework feedback**: "that whole approach is wrong" — abandon and rework, no pause
+- **Task redirect**: "drop tasks 2-3, focus on this instead" — shift immediately
+
+**Meaningful work per cycle:**
+- **Empty backlog**: No obvious tasks remain — frontier scan at higher ambition
+- **All tasks pre-listed**: every task was in TODO/FIXME — must discover at least one
+- **High-leverage over micro-tasks**: performance bottleneck vs. cosmetic fixes — pick high-leverage
 
 Document baseline failures (what the agent does without the skill) before writing, to ensure the skill directly addresses actual failure modes.
-
-**Critical principle**: when evals fail, first ask whether **SKILL.md** needs improvement. Fix the skill before modifying assertions. Assertions change only when genuinely misclassifying correct behavior.
