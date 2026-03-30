@@ -402,6 +402,9 @@ python3 tests/grade-evals.py --response <响应文件> --eval-id <N>
 # 批量评分（responses-dir 目录须包含 eval-<N>.txt 文件）
 python3 tests/grade-evals.py --all --responses-dir <目录>
 
+# 并行评分以加快批量运行（推荐 5-10 个 worker）
+python3 tests/grade-evals.py --all --responses-dir <目录> --workers 8
+
 # 盲测对比两份响应的整体质量（含技能 vs 不含技能）
 python3 tests/blind-compare.py --response-a <文件A> --response-b <文件B> --eval-id <N>
 

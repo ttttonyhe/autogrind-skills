@@ -199,9 +199,12 @@ python3 tests/grade-evals.py --response out.txt --eval-id 1 \
 # Grade all evals at once (responses-dir must contain eval-<N>.txt files)
 python3 tests/grade-evals.py --all --responses-dir <dir> \
     --output-dir autogrind-workspace/iteration-1/
+
+# Speed up batch grading with parallel workers (5-10 recommended)
+python3 tests/grade-evals.py --all --responses-dir <dir> --workers 8
 ```
 
-Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies.
+Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies. Use `--timeout SECONDS` (default 60) for slow model responses; `--workers N` to parallelize (default 1, sequential).
 
 `tests/blind-compare.py` runs a blind holistic quality comparison between two responses using an LLM judge. Complements assertion grading with subjective quality measurement (organization, completeness, correctness, usability):
 

@@ -29,7 +29,11 @@ import argparse
 import json
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+
+_timeout: int = 60
 
 
 def grade_assertion(assertion: str, response_text: str) -> dict:
@@ -54,9 +58,18 @@ def grade_assertion(assertion: str, response_text: str) -> dict:
             ["claude", "-p", prompt],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=_timeout,
         )
-        output = result.stdout.strip()
+        if result.returncode != 0:
+            stderr = result.stderr.strip()
+            print(
+                f"Warning: claude CLI returned exit code {result.returncode}"
+                + (f": {stderr[:120]}" if stderr else ""),
+                file=sys.stderr,
+            )
+            output = f"FAIL: Grader call failed (exit {result.returncode})"
+        else:
+            output = result.stdout.strip()
     except FileNotFoundError:
         print(
             "Error: claude CLI not found. Install from https://claude.ai/code",
@@ -64,16 +77,25 @@ def grade_assertion(assertion: str, response_text: str) -> dict:
         )
         sys.exit(2)
     except subprocess.TimeoutExpired:
-        output = "FAIL: Grading timed out"
+        output = f"FAIL: Grading timed out after {_timeout}s"
 
     passed = output.startswith("PASS")
     evidence = output[6:].strip() if len(output) > 5 else output
     return {"text": assertion, "passed": passed, "evidence": evidence}
 
 
-def grade_eval_case(eval_case: dict, response_text: str) -> dict:
+def grade_eval_case(eval_case: dict, response_text: str, workers: int = 1) -> dict:
     assertions = eval_case.get("assertions", [])
-    assertion_results = [grade_assertion(a, response_text) for a in assertions]
+    if workers > 1 and len(assertions) > 1:
+        with ThreadPoolExecutor(max_workers=min(workers, len(assertions))) as executor:
+            futures = {executor.submit(grade_assertion, a, response_text): i for i, a in enumerate(assertions)}
+            results_by_index = {}
+            for future in as_completed(futures):
+                idx = futures[future]
+                results_by_index[idx] = future.result()
+            assertion_results = [results_by_index[i] for i in range(len(assertions))]
+    else:
+        assertion_results = [grade_assertion(a, response_text) for a in assertions]
     total = len(assertion_results)
     passed_count = sum(1 for r in assertion_results if r["passed"])
     return {
@@ -109,7 +131,7 @@ def main():
             "  python3 tests/grade-evals.py --response out.txt --eval-id 1 \\\n"
             "      --output-dir autogrind-workspace/iteration-1/eval-1/with_skill\n"
             "  python3 tests/grade-evals.py --all --responses-dir evals/workspace/responses/ \\\n"
-            "      --output-dir autogrind-workspace/iteration-1/\n\n"
+            "      --output-dir autogrind-workspace/iteration-1/ --workers 8\n\n"
             "Output is grading.json printed to stdout. Use --output-dir to also save to a file.\n"
             "In --all mode, grading.json is saved to <output-dir>/eval-<N>/grading.json."
         ),
@@ -143,7 +165,18 @@ def main():
         metavar="FILE",
         help="Path to evals.json (default: ../evals/evals.json relative to this script)",
     )
+    parser.add_argument(
+        "--timeout", type=int, default=60, metavar="SECONDS",
+        help="Timeout in seconds for each grader call (default: 60)",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=1, metavar="N",
+        help="Number of parallel grader workers (default: 1; use 5-10 to speed up batch grading)",
+    )
     args = parser.parse_args()
+
+    global _timeout
+    _timeout = args.timeout
 
     output_dir = Path(args.output_dir) if args.output_dir else None
 
@@ -166,28 +199,46 @@ def main():
             print(f"Error: responses directory not found: {args.responses_dir}", file=sys.stderr)
             sys.exit(2)
 
-        eval_results = []
-        for eval_case in evals_data["evals"]:
+        def grade_one(eval_case: dict) -> dict | None:
             response_file = responses_dir / f"eval-{eval_case['id']}.txt"
             if not response_file.exists():
                 print(
                     f"Warning: response file not found for eval {eval_case['id']}: {response_file}",
                     file=sys.stderr,
                 )
-                continue
+                return None
             print(
                 f"Grading eval {eval_case['id']}: {len(eval_case.get('assertions', []))} assertions...",
                 file=sys.stderr,
             )
-            response_text = response_file.read_text()
-            result = grade_eval_case(eval_case, response_text)
-            eval_results.append(result)
+            return grade_eval_case(eval_case, response_file.read_text(), workers=args.workers)
 
-            if output_dir is not None:
-                eval_out_dir = output_dir / f"eval-{eval_case['id']}"
+        eval_results = []
+        if args.workers > 1:
+            with ThreadPoolExecutor(max_workers=args.workers) as executor:
+                future_to_case = {executor.submit(grade_one, ec): ec for ec in evals_data["evals"]}
+                for future in as_completed(future_to_case):
+                    result = future.result()
+                    if result is not None:
+                        eval_results.append(result)
+            eval_results.sort(key=lambda r: r["eval_id"])
+        else:
+            for eval_case in evals_data["evals"]:
+                result = grade_one(eval_case)
+                if result is not None:
+                    eval_results.append(result)
+                    if output_dir is not None:
+                        eval_out_dir = output_dir / f"eval-{eval_case['id']}"
+                        eval_out_dir.mkdir(parents=True, exist_ok=True)
+                        (eval_out_dir / "grading.json").write_text(json.dumps(result, indent=2))
+                        print(f"Saved grading for eval {eval_case['id']} to {eval_out_dir}/grading.json", file=sys.stderr)
+
+        if args.workers > 1 and output_dir is not None:
+            for result in eval_results:
+                eval_out_dir = output_dir / f"eval-{result['eval_id']}"
                 eval_out_dir.mkdir(parents=True, exist_ok=True)
                 (eval_out_dir / "grading.json").write_text(json.dumps(result, indent=2))
-                print(f"Saved grading for eval {eval_case['id']} to {eval_out_dir}/grading.json", file=sys.stderr)
+                print(f"Saved grading for eval {result['eval_id']} to {eval_out_dir}/grading.json", file=sys.stderr)
 
         total_evals = len(eval_results)
         total_assertions = sum(r["summary"]["total"] for r in eval_results)
@@ -237,7 +288,7 @@ def main():
     response_text = response_path.read_text()
     print(f"Grading eval {args.eval_id}: {len(assertions)} assertions...", file=sys.stderr)
 
-    result = grade_eval_case(eval_case, response_text)
+    result = grade_eval_case(eval_case, response_text, workers=args.workers)
     save_output(result, output_dir)
     sys.exit(1 if result["summary"]["failed"] > 0 else 0)
 

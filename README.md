@@ -402,6 +402,9 @@ python3 tests/grade-evals.py --response <response-file> --eval-id <N>
 # Grade all evals (responses-dir must contain eval-<N>.txt files)
 python3 tests/grade-evals.py --all --responses-dir <dir>
 
+# Parallel grading for faster batch runs (5-10 workers recommended)
+python3 tests/grade-evals.py --all --responses-dir <dir> --workers 8
+
 # Blind holistic comparison between two responses (with_skill vs without_skill)
 python3 tests/blind-compare.py --response-a <file-a> --response-b <file-b> --eval-id <N>
 
