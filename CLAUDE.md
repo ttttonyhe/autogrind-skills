@@ -188,10 +188,14 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.claude/skills/
 `tests/grade-evals.py` grades evals.json assertions against an agent response using the claude CLI. It outputs `grading.json` format per the agentskills.io spec:
 
 ```bash
+# Grade a single eval
 python3 tests/grade-evals.py --response <response-file> --eval-id <N>
+
+# Grade all evals at once (responses-dir must contain eval-<N>.txt files)
+python3 tests/grade-evals.py --all --responses-dir <dir>
 ```
 
-Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI.
+Exit codes: `0` all pass, `1` some fail, `2` usage error. Requires the claude CLI. PEP 723 compatible — no external dependencies.
 
 ### Primary test format: evals.json
 
