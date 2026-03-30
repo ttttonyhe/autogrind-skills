@@ -202,12 +202,11 @@ The `evals/` directory lives at the repo root only — it is not copied into ski
 ```
 evals/
 ├── evals.json              # Output quality evals (12 cases)
-├── eval_queries.json       # Full description trigger query set (20 queries, 10 each way)
-├── train_queries.json      # 60% split for description optimization (12 queries)
-└── validation_queries.json # 40% split for generalization check (8 queries)
+├── train_queries.json      # Description trigger queries — training set (12 queries, 60%)
+└── validation_queries.json # Description trigger queries — validation set (8 queries, 40%)
 ```
 
-`eval_queries.json` follows the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: a flat array of `{"query": "...", "should_trigger": true/false}` objects. `train_queries.json` and `validation_queries.json` are non-overlapping 60/40 subsets with proportional balance. Use train failures to guide description changes; use validation only to verify generalization.
+`train_queries.json` and `validation_queries.json` follow the [agentskills.io optimizing-descriptions](https://agentskills.io/skill-creation/optimizing-descriptions) format: flat arrays of `{"query": "...", "should_trigger": true/false}` objects. The two sets are non-overlapping with proportional balance of should-trigger/should-not-trigger. Use train failures to guide description changes; use validation only to verify generalization.
 
 Each eval has: `id`, `prompt` (realistic user message), `expected_output` (success description), `assertions` (verifiable pass/fail statements).
 
