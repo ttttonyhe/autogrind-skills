@@ -12,8 +12,13 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 - **Context:** Required for the with/without skill baseline comparison. Each eval needs a `prompt_baseline` field that presents the same scenario without AutoGrind framing.
 
 ### Generate 114 eval responses and build benchmark.json
-- **Status:** In progress. 113/114 responses generated (eval 57 with_skill timed out due to daily API token limit). Grading and aggregation pending API limit reset.
-- **Context:** Run `python3 tests/generate-responses.py --eval-ids 57 --iteration-dir autogrind-workspace/iteration-1/` to fill the gap, then grade with `python3 tests/grade-evals.py --all --workers 10` for both configs, then `python3 tests/aggregate-benchmark.py` to produce benchmark.json.
+- **Status:** In progress. 114/114 responses generated and saved to `autogrind-workspace/iteration-1/`. Grading blocked by daily API token limit.
+- **Next steps when limit resets:**
+  1. Grade with_skill: `python3 tests/grade-evals.py --all --responses-dir autogrind-workspace/iteration-1/with_skill_responses/ --output-dir autogrind-workspace/iteration-1/with_skill_grading_v2/ --workers 1 --timeout 120`
+  2. Grade without_skill: same with `without_skill_responses/` and `without_skill_grading_v2/` (run AFTER with_skill completes — concurrent calls hit rate limits)
+  3. Copy results: `for i in $(seq 1 57); do cp autogrind-workspace/iteration-1/with_skill_grading_v2/eval-$i/grading.json autogrind-workspace/iteration-1/eval-$i/with_skill/grading.json; cp autogrind-workspace/iteration-1/without_skill_grading_v2/eval-$i/grading.json autogrind-workspace/iteration-1/eval-$i/without_skill/grading.json; done`
+  4. Aggregate: `python3 tests/aggregate-benchmark.py --iteration-dir autogrind-workspace/iteration-1/ --output autogrind-workspace/iteration-1/benchmark.json`
+- **Note:** Run grading with --workers 1 (sequential). Parallel grading workers block each other via the claude CLI.
 - **Depends on:** Daily API token limit reset.
 
 ## P2
