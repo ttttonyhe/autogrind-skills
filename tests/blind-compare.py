@@ -72,6 +72,7 @@ def run_blind_comparison(
     response_a: str,
     response_b: str,
     task_prompt: str,
+    timeout: int = 120,
 ) -> dict:
     prompt = JUDGE_PROMPT_TEMPLATE.format(
         task_prompt=task_prompt,
@@ -83,8 +84,16 @@ def run_blind_comparison(
             ["claude", "-p", prompt],
             capture_output=True,
             text=True,
-            timeout=120,
+            timeout=timeout,
         )
+        if result.returncode != 0:
+            stderr = result.stderr.strip()
+            print(
+                f"Warning: claude CLI returned exit code {result.returncode}"
+                + (f": {stderr[:120]}" if stderr else ""),
+                file=sys.stderr,
+            )
+            return {"parse_error": f"judge call failed (exit {result.returncode})"}
         output = result.stdout.strip()
     except FileNotFoundError:
         print(
@@ -93,7 +102,7 @@ def run_blind_comparison(
         )
         sys.exit(2)
     except subprocess.TimeoutExpired:
-        print("Error: comparison timed out", file=sys.stderr)
+        print(f"Error: comparison timed out after {timeout}s", file=sys.stderr)
         sys.exit(2)
 
     # Extract JSON from the response
@@ -156,6 +165,10 @@ def main():
         "--output", metavar="FILE",
         help="Path to save the comparison result JSON (also printed to stdout)",
     )
+    parser.add_argument(
+        "--timeout", type=int, default=120, metavar="SECONDS",
+        help="Timeout in seconds for the judge call (default: 120)",
+    )
     args = parser.parse_args()
 
     if not args.eval_id and not args.task_prompt:
@@ -188,7 +201,7 @@ def main():
     response_b = path_b.read_text()
 
     print(f"Running blind comparison (A={args.response_a}, B={args.response_b})...", file=sys.stderr)
-    result = run_blind_comparison(response_a, response_b, task_prompt)
+    result = run_blind_comparison(response_a, response_b, task_prompt, timeout=args.timeout)
     result["mapping"] = {"A": str(path_a), "B": str(path_b)}
 
     json_str = json.dumps(result, indent=2)
