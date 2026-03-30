@@ -150,7 +150,7 @@ End Reflect with: _"Next cycle focus: [area]."_
 
 ### Inter-Cycle Pause
 
-After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — stop signal now to halt."`, wait 60s (`sleep 60`), then begin Overview. Not a stopping point.
+After Reflect: print `"Cycle [N] complete. Starting cycle [N+1] in 60 seconds — stop signal now to halt."`, wait 60s (`sleep 60`), then begin Overview. Not a stopping point. If the user explicitly signals continuation during the pause ("keep going", "don't wait"), begin Overview immediately.
 
 ## Stopping Conditions
 

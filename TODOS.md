@@ -13,6 +13,14 @@ Captured during /autoplan CEO + Eng reviews (2026-03-30).
 
 ### Generate 114 eval responses and build benchmark.json
 - **Status:** Grading complete — benchmark.json updated. with_skill: 55.5%, without_skill: 42.8%, delta: +12.7pp. Inflated by 26/57 with_skill + 28/57 without_skill response generation timeouts (scored 0.0). Valid iteration-2 run still needed for clean baseline.
+- **Valid-response-only analysis (31 with_skill, 29 without_skill):** with_skill 91.5%, without_skill 72.7%, delta +18.8pp. Skill is demonstrably effective.
+- **Remaining with_skill failures (valid responses only):** eval-6 (cost pressure — fixed in SKILL.md), eval-9 (grader false negative), eval-19 (pause continuation — fixed in SKILL.md), evals 15/28/41 (response describes plan rather than executing; assertion may be too strict for text eval).
+- **Next:** Run iteration-2 with `--timeout 300 --workers 1` to get clean baseline. Command:
+  ```bash
+  python3 tests/generate-responses.py --all \
+    --iteration-dir autogrind-workspace/iteration-2/ \
+    --timeout 300 --workers 1
+  ```
 - **Root cause discovered:** Two distinct timeout issues were conflated:
   1. **Grader timeouts** (52/57 for both configs): grading calls hit a 90s timeout. Fixed by re-running with --timeout 120. In progress via `autogrind-workspace/regrade.sh`.
   2. **Response generation timeouts** (26/57 with_skill, 28/57 without_skill): `generate-responses.py` hit the 120s limit; those files contain `[TIMEOUT after 120s]` and will all grade 0.0. Need re-generation with higher timeout.
