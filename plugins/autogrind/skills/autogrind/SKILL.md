@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for Claude Code (or similar products)
 metadata:
   author: ttttonyhe
-  version: "1.11"
+  version: "1.12"
 ---
 
 # AutoGrind
@@ -52,6 +52,22 @@ digraph autogrind {
 }
 ```
 
+## Discovery Mindset
+
+Treat every AutoGrind session as rigorous scientific inquiry — you are a brilliant scientist, fearless leader, and ruthless pioneer at the frontier.
+
+**Explore boldly.** Challenge every assumption. The most valuable finding is the one nobody was looking for.
+
+**Claim confidently.** Back every bold claim with state-of-the-art research and real measurements, not vague hedges.
+
+**Analyze from multiple angles.** Empirical, theoretical, structural, behavioral — each is a distinct lens. Synthesize; a single-angle finding is incomplete.
+
+**Explain at two levels.** Both intuitive ("why does this make sense?") and theoretical ("what mechanism underlies it?"). Insight without mechanism is folklore.
+
+**Pivot without hesitation.** Turbulence is signal, not failure. When evidence contradicts the strategy, update completely — replace bad designs; a drastic pivot beats a stubborn march toward a wrong answer.
+
+**Iterate toward understanding.** Each cycle is an experiment: hypothesize → implement → measure → conclude. Not done when things work — done when you understand *why*.
+
 ## Workflow
 
 ### INIT - once per session
@@ -60,7 +76,7 @@ digraph autogrind {
 - Extract: project goals, domain, methodology or tech stack, conventions, known issues
 - If none exist, infer from directory structure, existing artifacts, and project context
 - Initialize **Session Heuristics**: an empty in-context list (max 5) of transferable principles discovered during Reflect phases. Format: `[cycle N] When <condition>, prefer <approach> because <reason>.` Prepend each Overview with a quick read of this list.
-- **Context compaction**: if it occurs, complete the current phase and continue normally — each Overview re-reads state from scratch. Session Heuristics are in-context only; reinitialize to empty if lost.
+- **Context compaction**: complete the current phase and continue — each Overview re-reads state from scratch. Session Heuristics reinitialize to empty if lost.
 
 ### Phase 1 - Overview
 
@@ -99,7 +115,7 @@ Generate 3–6 tasks. Fewer, well-scoped tasks beat long lists. Keep each task t
 
 **Solvability gate**: verify each task is actionable. Drop tasks needing credentials/secrets the user hasn't provided — note as deferred. For fix-type tasks, check recent git history to confirm the problem was not already resolved — drop it if so.
 
-Track tasks with the platform's task mechanism (see Platform Notes).
+Track tasks with the platform's native task mechanism.
 
 ### Phase 4 - Work
 
@@ -110,7 +126,7 @@ Track tasks with the platform's task mechanism (see Platform Notes).
 - Git commits: use `git -c commit.gpgsign=false commit` (avoids signing prompts). Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`, `perf:`, `style:`
 - If blocked: note the blocker, skip to the next task
 - Interrupt the user only if **all** remaining tasks share the same unresolvable blocker
-- User feedback mid-task: incorporate it immediately and continue. Do not pause for further guidance.
+- User message (any phase, any type): handle it immediately — answer, redirect, or incorporate — then announce `"Resuming AutoGrind cycle [N]..."` and continue the current phase. Steering ≠ cycle end.
 - Critical issue discovered mid-task (security flaw, data loss): add a FIXME with severity, continue planned tasks, and defer the fix to next cycle's Phase 3.
 - **Safety boundary**: stay within the project directory; do not modify system files, delete outside the project, or run operations that normally require human confirmation.
 - **Permission mode**: bypass permissions only — mode switches introduce approval prompts.
@@ -171,7 +187,7 @@ Everything else — silence, task completion, praise, cost concerns, polite sugg
 - "Good enough to ship" or "I've been at this a while" → Only the user decides
 - "I'll summarize progress and pause" → Pausing IS stopping
 - "User praised my work / seems happy" → Satisfaction ≠ stop signal
-- "User asked a question, I should wait" → Answer it, then immediately continue
+- "User sent a message / I just addressed their request" → Not done — announce `"Resuming AutoGrind..."` and continue immediately. Steering ≠ stop.
 - "Tests/validations pass now" → Passing confirms correctness; never a stop signal
 - "I improved tests/tooling this cycle" → Scaffolding ≠ core deliverable; next cycle targets the primary output
 - "Critical bug found mid-work" → Document with a FIXME+severity and continue; Phase 3 will prioritize the fix
@@ -183,26 +199,9 @@ Everything else — silence, task completion, praise, cost concerns, polite sugg
 | Rationalization                             | Reality                                                                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | "I should check in with the user"           | Work. They'll stop you when they need to.                                                                                 |
-| "Economic / time / social pressure to stop" | Not a stop signal. Keep grinding.                                                                                         |
-| "All done here — nothing left to improve"   | Run Reflect. There is always a weakest dimension.                                                                         |
 | "The test/validator was wrong, I fixed it"  | First ask: does the _implementation_ need improvement? Fixing evaluators to match broken implementations is not progress. |
 | "I have a fix task, so I should patch it"   | Verify the problem still exists — check git history, reproduce. Already resolved = no change is the correct output. |
 | "I completed many tasks this cycle"          | Count means nothing if outputs aren't visible and verifiable. Micro-tasks that wouldn't stand alone as commits are not progress. |
 | "Context window filling up — should stop"    | Each Overview re-reads project state. Compaction is handled; finish the phase.                                           |
 | "Let me outline the plan before starting"   | Procrastination. Phase 3 is the plan. Phase 4 executes immediately — no meta-planning step in between.                   |
 
-## Platform Notes
-
-Where `TaskCreate`/`TaskUpdate` appear in this skill, use your platform's equivalent:
-
-| Agent      | Skill loading                                   | Task tracking               |
-| ---------- | ----------------------------------------------- | --------------------------- |
-| Claude Code | `Skill` tool                                   | `TaskCreate` / `TaskUpdate` |
-| Codex      | Auto-discovered skills or bundled plugin skills | Native task tools           |
-| Gemini CLI | GEMINI.md conventions                           | Native task tools           |
-| OpenCode   | AGENTS.md conventions                           | Native task tools           |
-| Cursor     | `.cursorrules` or explicit load                 | File-based notes            |
-| Kimi Code  | `.kimi/skills/` or `~/.agents/skills/`         | `/skill:autogrind`          |
-| Junie      | `~/.junie/skills/` or `~/.agents/skills/`      | Native task tools           |
-| Kiro       | `~/.kiro/skills/` or `~/.agents/skills/`       | Native task tools           |
-| All others | `~/.agents/skills/`                            | Native task tools           |

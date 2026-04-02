@@ -1,6 +1,6 @@
 {
   "name": "autogrind",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Engage in 24x7 auto-work mode — continuously grind through improvements, fixes, tests, and polish without stopping until you say so. For long-running sessions: code, ML/data, research, design, writing.",
   "author": {
     "name": "ttttonyhe",

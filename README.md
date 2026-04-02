@@ -28,7 +28,28 @@ Then invoke it:
 /autogrind
 ```
 
-If you use Claude Code or Codex and prefer native plugins, see the [plugin installation guide](PLUGIN.md).
+### Install via Claude Code Plugin
+
+If you use Claude Code, the native plugin is the preferred install -- it enables automatic updates and integrates natively with Claude Code's plugin system:
+
+```bash
+claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind
+```
+
+Or from inside Claude Code:
+
+```text
+/plugin marketplace add ttttonyhe/autogrind
+/plugin install autogrind@autogrind
+```
+
+**Invoke:** `/autogrind:start` or `keep working, don't stop`
+
+**Update:** `claude plugin update autogrind@autogrind`
+
+> Run `/reload-plugins` in an active session after install or update if the new plugin state does not appear immediately.
+
+For Codex native plugin install, see [PLUGIN.md](PLUGIN.md).
 
 Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
 
@@ -254,10 +275,6 @@ git clone --depth 1 https://github.com/ttttonyhe/autogrind.git ~/.agents/skills/
 **Invoke:** `"autogrind this, keep going"`
 
 </details>
-
-### Install via Plugins
-
-If you prefer native plugin UX on Claude Code or Codex, use the install paths in [PLUGIN.md](PLUGIN.md). Both native plugins wrap the same `autogrind` skill instead of replacing it.
 
 ---
 
