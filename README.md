@@ -22,34 +22,32 @@ Clone the repo, install the skill to the right location for my agent environment
 and confirm it is ready to use.
 ```
 
-Then invoke it:
+If you use Claude Code, the native plugin is the preferred install. It enables automatic updates and integrates natively with Claude Code's plugin system:
 
+```bash
+/plugin marketplace add ttttonyhe/autogrind
+/plugin install autogrind@autogrind
+
+/reload-plugins
 ```
+
+For Codex native plugin install, see [PLUGIN.md](PLUGIN.md).
+
+---
+
+## Usage
+
+Invoke via the slash command:
+
+```bash
 /autogrind
 ```
 
-### Install via Claude Code Plugin
-
-If you use Claude Code, the native plugin is the preferred install -- it enables automatic updates and integrates natively with Claude Code's plugin system:
+If you installed via Claude Code plugin, then invoke via the slash command:
 
 ```bash
-claude plugin marketplace add ttttonyhe/autogrind && claude plugin install autogrind@autogrind
+/autogrind:start
 ```
-
-Or from inside Claude Code:
-
-```text
-/plugin marketplace add ttttonyhe/autogrind
-/plugin install autogrind@autogrind
-```
-
-**Invoke:** `/autogrind:start` or `keep working, don't stop`
-
-**Update:** `claude plugin update autogrind@autogrind`
-
-> Run `/reload-plugins` in an active session after install or update if the new plugin state does not appear immediately.
-
-For Codex native plugin install, see [PLUGIN.md](PLUGIN.md).
 
 Remember to enable unrestricted tool use so AutoGrind can run commands, read files, and commit without per-call permission prompts. For example:
 
@@ -284,6 +282,12 @@ Paste this into any agent chat:
 
 ```
 Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind.
+```
+
+If you installed via Claude Code plugin:
+
+```bash
+claude plugin update autogrind@autogrind
 ```
 
 <details>
