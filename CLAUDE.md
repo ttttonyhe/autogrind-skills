@@ -46,8 +46,13 @@ between the root and marketplace copies of `commands/start.md`.
 
 When making significant skill changes, bump `metadata.version` in `SKILL.md`
 (and therefore in both copied skill files) **and** bump `"version"` in
-`.claude-plugin/plugin.json` and `plugins/autogrind/.codex-plugin/plugin.json`.
-All five must stay in sync.
+`.claude-plugin/marketplace.json` (plugin entry) and `plugins/autogrind/.codex-plugin/plugin.json`.
+
+**Do not set `version` in `.claude-plugin/plugin.json`.** The plugin uses a
+relative-path source (`"source": "./"`) in the marketplace entry. Per Claude Code
+docs, for relative-path plugins the version must live in the marketplace entry —
+if `plugin.json` also declares a version it silently overrides the marketplace
+entry and breaks update detection.
 
 ### SKILL.md Frontmatter
 

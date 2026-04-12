@@ -284,9 +284,10 @@ Paste this into any agent chat:
 Please update the AutoGrind skill to the latest version from https://github.com/ttttonyhe/autogrind.
 ```
 
-If you installed via Claude Code plugin:
+If you installed via Claude Code plugin, update the marketplace first (to fetch the latest version catalog), then update the plugin:
 
 ```bash
+claude plugin marketplace update autogrind
 claude plugin update autogrind@autogrind
 ```
 

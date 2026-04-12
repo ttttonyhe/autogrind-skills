@@ -10,6 +10,7 @@
     {
       "name": "autogrind",
       "source": "./",
+      "version": "1.12.1",
       "description": "Continuous autonomous grind loop — works until you say stop",
       "license": "MIT",
       "homepage": "https://github.com/ttttonyhe/autogrind",
